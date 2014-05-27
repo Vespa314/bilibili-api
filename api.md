@@ -1,4 +1,4 @@
-##直接爬取视频排行:
+##直接爬取视频排行【已完成】:
 * 获取URL: `http://www.bilibili.tv/list/[stow]-[zone]-[page]-[year1]-[month1]-[day1]~[year2]-[month2]-[day2].html`
 
 * 返回：只关于视频部分的源码
@@ -15,7 +15,7 @@
 * **用户评分**：comment
 * **弹幕数**：damku
 * *拼音*：pinyin-{x}，x可以是A~Z中的一个
-* *投稿时间*：default
+* *投稿时间*：default(越新放在越前面)
 
 >**注意：**上面排序方式中，**粗体字(前六个)**部分可以获取下文描述一切分区，但是*斜体(后两个)*只能获取二级以后的分区，也就是说**不可以**通过`拼音`和`投稿时间`来获取`综合排名`,`动画`,`音乐/舞蹈`,`游戏`,`科学技术`,`娱乐`,`影视`,`动画剧番`等分区。【可能是可以的，但是我没找到方法:-D】
 
@@ -125,7 +125,6 @@
 * 提取正则表达式：XXXXXXX【待补充】
 
 ###参数说明：
-http://www.bilibili.tv/list/b--a--t----d---1.html
 #### zone:地区
 * 不限：a
 * 中国大陆：a1
@@ -314,13 +313,14 @@ for i in range(0,len(json)-2):
 http://api.bilibili.tv/sp?title=VOCALOID
 ```
 
-**读取专题视频信息**
+**读取专题视频信息【已完成】**
 * URL：【返回json】
-    * `http://api.bilibili.tv/sp`
+    * ` http://api.bilibili.cn/spview`
 * 输入：
     * spid：专题SPID
     * season_id：专题分季ID【选填】
     * bangumi：设置为1时只返回番剧类视频 设置为0时只返回普通视频 不设置则返回所有视频【选填】
+> 经测试，设置为1返回剧番，不设置或者设置为0返回相关视频
 * 返回格式：
     * 第一层：
         * count：视频数目
@@ -336,8 +336,10 @@ http://api.bilibili.tv/sp?title=VOCALOID
         * page：不明，全是0
 
 >说明：关于SPID的获取，暂时只知道`chrome`点击`F12`，然后查看`Network`中html的文件名编号
+http://www.bilibili.tv/sppage/bangumi-[spid]-[page].html也可以获得专题剧番的信息，有空补上说明
+http://www.bilibili.tv/sppage/ad-recommend-[spid]-[page].html也可以获得相关专题信息。
 
-**读取用户信息**
+**读取用户信息【已完成】**
 * URL：【返回json】
     * `http://api.bilibili.cn/userinfo`
 * 输入：
@@ -349,7 +351,7 @@ http://api.bilibili.tv/sp?title=VOCALOID
     * approve：是否为认证帐号
     * spacename：空间名
     * sex：性别 (男/女/不明)
-    * rank：帐号显示标识
+    * rank：帐号显示标识【不明白是什么。。】
     * face：小头像
     * attention：关注的好友人数
     * fans：粉丝人数
@@ -357,3 +359,10 @@ http://api.bilibili.tv/sp?title=VOCALOID
     * place：所在地
     * description：认证用户为认证信息 普通用户为交友宣言
     * attentions：关注的好友列表
+
+**python-api：**
+```python
+GetUserInfoBymid(mid)
+GetUserInfoByName(name)
+```
+> **说明：**返回数据编码紊乱，有些utf8有些是gbk。。
