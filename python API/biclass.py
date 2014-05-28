@@ -71,3 +71,19 @@ class Vedio():
     date = None;
     cover = None;
     po = None;
+
+class Comment():
+    def __init__(self):
+        self.post_user = User();
+    lv = None;#楼层
+    fbid = None;#评论id
+    msg = None;
+    ad_check = None;#状态 (0: 正常 1: UP主隐藏 2: 管理员删除 3: 因举报删除)
+    post_user = None;
+
+class CommentList():
+    def __init__(self):
+        pass;
+    comments = None;
+    commentLen = None;
+    page = None;

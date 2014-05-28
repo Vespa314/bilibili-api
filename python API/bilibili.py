@@ -62,8 +62,7 @@ def GetUserInfo(url):
 待添加：
     如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
-    content = getURLContent(url)
-    jsoninfo = FromJson(content);
+    jsoninfo = FromJson(url);
     user = User(jsoninfo['mid'],jsoninfo['name'].encode('utf8'));
     user.isApprove = jsoninfo['approve'];
     user.spaceName = jsoninfo['spacename'].encode('utf8');
@@ -104,21 +103,20 @@ def GetUserInfoByName(name):
     return GetUserInfo(url)
 
 def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
-"""
+    """
 输入：
     spid:专题id
     season_id：分季ID
     bangumi：设置为1返回剧番，不设置或者设置为0返回相关视频
 返回：
     视频列表，包含av号，标题，封面和观看数
-"""
+    """
     url = ' http://api.bilibili.cn/spview?spid='+GetString(spid);
     if season_id != None:
         url += '&season_id='+GetString(season_id);
     if bangumi != None:
         url += '&bangumi='+GetString(bangumi);
-    content = getURLContent(url)
-    jsoninfo = FromJson(content);
+    jsoninfo = FromJson(url);
     vediolist = [];
     for vedio_idx in jsoninfo['list']:
         vedio = Vedio(jsoninfo['list'][vedio_idx]['aid'],jsoninfo['list'][vedio_idx]['title']);
@@ -126,6 +124,70 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
         vedio.guankan = jsoninfo['list'][vedio_idx]['click'];
         vediolist.append(vedio);
     return vediolist
+
+def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
+    """
+输入：
+    aid：AV号
+    page：页码
+    pagesize：单页返回的记录条数，最大不超过300，默认为10。
+    ver：API版本,最新是3
+    order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序
+返回：
+    评论列表
+    """
+    url = 'http://api.bilibili.cn/feedback?aid='+GetString(aid);
+    if page:
+        url += '&page='+GetString(page)
+    if pagesize:
+        url += '&pagesize='+GetString(pagesize)
+    if ver:
+        url += '&ver='+GetString(ver)
+    if order:
+        url += '&order='+GetString(order)
+    jsoninfo = FromJson(url);
+    commentList = CommentList();
+    commentList.comments = [];
+    commentList.commentLen = jsoninfo['totalResult']
+    commentList.page = jsoninfo['pages'];
+    idx = 0;
+    while jsoninfo.has_key(str(idx)):
+        liuyan = Comment();
+        liuyan.lv = jsoninfo[str(idx)]['lv']
+        liuyan.fbid = jsoninfo[str(idx)]['fbid']
+        liuyan.msg = jsoninfo[str(idx)]['msg']
+        liuyan.ad_check = jsoninfo[str(idx)]['ad_check']
+        liuyan.post_user.mid = jsoninfo[str(idx)]['mid'];
+        liuyan.post_user.avatar = jsoninfo[str(idx)]['face'];
+        liuyan.post_user.rank = jsoninfo[str(idx)]['rank']
+        liuyan.post_user.name = jsoninfo[str(idx)]['nick']
+        commentList.comments.append(liuyan);
+        idx += 1;
+    return commentList
+
+def GetAllComment(aid,ver=None,order = None):
+    """
+获取一个视频全部评论，有可能需要多次爬取，所以会有较大耗时
+输入：
+    aid：AV号
+    ver：API版本,最新是3
+    order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序
+返回：
+    评论列表
+    """
+    MaxPageSize = 300;
+    commentList = GetComment(aid=aid,pagesize=MaxPageSize,ver=ver,order=order)
+    if commentList.page == 1:
+        return commentList;
+    for p in range(2,commentList.page+1):
+        #print '%d/%d'%(p*MaxPageSize,commentList.commentLen)
+        t_commentlist = GetComment(aid=aid,pagesize=MaxPageSize,page=p,ver=ver,order=order)
+        for liuyan in t_commentlist.comments:
+            commentList.comments.append(liuyan)
+        time.sleep(0.5)
+    return commentList
+        
+        
 
 if __name__ == "__main__":
 #     f = open('result.txt','w');
@@ -143,4 +205,8 @@ if __name__ == "__main__":
 #    vediolist = GetVedioOfZhuanti('6492',bangumi=0);
 #    for vedio in vediolist:
 #        print vedio.title
+    
+    commentList = GetAllComment('55300');
+    for liuyan in commentList.comments:
+        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
 #     f.close();

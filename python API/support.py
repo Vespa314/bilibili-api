@@ -21,8 +21,8 @@ def getURLContent(url):
     except:
         return ""
     
-def FromJson(jsondata):
-    return json.loads(jsondata)
+def FromJson(url):
+    return json.loads(getURLContent(url))
 
 def GetString(t):
     if type(t) == int:
