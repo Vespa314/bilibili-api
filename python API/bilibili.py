@@ -76,7 +76,8 @@ def GetUserInfo(url):
     user.description = jsoninfo['description'];
     user.followlist = [];
     for fo in jsoninfo['attentions']:
-        user.followlist.append(jsoninfo['attentions'][fo])
+        if jsoninfo['attentions'][fo] != 0:
+            user.followlist.append(jsoninfo['attentions'][fo])
     return user;
 
 def GetUserInfoBymid(mid):

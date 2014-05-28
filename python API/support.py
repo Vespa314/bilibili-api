@@ -13,13 +13,18 @@ def GetRE(content,regexp):
     return re.findall(regexp, content)
 
 def getURLContent(url):
-    try:
-        headers = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
-        req = urllib2.Request(url = url,headers = headers);   
-        content = urllib2.urlopen(req).read();
-        return content;
-    except:
-        return ""
+    while True:    	
+        flag = 1;
+        try:
+            headers = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
+            req = urllib2.Request(url = url,headers = headers);   
+            content = urllib2.urlopen(req).read();
+        except:
+        	flag = 0;
+        	time.sleep(5)
+        if flag == 1:
+        	break;
+    return content;
     
 def FromJson(url):
     return json.loads(getURLContent(url))
