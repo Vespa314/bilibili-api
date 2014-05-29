@@ -38,6 +38,7 @@ def main():
                 f.write('\n')
                 idx += 1;
                 print 'finished:',idx;
+                print 'left:',len(polist);
 #                time.sleep(1);
         f.close();
     except:
