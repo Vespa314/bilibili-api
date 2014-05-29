@@ -5,8 +5,9 @@ Created on Mon May 26 23:42:03 2014
 @author: Administrator
 """
 
-import sys, time, os, re
+import time
 from support import * 
+import hashlib
 
 ############################常量定义
 
@@ -62,22 +63,22 @@ def GetUserInfo(url):
 待添加：
     如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
-    jsoninfo = FromJson(url);
-    user = User(jsoninfo['mid'],jsoninfo['name'].encode('utf8'));
-    user.isApprove = jsoninfo['approve'];
-    user.spaceName = jsoninfo['spacename'].encode('utf8');
-    user.sex = jsoninfo['sex'].encode('utf8');
-    user.rank = jsoninfo['rank'];
-    user.avatar = jsoninfo['face'];
-    user.follow = jsoninfo['attention'];
-    user.fans = jsoninfo['fans'];
-    user.article = jsoninfo['article'];
-    user.place = jsoninfo['place'];
-    user.description = jsoninfo['description'];
+    jsoninfo = JsonInfo(url);
+    user = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('name').encode('utf8'));
+    user.isApprove = jsoninfo.Getvalue('approve');
+    user.spaceName = jsoninfo.Getvalue('spacename').encode('utf8');
+    user.sex = jsoninfo.Getvalue('sex').encode('utf8');
+    user.rank = jsoninfo.Getvalue('rank');
+    user.avatar = jsoninfo.Getvalue('face');
+    user.follow = jsoninfo.Getvalue('attention');
+    user.fans = jsoninfo.Getvalue('fans');
+    user.article = jsoninfo.Getvalue('article');
+    user.place = jsoninfo.Getvalue('place');
+    user.description = jsoninfo.Getvalue('description');
     user.followlist = [];
-    for fo in jsoninfo['attentions']:
-        if jsoninfo['attentions'][fo] != 0:
-            user.followlist.append(jsoninfo['attentions'][fo])
+    for fo in jsoninfo.Getvalue('attentions'):
+        if jsoninfo.Getvalue('attentions',fo) != 0:
+            user.followlist.append(jsoninfo.Getvalue('attentions',fo))
     return user;
 
 def GetUserInfoBymid(mid):
@@ -100,7 +101,6 @@ def GetUserInfoByName(name):
     """
     name = GetString(name);
     url = 'http://api.bilibili.cn/userinfo'+"?user="+name;
-    print url
     return GetUserInfo(url)
 
 def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
@@ -117,12 +117,12 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
         url += '&season_id='+GetString(season_id);
     if bangumi != None:
         url += '&bangumi='+GetString(bangumi);
-    jsoninfo = FromJson(url);
+    jsoninfo = JsonInfo(url);
     vediolist = [];
-    for vedio_idx in jsoninfo['list']:
-        vedio = Vedio(jsoninfo['list'][vedio_idx]['aid'],jsoninfo['list'][vedio_idx]['title']);
-        vedio.cover = jsoninfo['list'][vedio_idx]['cover'];
-        vedio.guankan = jsoninfo['list'][vedio_idx]['click'];
+    for vedio_idx in jsoninfo.Getvalue('list'):
+        vedio = Vedio(jsoninfo.Getvalue('list',vedio_idx,'aid'),jsoninfo.Getvalue('list',vedio_idx,'title'));
+        vedio.cover = jsoninfo.Getvalue('list',vedio_idx,'cover');
+        vedio.guankan = jsoninfo.Getvalue('list',vedio_idx,'click');
         vediolist.append(vedio);
     return vediolist
 
@@ -146,22 +146,22 @@ def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
         url += '&ver='+GetString(ver)
     if order:
         url += '&order='+GetString(order)
-    jsoninfo = FromJson(url);
+    jsoninfo = JsonInfo(url);
     commentList = CommentList();
     commentList.comments = [];
-    commentList.commentLen = jsoninfo['totalResult']
-    commentList.page = jsoninfo['pages'];
+    commentList.commentLen = jsoninfo.Getvalue('totalResult')
+    commentList.page = jsoninfo.Getvalue('pages');
     idx = 0;
-    while jsoninfo.has_key(str(idx)):
+    while jsoninfo.Getvalue(str(idx)):
         liuyan = Comment();
-        liuyan.lv = jsoninfo[str(idx)]['lv']
-        liuyan.fbid = jsoninfo[str(idx)]['fbid']
-        liuyan.msg = jsoninfo[str(idx)]['msg']
-        liuyan.ad_check = jsoninfo[str(idx)]['ad_check']
-        liuyan.post_user.mid = jsoninfo[str(idx)]['mid'];
-        liuyan.post_user.avatar = jsoninfo[str(idx)]['face'];
-        liuyan.post_user.rank = jsoninfo[str(idx)]['rank']
-        liuyan.post_user.name = jsoninfo[str(idx)]['nick']
+        liuyan.lv = jsoninfo.Getvalue(str(idx),'lv')
+        liuyan.fbid = jsoninfo.Getvalue(str(idx),'fbid')
+        liuyan.msg = jsoninfo.Getvalue(str(idx),'msg')
+        liuyan.ad_check = jsoninfo.Getvalue(str(idx),'ad_check')
+        liuyan.post_user.mid = jsoninfo.Getvalue(str(idx),'mid');
+        liuyan.post_user.avatar = jsoninfo.Getvalue(str(idx),'face');
+        liuyan.post_user.rank = jsoninfo.Getvalue(str(idx),'rank')
+        liuyan.post_user.name = jsoninfo.Getvalue(str(idx),'nick')
         commentList.comments.append(liuyan);
         idx += 1;
     return commentList
@@ -187,27 +187,80 @@ def GetAllComment(aid,ver=None,order = None):
             commentList.comments.append(liuyan)
         time.sleep(0.5)
     return commentList
-        
-        
+
+def GetVedioInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
+    paras = {'id': GetString(aid),'page': GetString(page)};
+    if fav != None:
+        paras['fav'] = fav;
+    url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret);
+    jsoninfo = JsonInfo(url);
+    vedio = Vedio(aid,jsoninfo.Getvalue('title'));
+    vedio.guankan = jsoninfo.Getvalue('play')
+    vedio.commentNumber = jsoninfo.Getvalue('review')
+    vedio.danmu = jsoninfo.Getvalue('video_review')
+    vedio.shoucang = jsoninfo.Getvalue('favorites');
+    vedio.description = jsoninfo.Getvalue('description')
+    vedio.tag = [];
+    for tag in jsoninfo.Getvalue('tag').split(','):
+        vedio.tag.append(tag);
+    vedio.cover = jsoninfo.Getvalue('pic');
+    vedio.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
+    vedio.page = jsoninfo.Getvalue('pages');
+    vedio.date = jsoninfo.Getvalue('created_at');
+    vedio.credit = jsoninfo.Getvalue('credit');
+    vedio.coin = jsoninfo.Getvalue('coins');
+    vedio.spid = jsoninfo.Getvalue('spid');
+    vedio.cid = jsoninfo.Getvalue('cid');
+    vedio.offsite = jsoninfo.Getvalue('offsite');
+    vedio.partname = jsoninfo.Getvalue('partname');
+    vedio.src = jsoninfo.Getvalue('src');
+    vedio.tid = jsoninfo.Getvalue('tid')
+    vedio.typename = jsoninfo.Getvalue('typename')
+    vedio.instant_server = jsoninfo.Getvalue('instant_server');
+    return vedio
+    
+def GetSign(params,appkey,AppSecret=None):
+    """
+    获取新版API的签名，不然会返回-3错误
+待添加：【重要！】
+    需要做URL编码并保证字母都是大写，如 %2F
+    """
+    params['appkey']=appkey;
+    data = "";
+    for para in params:
+        if data != "":
+            data += "&";
+        data += para + "=" + params[para];
+    if AppSecret == None:
+        return data
+    m = hashlib.md5()
+    m.update(data+AppSecret)
+    return data+'&sign='+m.hexdigest()
 
 if __name__ == "__main__":
 #     f = open('result.txt','w');
-     
-#    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-#    for vedio in vedioList:
-#        vedio.saveToFile(f);
-     
+     #获取最热视频
+#     vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+#     for vedio in vedioList:
+#         vedio.saveToFile(f);
+     #获取用户信息
 #     user = GetUserInfoBymid('72960');
 #     print user.name.decode('utf8','ignore').encode('gbk','ignore')
 #     user = GetUserInfoByName('vespa')
 #     print user.spaceName.decode('utf8','ignore').encode('gbk','ignore')
-##    user.saveToFile(f);    
-    
+#    user.saveToFile(f);    
+    #获取专题视频信息
 #    vediolist = GetVedioOfZhuanti('6492',bangumi=0);
 #    for vedio in vediolist:
 #        print vedio.title
-    
-    commentList = GetAllComment('55300');
-    for liuyan in commentList.comments:
-        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
+    #获取评论
+#    commentList = GetAllComment('1154794');
+#    for liuyan in commentList.comments:
+#        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
 #     f.close();
+    #获取视频信息
+#    appkey='xxx';
+#    secretkey = 'xxxx'#选填
+#    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
+#    for tag in vedio.tag:
+#        print tag

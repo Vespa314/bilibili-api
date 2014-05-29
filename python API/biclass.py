@@ -25,11 +25,12 @@ class User():
         fid.write('地点:%s\n'%self.place);
         fid.write('认证信息:%s\n'%self.description);
         fid.write('关注好友：\n');
-        for fo in self.followlist:
-            fid.write('\t%s\n'%fo);
+        if self.followlist:
+            for fo in self.followlist:
+                fid.write('\t%s\n'%fo);
 #   获取空间地址
     def GetSpace(self):
-        return 'http://space.bilibili.tv/'+str(mid);
+        return 'http://space.bilibili.tv/'+str(self.mid);
     mid = None;
     name = None;
     isApprove = False;#是否是认证账号
@@ -61,7 +62,7 @@ class Vedio():
         fid.write('日期:%s\n'%self.date);
         fid.write('封面地址:%s\n'%self.cover);
         fid.write('Up主:\n');
-        self.po.saveToFile(fid);
+        self.author.saveToFile(fid);
         fid.write('\n');
     aid = None;
     title = None;
@@ -70,7 +71,22 @@ class Vedio():
     danmu = None;
     date = None;
     cover = None;
-    po = None;
+    commentNumber = None;
+    description = None;
+    tag = None;
+    author = None;
+    page = None;
+    credit = None;
+    coin = None;
+    spid = None;
+    cid = None;
+    offsite = None;
+#不明：    
+    tid = None;
+    typename = None;
+    instant_server = None;
+    src = None;
+    partname = None;
 
 class Comment():
     def __init__(self):
@@ -87,3 +103,4 @@ class CommentList():
     comments = None;
     commentLen = None;
     page = None;
+

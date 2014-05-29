@@ -4,10 +4,9 @@ Created on Mon May 26 23:59:09 2014
 
 @author: Administrator
 """
-import urllib
 import urllib2
-import json
 import re
+import json
 from biclass import * 
 def GetRE(content,regexp):
     return re.findall(regexp, content)
@@ -26,8 +25,27 @@ def getURLContent(url):
         	break;
     return content;
     
-def FromJson(url):
-    return json.loads(getURLContent(url))
+#def FromJson(url):
+#    return json.loads(getURLContent(url))
+
+class JsonInfo():
+    def __init__(self,url):
+        self.info = json.loads(getURLContent(url));
+    def Getvalue(self,*keys):
+        if len(keys) == 0:
+            return None
+        if self.info.has_key(keys[0]):
+            temp = self.info[keys[0]];
+        else:
+            return None;
+        if len(keys) > 1:
+            for key in keys[1:]:
+                if temp.has_key(key):
+                    temp = temp[key]
+                else:
+                    return None;
+        return temp
+    info = None;
 
 def GetString(t):
     if type(t) == int:
@@ -69,6 +87,6 @@ def GetVedioFromRate(content):
         vedio_t.danmu = int(info4[i]);
         vedio_t.date = info5[i];
         vedio_t.cover = info6[i];
-        vedio_t.po = User(info7[i][0],info7[i][1])
+        vedio_t.author = User(info7[i][0],info7[i][1])
         vedioList.append(vedio_t);
     return vedioList
