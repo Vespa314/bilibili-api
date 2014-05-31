@@ -12,7 +12,7 @@ def readfile(filename):
     f = open(filename,'r')
     for line in f:
         result.append(int(line));
-    f.close;
+    f.close();
     return result
 
 def main():
@@ -23,8 +23,11 @@ def main():
         idx = 0;
         while polist != []:
             cur = polist.pop(0);
+            print '\t',idx,len(polist),cur;
             finished.append(cur);
             user = GetUserInfoBymid(cur);
+            if user == None:
+                continue
             if user.article > 0:
                 print time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()));
                 f.write('Up:%s %d\n'%(user.name,user.mid));
@@ -37,22 +40,20 @@ def main():
                             polist.append(follow);
                 f.write('\n')
                 idx += 1;
-                print 'finished:',idx;
-                print 'left:',len(polist);
-#                time.sleep(1);
+                time.sleep(0.5);
         f.close();
-    except:
-        f.write('++++++++++++++++++++++')
-        pofile = open('polist.txt')
+    except e:
+        print str(e)
+        #出错的话保持现场
+        pofile = open('polist.txt','w')
         for item in polist:
             pofile.write(str(item)+'\n');
         pofile.close();
-        pofile = open('finished.txt')
+        pofile = open('finished.txt','w')
         for item in finished:
             pofile.write(str(item)+'\n');
         pofile.close();
         f.close();
-#        main()
 
 if __name__ == "__main__":
     main();

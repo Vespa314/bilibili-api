@@ -63,6 +63,8 @@ def GetUserInfo(url):
     如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
     jsoninfo = FromJson(url);
+    if not jsoninfo.has_key('mid'):
+        return None;
     user = User(jsoninfo['mid'],jsoninfo['name'].encode('utf8'));
     user.isApprove = jsoninfo['approve'];
     user.spaceName = jsoninfo['spacename'].encode('utf8');
