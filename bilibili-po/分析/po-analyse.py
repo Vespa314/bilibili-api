@@ -78,6 +78,20 @@ if __name__ == "__main__":
     for up in updict:
         f.write("%d %d %d\n"%(up,updict[up]['article'],updict[up]['fans']))
     f.close();
+    #保存每个Up和关注的关系
+    f = open('up-follow.txt','w');
+    for up in updict:
+        for fo in updict[up]['follow']:
+            if up in updict[fo]['follow'] and fo > up:
+                f.write("%s %s 2\n"%(up,fo))
+            else:
+                f.write("%d %d 1\n"%(up,fo))
+    f.close();
+    #保存id-昵称:
+    f = open('upinfo.txt','w');
+    for up in updict:
+        f.write('%d %s\n'%(up,updict[up]['name']))
+    f.close();
     #查找最大关注圈
     ups = updict.keys();
     ups.sort();
@@ -86,13 +100,24 @@ if __name__ == "__main__":
     while las != []:
         result.append(las);
         las = GetNext(result[-1],updict,ups);
-    #保存成文件
+#    #关注关系保存成文件
     for i in range(len(result)):
+        for j in range(len(result[i])):
+            result[i][j] = set(result[i][j]);
+    for i in range(0,len(result)):
         f = open(str(i+1)+'.txt','w');
         for pair in result[i]:
-            for po in pair:
-                f.write(updict[po]['name']);
-                f.write('\t');
-            f.write('\n')
+            flag = 1;
+            if i != len(result)-1:            
+                for pairnext in result[i+1]:
+                    if pair.issubset(pairnext):
+                        flag = 0;
+                        break
+            if flag == 1:
+                for po in pair:
+                    f.write(updict[po]['name']);
+                    f.write('\t');
+                f.write('\n')
         f.close()
     print 'Finished'
+    
