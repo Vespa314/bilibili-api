@@ -4,7 +4,9 @@
 ### 目录：
 * python API/：python版本API【开发中】
 * bilibili-po/：测试爬取B站up的关注关系网，以便后期分析
-
+  * bilibili-po/爬取结果:爬取的原始数据，包括每一个up的id，昵称，投稿数，粉丝数以及关注列表
+  * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
+  
 ### 文件：
 * api.md：API的详细说明
 * README.md：return this
