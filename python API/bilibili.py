@@ -303,8 +303,8 @@ if __name__ == "__main__":
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
 #     f.close();
     #获取视频信息
-    appkey='70472776da900153';
-    secretkey = 'f7d9146f9363f3407d31098918493336'#选填
+    appkey='XXX';
+    secretkey = 'XXXX'#选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
 #        print tag

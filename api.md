@@ -3,8 +3,6 @@
 
 * 返回：只关于视频部分的源码
 
-* 提取正则表达式：XXXXXXX【待补充】
-
 ###参数说明：
 
 ####Type:排序方式
@@ -117,12 +115,11 @@
 
 ---
 
-##新番Index
+##视频Index
 * 获取URL: `http://www.bilibili.tv/list/b-[firstlatter]-[zone]-[time]-[catalog]-[state]-[style]-[updatetime]-[sorttype]-[weekday]--[page].html`
 
 * 返回：整个网页源代码
 
-* 提取正则表达式：XXXXXXX【待补充】
 
 ###参数说明：
 #### zone:地区
@@ -199,7 +196,24 @@
 #### page：页数
 必填，1~n
 
+##按月份获取`动画`新番
+* 获取URL: `http://www.bilibili.tv/index/bangumi/[year]-[month].json`
 
+* 返回：json信息
+
+###参数说明：
+####输入：
+* year:年份  四位数
+* month:月份
+
+返回：
+* spid：spid
+* weekday：番剧周信息
+* title：标题
+* cover:封面  【大】
+* typeid:【不明】
+* mcover:封面 【中】
+* scover:封面 【小】
 
 ---
 
@@ -255,7 +269,7 @@ json['type1'][0]['title']
 json['list']['0']['title']
 ```
 
-**读取评论**
+**读取评论【已完成】**
 * URL：【返回json】
     * `http://api.bilibili.cn/feedback`
 * 输入：
@@ -278,11 +292,19 @@ json['list']['0']['title']
         *  ad_check：状态 (0: 正常 1: UP主隐藏 2: 管理员删除 3: 因举报删除)
         *  face：发布人头像
         *  rank：发布人显示标识
-        *  uname：发布人暱称
+        *  nick：发布人暱称
 * 示例
 ```python
 for i in range(0,len(json)-2):
     print JsonInfo[str(i)]['lv'],':',JsonInfo[str(i)]['msg'].encode('gbk','ignore')
+```
+
+> **python-api：**
+```python
+#获取视频单页评论：
+GetComment(aid,page = None,pagesize = None,ver=None,order = None)
+#获取视频全部评论：
+GetAllComment(aid,ver=None,order = None)
 ```
 
 **读取专题信息**
@@ -321,6 +343,7 @@ http://api.bilibili.tv/sp?title=VOCALOID
     * season_id：专题分季ID【选填】
     * bangumi：设置为1时只返回番剧类视频 设置为0时只返回普通视频 不设置则返回所有视频【选填】
 > 经测试，设置为1返回剧番，不设置或者设置为0返回相关视频
+
 * 返回格式：
     * 第一层：
         * count：视频数目
@@ -336,8 +359,16 @@ http://api.bilibili.tv/sp?title=VOCALOID
         * page：不明，全是0
 
 >说明：关于SPID的获取，暂时只知道`chrome`点击`F12`，然后查看`Network`中html的文件名编号
-http://www.bilibili.tv/sppage/bangumi-[spid]-[page].html也可以获得专题剧番的信息，有空补上说明
+http://www.bilibili.tv/sppage/bangumi-[spid]-[page].html 也可以获得专题剧番的信息，有空补上说明
 http://www.bilibili.tv/sppage/ad-recommend-[spid]-[page].html也可以获得相关专题信息。
+
+---
+
+> **python-api：**
+```python
+GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
+```
+
 
 **读取用户信息【已完成】**
 * URL：【返回json】
@@ -360,9 +391,84 @@ http://www.bilibili.tv/sppage/ad-recommend-[spid]-[page].html也可以获得相�
     * description：认证用户为认证信息 普通用户为交友宣言
     * attentions：关注的好友列表
 
-**python-api：**
+> **python-api：**
 ```python
 GetUserInfoBymid(mid)
 GetUserInfoByName(name)
 ```
-> **说明：**返回数据编码紊乱，有些utf8有些是gbk。。
+**说明：**返回数据编码紊乱，有些utf8有些是gbk。。
+
+---
+
+##B站API(需认证)：
+> 下方所有调用api方法均要加入`appkey=...`,如果是新注册的appkey的话还需要加入sign，具体算法是：
+【待补充】
+
+**读取视频信息**【已完成】
+* URL：【返回json】
+    * ` http://api.bilibili.cn/view`
+* 输入：
+    * id：AV号
+    * page:页码
+    * fav:是否读取会员收藏状态 (默认 0)【选填】
+
+* 返回格式：
+    * tid：【不明】
+    * typename：【不明，总是返回`其他`】
+    * instant_server：【不明】
+    * spid:spid
+    * src:【不明】
+    * partname:【不明】
+    * play：播放次数
+    * review：评论数
+    * video_review：弹幕数
+    * favorites：收藏数
+    * credit：评分数量
+    * coins：推荐数量(硬币数)
+    * title：标题
+    * description：简介
+    * tag：关键字
+    * pic：封面图片URL地址
+    * pages：返回记录的总页数
+    * ~~from：视频来源~~
+    * author：投搞人
+    * mid：投搞人ID
+    * cid：视频源及弹幕编号 弹幕地址 http://comment.bilibili.cn/<cid>.xml
+    * offsite：Flash播放调用地址（如果沒有此项则此视频无法在站外播放）
+    * create_at：视频发布日期
+    * ~~favorited：当前帐号收藏状态~~
+
+**获取新番信息**【已完成】
+* URL：【返回json】
+    * ` http://api.bilibili.cn/bangumi`
+* 输入：
+    * btype：番剧类型 2: 二次元新番 3: 三次元新番 默认：所有【选填】
+    * weekday:周一:1 周二:2 ...周六:6 【选填】
+
+> 官方API说周日的weekday取0，但经实验发现weekday=0返回全部信息，**目前不知如何获得周日新番列表**。。。
+
+* 返回格式：
+    * 第一层：
+        * results：返回的记录总数目
+        * count：返回的记录总数目
+        * list：列表
+    * 第二层：【相对于list】
+        * 0~results-1：编号
+    * 第三层：【相对于编号】
+        * typeid:【不明】
+        * lastupdate:最后更新时间  UNIX Timestamp
+        * areaid:【不明】
+        * bgmcount:番剧当前总集数
+        * title:标题
+        * lastupdate_at:最后更新时间
+        * attention:【不明，跟视频热度有关】
+        * cover:封面图片地址
+        * priority:【不明】
+        * area:地区  【如：日本】
+        * weekday:番剧周信息  【这个时候周日又是0 TAT】
+        * spid:spid
+        * new:是否最近有更新
+        * scover:封面图片地址  【为什么有两个。。】
+        * mcover:封面图片地址  【为什么有三个。。】
+        * click:浏览量
+> 几个封面应该是不同大小的图片，但是不知为何返回来都是一样大的。。
