@@ -15,6 +15,7 @@
 * 根据爬取页面获取到的信息：
   * 视频排行【已完成】
   * 根据条件筛选视频
+  * 按年份月份获取动画新番信息
 * 无需认证的API接口获取：
   * 获取各个板块本周最火视频
   * 读取视频评论【已完成】
@@ -23,6 +24,7 @@
   * 获取用户信息【已完成】
 * 需要appkey才可以获得的信息：
   * 获取视频信息【已完成】
+  * 获取新番信息【已完成】
   * ...
 
 ###类接口：
@@ -101,4 +103,27 @@ class CommentList():
     comments = None;
     commentLen = None;
     page = None;
+```
+
+####新番类：
+```
+class Bangumi():
+    def __init__(self):
+        pass;
+    typeid = None;
+    lastupdate = None;
+    areaid = None;
+    bgmcount = None;#番剧当前总集数
+    title = None;
+    lastupdate_at = None;
+    attention = None;
+    cover = None;
+    priority = None;
+    area = None;
+    weekday = None;
+    spid = None;
+    new = None;
+    scover = None;
+    mcover = None;
+    click = None;
 ```

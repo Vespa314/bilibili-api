@@ -227,7 +227,9 @@ def GetSign(params,appkey,AppSecret=None):
     """
     params['appkey']=appkey;
     data = "";
-    for para in params:
+    paras = params.keys();
+    paras.sort();
+    for para in paras:
         if data != "":
             data += "&";
         data += para + "=" + params[para];
@@ -236,6 +238,48 @@ def GetSign(params,appkey,AppSecret=None):
     m = hashlib.md5()
     m.update(data+AppSecret)
     return data+'&sign='+m.hexdigest()
+
+def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
+    """
+获取新番信息
+输入：
+    btype：番剧类型 2: 二次元新番 3: 三次元新番 默认：所有
+    weekday:周一:1 周二:2 ...周六:6 
+    """
+    paras = {};
+    if btype != None and btype in [2,3]:
+        paras['btype'] = GetString(btype)
+    if weekday != None:
+        paras['weekday'] = GetString(weekday)
+    url =  'http://api.bilibili.tv/bangumi?' + GetSign(paras,appkey,AppSecret);
+    jsoninfo = JsonInfo(url);
+    bangumilist = [];
+    for i in jsoninfo.Getvalue('list').keys():
+        bangumi = Bangumi();
+        bangumi.typeid = jsoninfo.Getvalue('list',i,'typeid')
+        bangumi.lastupdate = jsoninfo.Getvalue('list',i,'lastupdate')
+        bangumi.areaid = jsoninfo.Getvalue('list',i,'areaid')
+        bangumi.bgmcount = jsoninfo.Getvalue('list',i,'bgmcount')
+        bangumi.title = jsoninfo.Getvalue('list',i,'title')
+        bangumi.lastupdate_at = jsoninfo.Getvalue('list',i,'lastupdate_at')
+        bangumi.attention = jsoninfo.Getvalue('list',i,'attention')
+        bangumi.cover = jsoninfo.Getvalue('list',i,'cover')
+        bangumi.priority = jsoninfo.Getvalue('list',i,'priority')
+        bangumi.area = jsoninfo.Getvalue('list',i,'area')
+        bangumi.weekday = jsoninfo.Getvalue('list',i,'weekday')
+        bangumi.spid = jsoninfo.Getvalue('list',i,'spid')
+        bangumi.new = jsoninfo.Getvalue('list',i,'new')
+        bangumi.scover = jsoninfo.Getvalue('list',i,'scover')
+        bangumi.mcover = jsoninfo.Getvalue('list',i,'mcover')
+        bangumi.click = jsoninfo.Getvalue('list',i,'click')
+        bangumilist.append(bangumi)
+    return bangumilist
+        
+#def GetBangumiByTime(year,month):
+#    url='http://www.bilibili.tv/index/bangumi/%s-%s.json'%(GetString(year),GetString(month));     
+#    print url    
+#    jsoninfo = getURLContent(url);
+#    print jsoninfo
 
 if __name__ == "__main__":
 #     f = open('result.txt','w');
@@ -259,8 +303,12 @@ if __name__ == "__main__":
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
 #     f.close();
     #获取视频信息
-#    appkey='xxx';
-#    secretkey = 'xxxx'#选填
+    appkey='70472776da900153';
+    secretkey = 'f7d9146f9363f3407d31098918493336'#选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
 #        print tag
+    #获取新番
+#    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey);
+#    for bangumi in bangumilist:
+#        print bangumi.scover,bangumi.mcover,bangumi.cover

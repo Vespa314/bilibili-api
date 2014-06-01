@@ -80,7 +80,7 @@ class Vedio():
     coin = None;
     spid = None;
     cid = None;
-    offsite = None;
+    offsite = None;#Flash播放调用地址
 #不明：    
     tid = None;
     typename = None;
@@ -88,6 +88,26 @@ class Vedio():
     src = None;
     partname = None;
 
+class Bangumi():
+    def __init__(self):
+        pass;
+    typeid = None;
+    lastupdate = None;
+    areaid = None;
+    bgmcount = None;#番剧当前总集数
+    title = None;
+    lastupdate_at = None;
+    attention = None;
+    cover = None;
+    priority = None;
+    area = None;
+    weekday = None;
+    spid = None;
+    new = None;
+    scover = None;
+    mcover = None;
+    click = None;
+    
 class Comment():
     def __init__(self):
         self.post_user = User();
