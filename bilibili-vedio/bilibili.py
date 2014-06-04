@@ -331,39 +331,3 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
         vediolist.append(vedio)
     return [page,name,vediolist]
         
-        
-if __name__ == "__main__":
-#     f = open('result.txt','w');
-     #获取最热视频
-#     vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-#     for vedio in vedioList:
-#         vedio.saveToFile(f);
-     #获取用户信息
-#     user = GetUserInfoBymid('72960');
-#     print user.name.decode('utf8','ignore').encode('gbk','ignore')
-#     user = GetUserInfoByName('vespa')
-#     print user.spaceName.decode('utf8','ignore').encode('gbk','ignore')
-#    user.saveToFile(f);    
-    #获取专题视频信息
-#    vediolist = GetVedioOfZhuanti('6492',bangumi=0);
-#    for vedio in vediolist:
-#        print vedio.title
-    #获取评论
-#    commentList = GetAllComment('1154794');
-#    for liuyan in commentList.comments:
-#        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
-#     f.close();
-    #获取视频信息
-    appkey='XXX';
-    secretkey = 'XXXX'#选填
-#    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
-#    for tag in vedio.tag:
-#        print tag
-    #获取新番
-#    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey);
-#    for bangumi in bangumilist:
-#        print bangumi.scover,bangumi.mcover,bangumi.cover
-    #获取分类排行
-    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')  
-    for vedio in vediolist:
-        print vedio.title.encode('gbk','ignore'),vedio.play_site
