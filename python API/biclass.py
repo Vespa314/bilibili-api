@@ -94,6 +94,7 @@ class Vedio():
     play_site = None;
     play_forward = None;
     play_mobile = None;
+    
 class Bangumi():
     def __init__(self):
         pass;

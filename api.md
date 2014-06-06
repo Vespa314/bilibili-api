@@ -472,3 +472,73 @@ GetUserInfoByName(name)
         * mcover:封面图片地址  【为什么有三个。。】
         * click:浏览量
 > 几个封面应该是不同大小的图片，但是不知为何返回来都是一样大的。。
+
+**获取排行信息**【已完成】
+* URL：【返回json】
+    * `http://api.bilibili.cn/list`
+* 输入：
+    * tid: 分类编号 【new排序为必填 其他为可选】
+    * exclude_tid: 排除分类编号 不可与tid同时使用【选填】
+    * mid: 只显示该帐号投稿【选填】
+    * begin: 起始搜索日期 (格式：YYYY-mm-dd)【选填】
+    * end: 结束搜索日期 (格式：YYYY-mm-dd)【选填】
+    * days:搜索最近天数 范围 1-90天 默认7天【选填】
+    * page: 结果分页选择 默认为第1页【选填】
+    * pagesize: 单页返回的记录条数，最大不超过100，默认为30【选填】
+    * pinyin: 在使用拼音排序时必填选项 拼音首字母【选填】
+    * click_detail: 返回详细点击信息【选填】
+    * original: 只返回原创投稿【选填】
+    * mission_id:返回活动投稿【选填】
+    * exclude: 排除exclude中的id 可用,分隔多个【选填】
+    * ver: 	 API版本 建议使用2【选填】
+    * order: 排序方式【选填】
+        * default	 按新投稿排序
+        * new	 按新评论排序
+        * review	 按评论数从高至低排序
+        * hot	 按点击从高至低排序
+        * damku	 按弹幕数从高至低排序
+        * comment	 按推荐数从高至低排序
+        * promote	 按宣传数排序（硬币）
+        * pinyin	 按标题拼音排序
+
+> **注：**
+* 好像pagesize必填，不然出错。而且读取速度不能太快，返回速度也比较慢。
+* click_detail好像只要填了非空，就可以获得`play_site`,`play_forward`,`play_mobile`三个数据
+
+* 返回格式：
+    * 第一层：
+        * name:分类名称
+        * results:返回的记录总数目
+        * pages:返回的记录总页数
+        * list:返回数据
+
+    * 第二层：【相对于list】
+        * 0~results-1：编号
+    * 第三层：【相对于编号】
+        * aid:视频编号
+        * title:视频名称
+        * copyright:是否原创
+        * typeid:视频分类ID
+        * typename:视频分类名称
+        * subtitle:视频副标题
+        * play:播放次数
+        * review:评论数
+        * video_review:弹幕数
+        * favorites:收藏数
+        * author:视频作者
+        * mid:视频作者ID
+        * description:视频简介
+        * create:视频创建日期
+        * pic:封面图片地址
+        * credit:评分数量
+        * coins:硬币数量
+        * duration:视频时长
+        * play_site:网站播放
+        * play_forward:【外链播放？】
+        * play_mobile:app播放
+
+错误代码：
+* -601:起始日期格式错误
+* -602:结束日期格式错误
+* -603:选择的时间跨度过大
+* -604:沒有输入拼音

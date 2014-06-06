@@ -3,12 +3,13 @@
 
 ### 目录：
 * python API/：python版本API【开发中】
-* bilibili-po/：测试爬取B站up的关注关系网，以便后期分析
+* bilibili-po/：测试爬取B站up的关注关系网，以便后期分析【已完成】
   * bilibili-po/爬取结果:爬取的原始数据，包括每一个up的id，昵称，投稿数，粉丝数以及关注列表
   * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
-  
+* bilibili-vedio/:爬取B站所有视频信息【爬取中，数据预计不公开】
+
 ### 文件：
-* api.md：API的详细说明
+* api.md   ：API的详细说明
 * README.md：return this
 
 ###主要三部分API组成：
@@ -25,6 +26,7 @@
 * 需要appkey才可以获得的信息：
   * 获取视频信息【已完成】
   * 获取新番信息【已完成】
+  * 获取排行视频信息【已完成】
   * ...
 
 ###类接口：
@@ -60,6 +62,7 @@ class Vedio():
             self.aid = m_aid;
         if m_title:
             self.title = m_title;
+    aid = None;
     title = None;
     guankan = None;
     shoucang = None;
@@ -75,12 +78,20 @@ class Vedio():
     coin = None;
     spid = None;
     cid = None;
-    offsite = None;
+    offsite = None;#Flash播放调用地址
+    Iscopy = None;
+    subtitle = None;
+    duration = None;
+#不明：    
     tid = None;
     typename = None;
     instant_server = None;
     src = None;
     partname = None;
+#播放信息：
+    play_site = None;
+    play_forward = None;
+    play_mobile = None;
 ```
 
 ####评论类：
