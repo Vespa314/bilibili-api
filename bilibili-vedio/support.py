@@ -17,11 +17,11 @@ def getURLContent(url):
         try:
             headers = {'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
             req = urllib2.Request(url = url,headers = headers);   
-            content = urllib2.urlopen(req).read();
+            content = urllib2.urlopen(req,timeout = 10).read();
         except:
             print 'connect error...'
             flag = 0;
-            time.sleep(30)
+            time.sleep(20)
         if flag == 1:
         	break;
     return content;

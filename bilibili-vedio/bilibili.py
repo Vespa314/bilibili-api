@@ -303,9 +303,12 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
         paras['click_detail'] = click_detail;
     url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret);    
     jsoninfo = JsonInfo(url);
+    while jsoninfo.Getvalue('code') != 0:
+        print jsoninfo.Getvalue('error'),'re-connecting...'
+        time.sleep(3);
     vediolist = [];
     page = jsoninfo.Getvalue('pages')
-    name = jsoninfo.Getvalue('name')
+    number = jsoninfo.Getvalue('results')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
         idx = str(i);
         vedio = Vedio(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'));
@@ -329,5 +332,5 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
             vedio.play_forward = jsoninfo.Getvalue('list',idx,'play_forward');
             vedio.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile');
         vediolist.append(vedio)
-    return [page,name,vediolist]
+    return [page,number,vediolist]
         
