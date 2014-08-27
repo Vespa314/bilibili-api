@@ -1,6 +1,8 @@
 ##B站API收集整理及开发，测试【开发中】
 ============
 
+#注意：由于B站修改，本站中所有api皆使用`api.bilibili.cn`下url请求，等我有空改过来；
+
 ### 目录：
 * python API/：python版本API【开发中】
 * bilibili-po/：测试爬取B站up的关注关系网，以便后期分析【已完成】
