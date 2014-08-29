@@ -5,7 +5,7 @@ Created on Mon May 26 23:42:03 2014
 @author: Administrator
 """
 
-import time
+
 from support import * 
 import hashlib
 
@@ -77,8 +77,7 @@ def GetUserInfo(url):
     user.description = jsoninfo.Getvalue('description');
     user.followlist = [];
     for fo in jsoninfo.Getvalue('attentions'):
-        if jsoninfo.Getvalue('attentions',fo) != 0:
-            user.followlist.append(jsoninfo.Getvalue('attentions',fo))
+        user.followlist.append(fo)
     return user;
 
 def GetUserInfoBymid(mid):
@@ -120,9 +119,9 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
     jsoninfo = JsonInfo(url);
     vediolist = [];
     for vedio_idx in jsoninfo.Getvalue('list'):
-        vedio = Vedio(jsoninfo.Getvalue('list',vedio_idx,'aid'),jsoninfo.Getvalue('list',vedio_idx,'title'));
-        vedio.cover = jsoninfo.Getvalue('list',vedio_idx,'cover');
-        vedio.guankan = jsoninfo.Getvalue('list',vedio_idx,'click');
+        vedio = Vedio(vedio_idx['aid'],vedio_idx['title']);
+        vedio.cover = vedio_idx['cover'];
+        vedio.guankan = vedio_idx['click'];
         vediolist.append(vedio);
     return vediolist
 
@@ -253,27 +252,28 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
         paras['btype'] = GetString(btype)
     if weekday != None:
         paras['weekday'] = GetString(weekday)
-    url =  'http://api.bilibili.tv/bangumi?' + GetSign(paras,appkey,AppSecret);
+    url =  'http://api.bilibili.cn/bangumi?' + GetSign(paras,appkey,AppSecret);
     jsoninfo = JsonInfo(url);
     bangumilist = [];
-    for i in jsoninfo.Getvalue('list').keys():
+    for bgm in jsoninfo.Getvalue('list'):
         bangumi = Bangumi();
-        bangumi.typeid = jsoninfo.Getvalue('list',i,'typeid')
-        bangumi.lastupdate = jsoninfo.Getvalue('list',i,'lastupdate')
-        bangumi.areaid = jsoninfo.Getvalue('list',i,'areaid')
-        bangumi.bgmcount = jsoninfo.Getvalue('list',i,'bgmcount')
-        bangumi.title = jsoninfo.Getvalue('list',i,'title')
-        bangumi.lastupdate_at = jsoninfo.Getvalue('list',i,'lastupdate_at')
-        bangumi.attention = jsoninfo.Getvalue('list',i,'attention')
-        bangumi.cover = jsoninfo.Getvalue('list',i,'cover')
-        bangumi.priority = jsoninfo.Getvalue('list',i,'priority')
-        bangumi.area = jsoninfo.Getvalue('list',i,'area')
-        bangumi.weekday = jsoninfo.Getvalue('list',i,'weekday')
-        bangumi.spid = jsoninfo.Getvalue('list',i,'spid')
-        bangumi.new = jsoninfo.Getvalue('list',i,'new')
-        bangumi.scover = jsoninfo.Getvalue('list',i,'scover')
-        bangumi.mcover = jsoninfo.Getvalue('list',i,'mcover')
-        bangumi.click = jsoninfo.Getvalue('list',i,'click')
+        bangumi = Bangumi();
+        bangumi.typeid = bgm['typeid']
+        bangumi.lastupdate = bgm['lastupdate']
+        bangumi.areaid = bgm['areaid']
+        bangumi.bgmcount = bgm['bgmcount']
+        bangumi.title = bgm['title']
+        bangumi.lastupdate_at = bgm['lastupdate_at']
+        bangumi.attention = bgm['attention']
+        bangumi.cover = bgm['cover']
+        bangumi.priority = bgm['priority']
+        bangumi.area = bgm['area']
+        bangumi.weekday = bgm['weekday']
+        bangumi.spid = bgm['spid']
+        bangumi.new = bgm['new']
+        bangumi.scover = bgm['scover']
+        bangumi.mcover = bgm['mcover']
+        bangumi.click = bgm['click']
         bangumilist.append(bangumi)
     return bangumilist
         
@@ -333,29 +333,30 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
         
         
 if __name__ == "__main__":
-#     f = open('result.txt','w');
+#    f = open('result.txt','w');
      #获取最热视频
-#     vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-#     for vedio in vedioList:
-#         vedio.saveToFile(f);
+    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+    for vedio in vedioList:
+        print vedio.title
+#        vedio.saveToFile(f);
      #获取用户信息
 #     user = GetUserInfoBymid('72960');
-#     print user.name.decode('utf8','ignore').encode('gbk','ignore')
+#     print user.name
 #     user = GetUserInfoByName('vespa')
-#     print user.spaceName.decode('utf8','ignore').encode('gbk','ignore')
+#     print user.spaceName
 #    user.saveToFile(f);    
     #获取专题视频信息
-#    vediolist = GetVedioOfZhuanti('6492',bangumi=0);
+#    vediolist = GetVedioOfZhuanti('6492',bangumi=0)
 #    for vedio in vediolist:
 #        print vedio.title
     #获取评论
 #    commentList = GetAllComment('1154794');
 #    for liuyan in commentList.comments:
-#        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg.encode('gbk','ignore')
-#     f.close();
+#        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
+#    f.close();
     #获取视频信息
-    appkey='XXX';
-    secretkey = 'XXXX'#选填
+#    appkey='03fc8eb101b091fb';
+#    secretkey = None #选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
 #        print tag
@@ -364,6 +365,6 @@ if __name__ == "__main__":
 #    for bangumi in bangumilist:
 #        print bangumi.scover,bangumi.mcover,bangumi.cover
     #获取分类排行
-    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')  
-    for vedio in vediolist:
-        print vedio.title.encode('gbk','ignore'),vedio.play_site
+#    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')  
+#    for vedio in vediolist:
+#        print vedio.title,vedio.play_site
