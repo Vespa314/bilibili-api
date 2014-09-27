@@ -84,6 +84,7 @@ class Vedio():
     Iscopy = None;
     subtitle = None;
     duration = None;
+    episode = None;
 #不明：    
     tid = None;
     typename = None;

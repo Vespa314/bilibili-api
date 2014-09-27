@@ -122,6 +122,8 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
         vedio = Vedio(vedio_idx['aid'],vedio_idx['title']);
         vedio.cover = vedio_idx['cover'];
         vedio.guankan = vedio_idx['click'];
+        vedio.episode = vedio_idx['episode'];
+        vedio.src = vedio_idx["from"];
         vediolist.append(vedio);
     return vediolist
 
@@ -355,7 +357,7 @@ if __name__ == "__main__":
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
 #    f.close();
     #获取视频信息
-#    appkey='03fc8eb101b091fb';
+#    appkey='***********';
 #    secretkey = None #选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
