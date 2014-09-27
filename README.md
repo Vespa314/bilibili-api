@@ -9,6 +9,7 @@
   * bilibili-po/爬取结果:爬取的原始数据，包括每一个up的id，昵称，投稿数，粉丝数以及关注列表
   * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
 * bilibili-vedio/:爬取B站所有视频信息【爬取中，数据预计不公开】
+* bili-monitor/:监视B站新番各种数据脚本【已完成】
 
 ### 文件：
 * api.md   ：API的详细说明
