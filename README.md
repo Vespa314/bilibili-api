@@ -10,6 +10,7 @@
   * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
 * bilibili-vedio/:爬取B站所有视频信息【爬取中，数据预计不公开】
 * bili-monitor/:监视B站新番各种数据脚本【已完成】
+* Alfred/:几个基于此API开发的Workflow，此处不再更新，具体参见[Github](https://github.com/Vespa314/AlfredWorkFlows)【已完成】
 
 ### 文件：
 * api.md   ：API的详细说明
