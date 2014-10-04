@@ -115,6 +115,7 @@ class Bangumi():
     scover = None;
     mcover = None;
     click = None;
+    season_id = None;
     
 class Comment():
     def __init__(self):

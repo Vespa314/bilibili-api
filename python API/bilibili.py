@@ -276,6 +276,7 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
         bangumi.scover = bgm['scover']
         bangumi.mcover = bgm['mcover']
         bangumi.click = bgm['click']
+        bangumi.season_id = bgm['season_id']
         bangumilist.append(bangumi)
     return bangumilist
         
