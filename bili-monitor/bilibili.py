@@ -112,7 +112,7 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
 返回：
     视频列表，包含av号，标题，封面和观看数
     """
-    url = ' http://api.bilibili.cn/spview?spid='+GetString(spid);
+    url = 'http://api.bilibili.cn/spview?spid='+GetString(spid);
     if season_id != None:
         url += '&season_id='+GetString(season_id);
     if bangumi != None:
@@ -277,6 +277,7 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
         bangumi.scover = bgm['scover']
         bangumi.mcover = bgm['mcover']
         bangumi.click = bgm['click']
+        bangumi.season_id = bgm['season_id']
         bangumilist.append(bangumi)
     return bangumilist
         
@@ -344,7 +345,7 @@ if __name__ == "__main__":
         path = "./%s/"%(bangumi.title);
         if not os.path.exists(path):
             os.mkdir(path)
-        vediolist = GetVedioOfZhuanti(str(bangumi.spid),bangumi=1)
+        vediolist = GetVedioOfZhuanti(str(bangumi.spid),bangumi=1,season_id=bangumi.season_id)
         for vedio in vediolist:
             print "Getting info of:",vedio.title
             vedioinfo = GetVedioInfo(vedio.aid,appkey=appkey,AppSecret=secretkey);
@@ -362,4 +363,3 @@ if __name__ == "__main__":
             fid.write(info)
             fid.close();
             time.sleep(1)
-            
