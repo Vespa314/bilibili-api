@@ -341,6 +341,8 @@ if __name__ == "__main__":
     secretkey = None #选填
     bangumilist = GetGangumi(appkey,btype = 2,weekday=0,AppSecret=secretkey);
     for bangumi in bangumilist:
+        if(bangumi.title.find(r"/")>=0):
+                bangumi.title = bangumi.title.replace(r"/","");
         print "updating bangumi info of:",bangumi.title
         path = "./%s/"%(bangumi.title);
         if not os.path.exists(path):
