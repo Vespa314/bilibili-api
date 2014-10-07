@@ -263,7 +263,7 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
         bangumi.typeid = bgm['typeid']
         bangumi.lastupdate = bgm['lastupdate']
         bangumi.areaid = bgm['areaid']
-        bangumi.bgmcount = bgm['bgmcount']
+        bangumi.bgmcount = getint(bgm['bgmcount'])
         bangumi.title = bgm['title']
         bangumi.lastupdate_at = bgm['lastupdate_at']
         bangumi.attention = bgm['attention']
