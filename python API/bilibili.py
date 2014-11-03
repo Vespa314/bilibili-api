@@ -334,13 +334,20 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
         vediolist.append(vedio)
     return [page,name,vediolist]
         
-        
+def GetDanmuku(cid):
+    cid = getint(cid);
+    url = "http://comment.bilibili.cn/%d.xml"%(cid);
+    content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
+    content = GetRE(content,r'<d p=[^>]*>([^<]*)<')
+    return content;
+
+    
 if __name__ == "__main__":
 #    f = open('result.txt','w');
      #获取最热视频
-    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-    for vedio in vedioList:
-        print vedio.title
+#    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+#    for vedio in vedioList:
+#        print vedio.title
 #        vedio.saveToFile(f);
      #获取用户信息
 #     user = GetUserInfoBymid('72960');
@@ -371,3 +378,7 @@ if __name__ == "__main__":
 #    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')  
 #    for vedio in vediolist:
 #        print vedio.title,vedio.play_site
+#获取弹幕
+    vedio = GetVedioInfo(1677082,appkey,AppSecret=screatekey)
+    for danmu in GetDanmuku(vedio.cid):
+        print danmu

@@ -7,6 +7,7 @@ Created on Mon May 26 23:59:09 2014
 import urllib2
 import re
 import json
+import zlib
 from biclass import * 
 import time
 def GetRE(content,regexp):
