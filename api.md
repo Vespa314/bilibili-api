@@ -438,6 +438,8 @@ GetUserInfoByName(name)
     * create_at：视频发布日期
     * ~~favorited：当前帐号收藏状态~~
 
+> 下载弹幕API：GetDanmuku(cid)，无需API验证
+
 **获取新番信息**【已完成】
 * URL：【返回json】
     * ` http://api.bilibili.cn/bangumi`
