@@ -457,5 +457,11 @@ if __name__ == '__main__':
         print "输入av号"
     else:
         appkey = "03fc8eb101b091fb"
-        vedio = GetVedioInfo(sys.argv[1],appkey,AppSecret=None)
-        Danmaku2ASS(GetDanmuku(vedio.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),vedio.title), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
+        regex = re.compile('http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)')
+        regex_match = regex.match(sys.argv[1])
+        if not regex_match:
+            raise ValueError('Invalid URL: %s' % url)
+        aid = regex_match.group(1)
+        pid = regex_match.group(3) or '1'
+        vedio = GetVedioInfo(aid,appkey,AppSecret=None,page = pid)
+        Danmaku2ASS(GetDanmuku(vedio.cid),r'%s/Desktop/%s-%s.ass'%(os.path.expanduser('~'),vedio.title,pid), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
