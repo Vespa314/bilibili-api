@@ -440,6 +440,8 @@ GetUserInfoByName(name)
 
 > 下载弹幕API：GetDanmuku(cid)，无需API验证
 
+> **注意：**发现有部分视频必须登陆后才可以获得视频信息，这部分待完善！！！！
+
 **获取新番信息**【已完成】
 * URL：【返回json】
     * ` http://api.bilibili.cn/bangumi`
