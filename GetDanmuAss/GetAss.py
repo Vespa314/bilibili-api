@@ -12,7 +12,14 @@ import io
 import xml.dom.minidom
 import random
 import math
+import os
+import sys
 
+default_encoding = 'utf-8'
+if sys.getdefaultencoding() != default_encoding:
+    reload(sys)
+    sys.setdefaultencoding(default_encoding)
+    
 class safe_list(list):
     def get(self, index, default=None):
         try:
@@ -374,7 +381,7 @@ def GetDanmuku(cid):
 #    return io.StringIO(s)
     
 def ReadCommentsBilibili(f, fontsize):
-    dom = xml.dom.minidom.parse(f)
+    dom = xml.dom.minidom.parseString(f)
     comment_element = dom.getElementsByTagName('d')
     for i, comment in enumerate(comment_element):
         try:
@@ -440,17 +447,15 @@ def Danmaku2ASS(input_files, output_file, stage_width, stage_height, reserve_bla
             fo.close()
 
 def ReadComments(input_files, font_size=25.0):    
-    input_files = [input_files]    
     comments = []
-    for idx, i in enumerate(input_files):
-        with ConvertToFile(i, 'r') as f:
-            comments.extend(ReadCommentsBilibili(f, font_size))
+    comments.extend(ReadCommentsBilibili(input_files, font_size))
     comments.sort()
     return comments
 
-appkey = "03fc8eb101b091fb"
-vedio = GetVedioInfo(1447736,appkey,AppSecret=None)
-f = open(vedio.title+'.xml','w')
-f.write(GetDanmuku(vedio.cid))
-f.close()
-Danmaku2ASS('./%s.xml'%(vedio.title),vedio.title+'.ass', 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
+if __name__ == '__main__':
+    if len(sys.argv) == 1:
+        print "输入av号"
+    else:
+        appkey = "03fc8eb101b091fb"
+        vedio = GetVedioInfo(sys.argv[1],appkey,AppSecret=None)
+        Danmaku2ASS(GetDanmuku(vedio.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),vedio.title), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
