@@ -10,6 +10,7 @@
 * bili-monitor/:监视B站新番各种数据脚本【已完成】
 * Alfred/:几个基于此API开发的Workflow，此处不再更新，具体参见[Github](https://github.com/Vespa314/AlfredWorkFlows)【已完成】
 * GetDanmuAss/：通过输入av号获得本地弹幕播放用的ASS文件【已完成】
+* GetVedioUrl/：输入视频URL地址获得下载URL（改造自[biligrab](https://github.com/m13253/biligrab-danmaku2ass)】）【已完成】
 
 ### 文件：
 * api.md   ：API的详细说明
