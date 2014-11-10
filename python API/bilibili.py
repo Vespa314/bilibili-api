@@ -341,6 +341,20 @@ def GetDanmuku(cid):
     content = GetRE(content,r'<d p=[^>]*>([^<]*)<')
     return content;
 
+def GetBilibiliUrl(url,appkey,AppSecret=None):
+    overseas=False
+    url_get_media = 'http://interface.bilibili.com/playurl?' if not overseas else 'http://interface.bilibili.com/v_cdn_play?'
+    regex_match = re.findall('http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)',url)
+    if not regex_match:
+        return []
+    aid = regex_match[0][0]
+    pid = regex_match[0][2] or '1'
+    vedio = GetVedioInfo(aid,appkey,pid,AppSecret)
+    cid = vedio.cid
+    media_args = {'cid': cid,'quality':4}
+    resp_media = getURLContent(url_get_media+GetSign(media_args,appkey,AppSecret))
+    media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
+    return media_urls
     
 if __name__ == "__main__":
 #    f = open('result.txt','w');
@@ -365,8 +379,8 @@ if __name__ == "__main__":
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
 #    f.close();
     #获取视频信息
-#    appkey='***********';
-#    secretkey = None #选填
+    appkey = '************'
+    secretkey = None #选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
 #        print tag
@@ -379,6 +393,10 @@ if __name__ == "__main__":
 #    for vedio in vediolist:
 #        print vedio.title,vedio.play_site
 #获取弹幕
-    vedio = GetVedioInfo(1677082,appkey,AppSecret=screatekey)
-    for danmu in GetDanmuku(vedio.cid):
-        print danmu
+#    vedio = GetVedioInfo(1677082,appkey,AppSecret=screatekey)
+#    for danmu in GetDanmuku(vedio.cid):
+#        print danmu
+    #获取视频下载地址列表
+    media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
+    for url in media_urls:
+        print(url)

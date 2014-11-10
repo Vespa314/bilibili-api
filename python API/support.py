@@ -8,6 +8,9 @@ import urllib2
 import re
 import json
 import zlib
+import gzip
+import xml.dom.minidom
+
 from biclass import * 
 import time
 def GetRE(content,regexp):

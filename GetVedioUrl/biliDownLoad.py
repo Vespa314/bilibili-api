@@ -5,13 +5,12 @@ import gzip
 import json
 import hashlib
 import re
-import subprocess
 import urllib.parse
 import urllib.request
 import xml.dom.minidom
 import zlib
 
-USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.125 Safari/537.36'
+USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'
 APPKEY = '85eb6835b0a1034e'
 APPSEC = '2ad42749773c441109bdc0191257a664'
 
@@ -23,18 +22,36 @@ def GetBilibiliUrl(url):
         raise ValueError('Invalid URL: %s' % url)
     aid = regex_match[0][0]
     pid = regex_match[0][2] or '1'
-    cid_args = {'type': 'json', 'appkey': APPKEY, 'id': aid, 'page': pid}
-    cid_args['sign'] = bilibilihash(cid_args)
-    resp_cid = urlfetch('http://api.bilibili.com/view?'+urllib.parse.urlencode(cid_args))
+    cid_args = {'type': 'json',  'id': aid, 'page': pid}
+
+    resp_cid = urlfetch('http://api.bilibili.com/view?'+GetSign(cid_args,APPKEY,APPSEC))
     resp_cid = dict(json.loads(resp_cid.decode('utf-8', 'replace')))
     cid = resp_cid.get('cid')
-    media_args = {'appkey': APPKEY, 'cid': cid}
-    media_args['quality'] = 4 #hd
-    media_args['sign'] = bilibilihash(media_args)
-    resp_media = urlfetch(url_get_media+urllib.parse.urlencode(media_args))
+    media_args = {'cid': cid,'quality':4}
+    resp_media = urlfetch(url_get_media+GetSign(media_args,APPKEY,APPSEC))
     media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
     return media_urls
-
+    
+def GetSign(params,appkey,AppSecret=None):
+    """
+    获取新版API的签名，不然会返回-3错误
+待添加：【重要！】
+    需要做URL编码并保证字母都是大写，如 %2F
+    """
+    params['appkey']=appkey;
+    data = "";
+    paras = sorted(params)
+    paras.sort();
+    for para in paras:
+        if data != "":
+            data += "&";
+        data += para + "=" + str(params[para]);
+    if AppSecret == None:
+        return data
+    m = hashlib.md5()
+    m.update((data+AppSecret).encode('utf-8'))
+    return data+'&sign='+m.hexdigest()
+    
 def urlfetch(url):
     req_headers = {'Accept-Encoding': 'gzip, deflate'}
     req = urllib.request.Request(url=url, headers=req_headers)
@@ -48,9 +65,6 @@ def urlfetch(url):
     else:
         data = response.read()
     return data
-
-def bilibilihash(args):
-    return hashlib.md5((urllib.parse.urlencode(sorted(args.items()))+APPSEC).encode('utf-8')).hexdigest()
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
