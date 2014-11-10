@@ -546,3 +546,22 @@ GetUserInfoByName(name)
 * -602:结束日期格式错误
 * -603:选择的时间跨度过大
 * -604:沒有输入拼音
+
+---
+## 辅助API
+
+**获取视频下载URL**【已完成】
+
+code：
+GetBilibiliUrl(url,appkey,AppSecret=None)
+
+* 输入：
+	* url：视频地址，比如：
+		* http://www.bilibili.com/video/av510515/index_3.html
+		* http://www.bilibili.com/video/av1687261/
+	* appkey：
+	* AppSecret：密钥什么的。。。
+* 返回
+	* url列表
+
+> 返回URL地址经常变化，而且有时返回的是若干个6分钟短视频的url，需要通过ffmpeg等工具连接起来，但是偶尔再等一下返回的又变成一个URL了。。。
