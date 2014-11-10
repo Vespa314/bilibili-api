@@ -221,7 +221,7 @@ def GetVedioInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
     vedio.typename = jsoninfo.Getvalue('typename')
     vedio.instant_server = jsoninfo.Getvalue('instant_server');
     return vedio
-    
+
 def GetSign(params,appkey,AppSecret=None):
     """
     获取新版API的签名，不然会返回-3错误
@@ -235,7 +235,7 @@ def GetSign(params,appkey,AppSecret=None):
     for para in paras:
         if data != "":
             data += "&";
-        data += para + "=" + params[para];
+        data += para + "=" + str(params[para]);
     if AppSecret == None:
         return data
     m = hashlib.md5()
