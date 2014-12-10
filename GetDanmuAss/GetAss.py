@@ -305,6 +305,8 @@ def WriteComment(f, c, row, width, height, bottomReserved, fontsize, lifetime, s
         styles.append('\\c&H%s&' % ConvertColor(c[5]))
         if c[5] == 0x000000:
             styles.append('\\3c&HFFFFFF&')
+    ## 替换空格
+    text = text.replace('\u2007',' ')
     f.write('Dialogue: 2,%(start)s,%(end)s,%(styleid)s,,0000,0000,0000,,{%(styles)s}%(text)s\n' % {'start': ConvertTimestamp(c[0]), 'end': ConvertTimestamp(c[0]+lifetime), 'styles': ''.join(styles), 'text': text, 'styleid': styleid})
 
 
