@@ -2,7 +2,7 @@
 ============
 
 ### 目录：
-* python API/：python版本API【开发中】
+* python API/：python版本API【变坑中。。】
 * bilibili-po/：测试爬取B站up的关注关系网，以便后期分析【已完成】
   * bilibili-po/爬取结果:爬取的原始数据，包括每一个up的id，昵称，投稿数，粉丝数以及关注列表
   * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
@@ -11,7 +11,8 @@
 * Alfred/:几个基于此API开发的Workflow，此处不再更新，具体参见[Github](https://github.com/Vespa314/AlfredWorkFlows)【已完成】
 * GetDanmuAss/：通过输入av号获得本地弹幕播放用的ASS文件【已完成】
 * GetVedioUrl/：输入视频URL地址获得下载URL（改造自[biligrab](https://github.com/m13253/biligrab-danmaku2ass)】）【已完成】
-* BiliMerge/：合并来自B站手机客户端离线下载的视频
+* BiliMerge/：随手写的合并来自B站手机客户端离线下载的视频【已完成】
+* danmu-Delay/：随手写的弹幕字幕文件延时。。【已完成】
 
 ### 文件：
 * api.md   ：API的详细说明
