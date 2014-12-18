@@ -6,7 +6,7 @@
 
 import re
 
-def t_delay(h,m,s):
+def t_delay(h,m,s,delay):
     s += delay;
     if s >= 60:
         s -= 60
@@ -25,9 +25,9 @@ for line in open(filename):
         fid.write(line)
     else:
         t = t[0]       
-        [h,m,s] = t_delay(int(t[1]),int(t[2]),int(t[3]))      
+        [h,m,s] = t_delay(int(t[1]),int(t[2]),int(t[3]),delay)      
         fid.write('%s%d:%.2d:%.2d.%s,'%(t[0],h,m,s,t[4]))        
-        [h,m,s] = t_delay(int(t[5]),int(t[6]),int(t[7])) 
+        [h,m,s] = t_delay(int(t[5]),int(t[6]),int(t[7]),delay) 
         fid.write('%d:%.2d:%.2d.%s\n'%(h,m,s,t[8]))
         
 fid.close();
