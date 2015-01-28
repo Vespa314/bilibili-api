@@ -24,6 +24,8 @@ class User():
         fid.write('投稿数:%d\n'%self.article);
         fid.write('地点:%s\n'%self.place);
         fid.write('认证信息:%s\n'%self.description);
+        #fid.write('xxx:%s\n'%self.DisplayRank)
+        fid.write('好友数目:%d\n'%self.friend)
         fid.write('关注好友：\n');
         if self.followlist:
             for fo in self.followlist:
@@ -44,6 +46,8 @@ class User():
     place = None;#所在地
     description = None;#认证用户为认证信息 普通用户为交友宣言
     followlist = None;#关注的好友列表
+    friend = None
+    DisplayRank = None
     
 
 class Vedio():

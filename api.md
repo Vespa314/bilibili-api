@@ -388,6 +388,7 @@ GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
 
 
 **读取用户信息【已完成】**
+
 * URL：【返回json】
     * `http://api.bilibili.cn/userinfo`
 * 输入：
@@ -397,23 +398,26 @@ GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
     * mid：会员ID
     * name：暱名
     * approve：是否为认证帐号
-    * spacename：空间名
+    * spacename：空间名【注意：2015-01-29测试该项不返回】
     * sex：性别 (男/女/不明)
     * rank：帐号显示标识【不明白是什么。。】
+    * DisplayRank：【好像是rank的字符串形式】
     * face：小头像
     * attention：关注的好友人数
+    * friend：好友数【不明白，反正比attention多1】
     * fans：粉丝人数
     * article：投稿数
     * place：所在地
     * description：认证用户为认证信息 普通用户为交友宣言
     * attentions：关注的好友列表
 
-> **python-api：**
+#### API实现
 ```python
 GetUserInfoBymid(mid)
 GetUserInfoByName(name)
 ```
-**说明：**返回数据编码紊乱，有些utf8有些是gbk。。
+
+**说明：**返回数据编码紊乱，有些utf8有些是gbk。。如果现实有问题，请自行调整
 
 ---
 

@@ -62,22 +62,25 @@ def GetUserInfo(url):
 待添加：
     如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
-    jsoninfo = JsonInfo(url);
-    user = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('name').encode('utf8'));
-    user.isApprove = jsoninfo.Getvalue('approve');
-    user.spaceName = jsoninfo.Getvalue('spacename').encode('utf8');
-    user.sex = jsoninfo.Getvalue('sex').encode('utf8');
-    user.rank = jsoninfo.Getvalue('rank');
-    user.avatar = jsoninfo.Getvalue('face');
-    user.follow = jsoninfo.Getvalue('attention');
-    user.fans = jsoninfo.Getvalue('fans');
-    user.article = jsoninfo.Getvalue('article');
-    user.place = jsoninfo.Getvalue('place');
-    user.description = jsoninfo.Getvalue('description');
-    user.followlist = [];
+    jsoninfo = JsonInfo(url)
+    user = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('name').encode('utf8'))
+    user.isApprove = jsoninfo.Getvalue('approve')
+    #b站现在空间名暂时不返回
+    #user.spaceName = jsoninfo.Getvalue('spacename').encode('utf8')
+    user.sex = jsoninfo.Getvalue('sex').encode('utf8')
+    user.rank = jsoninfo.Getvalue('rank')
+    user.avatar = jsoninfo.Getvalue('face')
+    user.follow = jsoninfo.Getvalue('attention')
+    user.fans = jsoninfo.Getvalue('fans')
+    user.article = jsoninfo.Getvalue('article')
+    user.place = jsoninfo.Getvalue('place').encode('utf8')
+    user.description = jsoninfo.Getvalue('description')
+    user.friend = jsoninfo.Getvalue('friend')
+    user.DisplayRank = jsoninfo.Getvalue('DisplayRank')
+    user.followlist = []
     for fo in jsoninfo.Getvalue('attentions'):
         user.followlist.append(fo)
-    return user;
+    return user
 
 def GetUserInfoBymid(mid):
     """
@@ -86,10 +89,10 @@ def GetUserInfoBymid(mid):
 返回：
     查看GetUserInfo()函数
     """
-    mid = GetString(mid);
-    url = 'http://api.bilibili.cn/userinfo'+"?mid="+mid;
+    mid = GetString(mid)
+    url = 'http://api.bilibili.cn/userinfo'+"?mid="+mid
     return GetUserInfo(url)
-    
+
 def GetUserInfoByName(name):
     """
 输入：
@@ -97,8 +100,8 @@ def GetUserInfoByName(name):
 返回：
     查看GetUserInfo()函数
     """
-    name = GetString(name);
-    url = 'http://api.bilibili.cn/userinfo'+"?user="+name;
+    name = GetString(name)
+    url = 'http://api.bilibili.cn/userinfo'+"?user="+name
     return GetUserInfo(url)
 
 def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
@@ -363,10 +366,10 @@ if __name__ == "__main__":
 #        print vedio.title
 #        vedio.saveToFile(f);
      #获取用户信息
-#     user = GetUserInfoBymid('72960');
-#     print user.name
-#     user = GetUserInfoByName('vespa')
-#     print user.spaceName
+    user = GetUserInfoBymid('72960')
+    print user.name, user.DisplayRank
+    user = GetUserInfoByName('vespa')
+    print user.friend
 #    user.saveToFile(f);    
     #获取专题视频信息
 #    vediolist = GetVedioOfZhuanti('6492',bangumi=0)
@@ -378,8 +381,8 @@ if __name__ == "__main__":
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
 #    f.close();
     #获取视频信息
-    appkey = '************'
-    secretkey = None #选填
+    # appkey = '************'
+    # secretkey = None #选填
 #    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
 #    for tag in vedio.tag:
 #        print tag
@@ -388,7 +391,7 @@ if __name__ == "__main__":
 #    for bangumi in bangumilist:
 #        print bangumi.scover,bangumi.mcover,bangumi.cover
     #获取分类排行
-#    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')  
+#    [page,name,vediolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
 #    for vedio in vediolist:
 #        print vedio.title,vedio.play_site
 #获取弹幕
@@ -396,6 +399,6 @@ if __name__ == "__main__":
 #    for danmu in GetDanmuku(vedio.cid):
 #        print danmu
     #获取视频下载地址列表
-    media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
-    for url in media_urls:
-        print(url)
+    # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
+    # for url in media_urls:
+    #     print(url)
