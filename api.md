@@ -108,11 +108,28 @@
     * 完结动画：32
     * 剧场·OVA：94
 
-####page：页数，从1开始
+**注：page：页数，从1开始**
 
 >如果只想查看原创，只需在后面加上`-original`即可，也就是URL=
 `http://www.bilibili.tv/list/[stow]-[zone]-[page]-[year1]-[month1]-[day1]~[year2]-[month2]-[day2]-original.html`
 
+#### API实现：
+```python
+def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0)
+```
+
+* 输入:
+	* begintime：起始时间，三元数组[year1,month1,day1]
+    * endtime：终止时间,三元数组[year2,month2,day2]
+    * sortType：字符串，排序方式，参照TYPE_开头的常量
+    * zone:整数，分区，参照api.md文档说明
+    * page：整数，页数
+* 返回：
+    * 视频列表,包含AV号，标题，观看数，收藏数，弹幕数，投稿日期，封面，UP的id号和名字
+* 备注：
+    * 待添加：保证时间小于三个月
+    * 待添加：TYPE_PINYIN模式后面要添加类似：TYPE_PINYIN-'A'
+    
 ---
 
 ##视频Index

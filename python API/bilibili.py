@@ -30,30 +30,29 @@ TYPE_PINYIN = 'pinyin'
 TYPE_TOUGAO = 'default'
 ############################常量定义结束
 
-def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0):
+def GetPopularVedio(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, original=0):
     """
-输入：    
+输入：
     begintime：起始时间，三元数组[year1,month1,day1]
     endtime：终止时间,三元数组[year2,month2,day2]
     sortType：字符串，排序方式，参照TYPE_开头的常量
     zone:整数，分区，参照api.md文档说明
     page：整数，页数
-    
 返回：
     视频列表,包含AV号，标题，观看数，收藏数，弹幕数，投稿日期，封面，UP的id号和名字
-备注：
-    待添加：保证时间小于三个月
-    待添加：TYPE_PINYIN模式后面要添加类似：TYPE_PINYIN-'A'
-    待添加：TYPE_PINYIN和TYPE_TOUGAO情况下zone不可以等于[0,1,3,4,5,36,11,13]
     """
-    #判断是否原创    
+    # TYPE_PINYIN和TYPE_TOUGAO情况下zone不可以等于[0,1,3,4,5,36,11,13]
+    if sortType in [TYPE_PINYIN,TYPE_TOUGAO]:
+        if zone in [0,1,3,4,5,36,11,13]:
+            return []
+    #判断是否原创
     if original:
-        ori = '-original';
+        ori = '-original'
     else:
         ori = ''
-    url = 'http://www.bilibili.tv/list/%s-%d-%d-%d-%d-%d~%d-%d-%d%s.html'%(sortType,zone,page,begintime[0],begintime[1],begintime[2],endtime[0],endtime[1],endtime[2],ori);    
-    content = getURLContent(url);
-    return GetVedioFromRate(content);
+    url = 'http://www.bilibili.tv/list/%s-%d-%d-%d-%d-%d~%d-%d-%d%s.html'%(sortType,zone,page,begintime[0],begintime[1],begintime[2],endtime[0],endtime[1],endtime[2],ori)
+    content = getURLContent(url)
+    return GetVedioFromRate(content)
 
 def GetUserInfo(url):
     """
