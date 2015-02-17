@@ -395,13 +395,6 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None)
     * 见上第三层
     
 
----
-
-> **python-api：**
-```python
-GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
-```
-
 
 **读取用户信息【已完成】**
 
@@ -583,6 +576,71 @@ GetUserInfoByName(name)
 * -602:结束日期格式错误
 * -603:选择的时间跨度过大
 * -604:沒有输入拼音
+
+
+**搜索视频**【已完成】
+* URL：【返回json】
+    * `http://api.bilibili.cn/search`
+* 输入：
+    * keyword：关键词
+    * order：排序方式  默认default，其余待测试【选填】
+    * pagesize:返回条目多少【选填】
+    * page：页码【选填】
+* 返回：
+	* aid：AV号
+	* title：标题
+	* typename：类型名
+	* mid：上传者id
+	* author：Up主姓名
+	* arcurl：视频页面地址
+	* description：视频简介
+	* arcrank：【不明】
+	* pic：封面图片URL
+	* play：播放数
+	* video_review：弹幕数
+	* favorites：收藏数
+	* review：评论数
+	* pubdate：上传时间
+	* tag：标签
+  
+#### API实现：
+```python
+def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1)
+```
+
+**搜索专题**【已完成】
+* URL：【返回json】
+    * `http://api.bilibili.cn/search`
+* 输入：
+    * keyword：关键词
+* 返回：
+	* spid：spid
+	* title：标题
+	* mid：Up的id
+	* author：Up
+	* pic：封面url
+	* thumb：小封面url
+	* ischeck：【不明】
+	* tag：tag
+	* description：说明
+	* pubdate：【不明】
+	* postdate：【不明】
+	* lastupdate：最后更新时间
+	* click：点击
+	* favourite：收藏
+	* attention：关注
+	* count：数目
+	* bgmcount：番剧数目
+	* spcount：【不明】
+	* season_id：专题分季id
+	* is_bangumi：是否番剧
+	* arcurl：专题页面URL
+  
+#### API实现：
+```python
+def biliZhuantiSearch(keyword)
+```
+
 
 ---
 ## 辅助API
