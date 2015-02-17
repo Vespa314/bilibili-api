@@ -264,7 +264,6 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
     bangumilist = [];
     for bgm in jsoninfo.Getvalue('list'):
         bangumi = Bangumi();
-        bangumi = Bangumi();
         bangumi.typeid = bgm['typeid']
         bangumi.lastupdate = bgm['lastupdate']
         bangumi.areaid = bgm['areaid']
@@ -284,7 +283,39 @@ def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
         bangumi.season_id = bgm['season_id']
         bangumilist.append(bangumi)
     return bangumilist
-        
+
+def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
+    """
+根据关键词搜索视频
+输入：
+    order：排序方式  默认default，其余待测试
+    keyword：关键词
+    pagesize:返回条目多少
+    page：页码
+    """
+    url = "http://api.bilibili.cn/search?keyword=%s&order=%s&pagesize=%d&page=%d"%(keyword,order,pagesize,page)
+    jsoninfo = JsonInfo(url)
+    vediolist = []
+    for vedio_idx in jsoninfo.Getvalue('result'):
+        if not vedio_idx.has_key('aid'):
+            continue
+        vedio = Vedio(vedio_idx['aid'],vedio_idx['title'].encode('utf8'))
+        vedio.typename = vedio_idx['typename']
+        vedio.author = User(vedio_idx['mid'],vedio_idx['author'])
+        vedio.acurl = vedio_idx['arcurl']
+        vedio.description = vedio_idx['description']
+        vedio.arcrank = vedio_idx['arcrank']
+        vedio.cover = vedio_idx['pic']
+        vedio.guankan = vedio_idx['play']
+        vedio.danmu = vedio_idx['video_review']
+        vedio.shoucang = vedio_idx['favorites']
+        vedio.commentNumber = vedio_idx['review']
+        vedio.date = vedio_idx['pubdate']
+        vedio.tag = vedio_idx['tag'].split(',')
+        vediolist.append(vedio)
+    return vediolist
+
+
 #def GetBangumiByTime(year,month):
 #    url='http://www.bilibili.tv/index/bangumi/%s-%s.json'%(GetString(year),GetString(month));     
 #    print url    
@@ -375,9 +406,9 @@ if __name__ == "__main__":
     # print user.friend
 #    user.saveToFile(f);   
     #获取专题视频信息
-   vediolist = GetVedioOfZhuanti('5691',bangumi=1)
-   for vedio in vediolist:
-       print vedio.title.encode('utf8')
+   # vediolist = GetVedioOfZhuanti('5691',bangumi=1)
+   # for vedio in vediolist:
+   #     print vedio.title.encode('utf8')
     #获取评论
 #    commentList = GetAllComment('1154794');
 #    for liuyan in commentList.comments:
@@ -405,3 +436,5 @@ if __name__ == "__main__":
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
     #     print(url)
+    for vedio in biliVedioSearch('rwby'):
+        print vedio.title

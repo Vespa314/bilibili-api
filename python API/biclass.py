@@ -89,6 +89,8 @@ class Vedio():
     subtitle = None;
     duration = None;
     episode = None;
+    arcurl = None;#网页地址
+    arcrank = None;#不明
 #不明：    
     tid = None;
     typename = None;
