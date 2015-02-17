@@ -113,19 +113,22 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
 返回：
     视频列表，包含av号，标题，封面和观看数
     """
-    url = ' http://api.bilibili.cn/spview?spid='+GetString(spid);
+    url = ' http://api.bilibili.cn/spview?spid='+GetString(spid)
     if season_id != None:
-        url += '&season_id='+GetString(season_id);
+        url += '&season_id='+GetString(season_id)
     if bangumi != None:
-        url += '&bangumi='+GetString(bangumi);
+        url += '&bangumi='+GetString(bangumi)
     jsoninfo = JsonInfo(url);
     vediolist = [];
     for vedio_idx in jsoninfo.Getvalue('list'):
-        vedio = Vedio(vedio_idx['aid'],vedio_idx['title']);
-        vedio.cover = vedio_idx['cover'];
-        vedio.guankan = vedio_idx['click'];
-        vedio.episode = vedio_idx['episode'];
-        vedio.src = vedio_idx["from"];
+        vedio = Vedio(vedio_idx['aid'],vedio_idx['title'])
+        vedio.cover = vedio_idx['cover']
+        vedio.guankan = vedio_idx['click']
+        if vedio_idx.has_key('episode'):
+            vedio.episode = vedio_idx['episode']
+        vedio.src = vedio_idx["from"]
+        vedio.cid = vedio_idx["cid"]
+        vedio.page = vedio_idx["page"]
         vediolist.append(vedio);
     return vediolist
 
@@ -366,15 +369,15 @@ if __name__ == "__main__":
 #        print vedio.title
 #        vedio.saveToFile(f);
      #获取用户信息
-    user = GetUserInfoBymid('72960')
-    print user.name, user.DisplayRank
-    user = GetUserInfoByName('vespa')
-    print user.friend
-#    user.saveToFile(f);    
+    # user = GetUserInfoBymid('72960')
+    # print user.name, user.DisplayRank
+    # user = GetUserInfoByName('vespa')
+    # print user.friend
+#    user.saveToFile(f);   
     #获取专题视频信息
-#    vediolist = GetVedioOfZhuanti('6492',bangumi=0)
-#    for vedio in vediolist:
-#        print vedio.title
+   vediolist = GetVedioOfZhuanti('5691',bangumi=1)
+   for vedio in vediolist:
+       print vedio.title.encode('utf8')
     #获取评论
 #    commentList = GetAllComment('1154794');
 #    for liuyan in commentList.comments:
