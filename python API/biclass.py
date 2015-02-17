@@ -139,3 +139,28 @@ class CommentList():
     commentLen = None;
     page = None;
 
+class ZhuantiInfo():
+    def __init__(self, m_spid,m_title):
+        self.spid = m_spid
+        self.title = m_title
+    spid = None
+    title = None
+    author = None
+    cover = None
+    thumb = None
+    ischeck = None #不明
+    typeurl = None #总是"http://www.bilibili.com"
+    tag = None
+    description = None
+    pubdate = None # 不明
+    postdate = None
+    lastupdate = None
+    click = None
+    favourite = None
+    attention = None
+    count = None
+    bgmcount = None
+    spcount = None
+    season_id = None
+    is_bangumi = None
+    arcurl = None

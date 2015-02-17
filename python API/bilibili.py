@@ -297,7 +297,7 @@ def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
     jsoninfo = JsonInfo(url)
     vediolist = []
     for vedio_idx in jsoninfo.Getvalue('result'):
-        if not vedio_idx.has_key('aid'):
+        if vedio_idx['type'] != 'video':
             continue
         vedio = Vedio(vedio_idx['aid'],vedio_idx['title'].encode('utf8'))
         vedio.typename = vedio_idx['typename']
@@ -314,6 +314,40 @@ def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
         vedio.tag = vedio_idx['tag'].split(',')
         vediolist.append(vedio)
     return vediolist
+
+def biliZhuantiSearch(keyword):
+    """
+根据关键词搜索专题
+输入：
+    keyword：关键词
+    """
+    url = "http://api.bilibili.cn/search?keyword=%s"%(keyword)
+    jsoninfo = JsonInfo(url)
+    zhuantiList = []
+    for zhuanti_idx in jsoninfo.Getvalue('result'):
+        if zhuanti_idx['type'] != 'special':
+            continue
+        zhuanti = ZhuantiInfo(zhuanti_idx['spid'],zhuanti_idx['title'].encode('utf8'))
+        zhuanti.author = User(zhuanti_idx['mid'],zhuanti_idx['author'].encode('utf8'))
+        zhuanti.cover = zhuanti_idx['pic']
+        zhuanti.thumb = zhuanti_idx['thumb']
+        zhuanti.ischeck = zhuanti_idx['ischeck']
+        zhuanti.tag = zhuanti_idx['tag'].split(',')
+        zhuanti.description = zhuanti_idx['description']
+        zhuanti.pubdate = zhuanti_idx['pubdate']
+        zhuanti.postdate = zhuanti_idx['postdate']
+        zhuanti.lastupdate = zhuanti_idx['lastupdate']
+        zhuanti.click = zhuanti_idx['click']
+        zhuanti.favourite = zhuanti_idx['favourite']
+        zhuanti.attention = zhuanti_idx['attention']
+        zhuanti.count = zhuanti_idx['count']
+        zhuanti.bgmcount = zhuanti_idx['bgmcount']
+        zhuanti.spcount = zhuanti_idx['spcount']
+        zhuanti.season_id = zhuanti_idx['season_id']
+        zhuanti.is_bangumi = zhuanti_idx['is_bangumi']
+        zhuanti.arcurl = zhuanti_idx['arcurl']
+        zhuantiList.append(zhuanti)
+    return zhuantiList
 
 
 #def GetBangumiByTime(year,month):
@@ -436,5 +470,7 @@ if __name__ == "__main__":
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
     #     print(url)
-    for vedio in biliVedioSearch('rwby'):
-        print vedio.title
+    # for vedio in biliVedioSearch('rwby'):
+    #     print vedio.title
+    for zhuanti in biliZhuantiSearch('rwby'):
+        print zhuanti.title
