@@ -374,10 +374,26 @@ http://api.bilibili.tv/sp?title=VOCALOID
         * title：标题
         * click：点击数
         * page：不明，全是0
+        * from：视频源（如sohu，sina等）
+        * cid：cid
+        * episode：集数【注：不是所有专题视频都有此信息】
 
 >说明：关于SPID的获取，暂时只知道`chrome`点击`F12`，然后查看`Network`中html的文件名编号
 http://www.bilibili.tv/sppage/bangumi-[spid]-[page].html 也可以获得专题剧番的信息，有空补上说明
 http://www.bilibili.tv/sppage/ad-recommend-[spid]-[page].html也可以获得相关专题信息。
+
+#### API实现：
+```python
+def GetVedioOfZhuanti(spid,season_id=None,bangumi=None)
+```
+
+* 输入:
+	* spid：见上
+    * season_id：见上
+    * bangumi：见上
+* 返回：
+    * 见上第三层
+    
 
 ---
 
