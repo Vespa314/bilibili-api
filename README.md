@@ -88,6 +88,9 @@ class Vedio():
     Iscopy = None;
     subtitle = None;
     duration = None;
+    episode = None;
+    arcurl = None;#网页地址
+    arcrank = None;#不明
 #不明：    
     tid = None;
     typename = None;
@@ -143,4 +146,33 @@ class Bangumi():
     scover = None;
     mcover = None;
     click = None;
+```
+
+专题类
+```
+class ZhuantiInfo():
+    def __init__(self, m_spid,m_title):
+        self.spid = m_spid
+        self.title = m_title
+    spid = None
+    title = None
+    author = None
+    cover = None
+    thumb = None
+    ischeck = None #不明
+    typeurl = None #总是”http://www.bilibili.com”
+    tag = None
+    description = None
+    pubdate = None # 不明
+    postdate = None
+    lastupdate = None
+    click = None
+    favorite = None
+    attention = None
+    count = None
+    bgmcount = None
+    spcount = None
+    season_id = None
+    is_bangumi = None
+    arcurl = None
 ```
