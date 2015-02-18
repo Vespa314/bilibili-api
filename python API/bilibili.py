@@ -2,11 +2,11 @@
 """
 Created on Mon May 26 23:42:03 2014
 
-@author: Administrator
+@author: Vespa
 """
 
 
-from support import * 
+from support import *
 import hashlib
 
 ############################常量定义
@@ -54,6 +54,47 @@ def GetPopularVedio(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, or
     content = getURLContent(url)
     return GetVedioFromRate(content)
 
+def GetVedioFromRate(content):
+"""
+从视频搜索源码页面提取视频信息
+"""
+    #av号和标题
+    regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title">([^/]+)</a>'
+    info1 = GetRE(content,regular1)
+    #观看数
+    regular2 = r'<i class="gk" title=".*">(.+)</i>'
+    info2 = GetRE(content,regular2)
+    #收藏
+    regular3 = r'<i class="sc" title=".*">(.+)</i>'
+    info3 = GetRE(content,regular3)
+    #弹幕
+    regular4 = r'<i class="dm" title=".*">(.+)</i>'
+    info4 = GetRE(content,regular4)
+    #日期
+    regular5 = r'<i class="date" title=".*">(\d+-\d+-\d+ \d+:\d+)</i>'
+    info5 = GetRE(content,regular5)
+    #封面
+    regular6 = r'<img src="(.+)">'
+    info6 = GetRE(content,regular6)
+    #Up的id和名字
+    regular7 = r'<a class="up r10000" href="http://space\.bilibili\.com/(\d+)" target="_blank">(.+)</a>'
+    info7 = GetRE(content,regular7)
+    #!!!!!!!!这里可以断言所有信息长度相等
+    vedioNum = len(info1)#视频长度
+    vedioList = []
+    for i in range(vedioNum):
+        vedio_t = Vedio()
+        vedio_t.aid = getint(info1[i][0])
+        vedio_t.title = info1[i][1]
+        vedio_t.guankan = getint(info2[i])
+        vedio_t.shoucang = getint(info3[i])
+        vedio_t.danmu = getint(info4[i])
+        vedio_t.date = info5[i]
+        vedio_t.cover = info6[i]
+        vedio_t.author = User(info7[i][0],info7[i][1])
+        vedioList.append(vedio_t)
+    return vedioList
+
 def GetUserInfo(url):
     """
 由GetUserInfoBymid(mid)或者GetUserInfoByName(name)调用
@@ -63,17 +104,17 @@ def GetUserInfo(url):
     如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
     jsoninfo = JsonInfo(url)
-    user = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('name').encode('utf8'))
+    user = User(jsoninfo.Getvalue('mid'), jsoninfo.Getvalue('name'))
     user.isApprove = jsoninfo.Getvalue('approve')
     #b站现在空间名暂时不返回
-    #user.spaceName = jsoninfo.Getvalue('spacename').encode('utf8')
-    user.sex = jsoninfo.Getvalue('sex').encode('utf8')
+    #user.spaceName = jsoninfo.Getvalue('spacename')
+    user.sex = jsoninfo.Getvalue('sex')
     user.rank = jsoninfo.Getvalue('rank')
     user.avatar = jsoninfo.Getvalue('face')
     user.follow = jsoninfo.Getvalue('attention')
     user.fans = jsoninfo.Getvalue('fans')
     user.article = jsoninfo.Getvalue('article')
-    user.place = jsoninfo.Getvalue('place').encode('utf8')
+    user.place = jsoninfo.Getvalue('place')
     user.description = jsoninfo.Getvalue('description')
     user.friend = jsoninfo.Getvalue('friend')
     user.DisplayRank = jsoninfo.Getvalue('DisplayRank')
@@ -104,7 +145,7 @@ def GetUserInfoByName(name):
     url = 'http://api.bilibili.cn/userinfo'+"?user="+name
     return GetUserInfo(url)
 
-def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
+def GetVedioOfZhuanti(spid, season_id=None, bangumi=None):
     """
 输入：
     spid:专题id
@@ -114,12 +155,12 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
     视频列表，包含av号，标题，封面和观看数
     """
     url = ' http://api.bilibili.cn/spview?spid='+GetString(spid)
-    if season_id != None:
+    if season_id:
         url += '&season_id='+GetString(season_id)
-    if bangumi != None:
+    if bangumi:
         url += '&bangumi='+GetString(bangumi)
-    jsoninfo = JsonInfo(url);
-    vediolist = [];
+    jsoninfo = JsonInfo(url)
+    vediolist = []
     for vedio_idx in jsoninfo.Getvalue('list'):
         vedio = Vedio(vedio_idx['aid'],vedio_idx['title'])
         vedio.cover = vedio_idx['cover']
@@ -129,10 +170,10 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
         vedio.src = vedio_idx["from"]
         vedio.cid = vedio_idx["cid"]
         vedio.page = vedio_idx["page"]
-        vediolist.append(vedio);
+        vediolist.append(vedio)
     return vediolist
 
-def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
+def GetComment(aid, page = None, pagesize = None, ver=None, order = None):
     """
 输入：
     aid：AV号
@@ -143,7 +184,7 @@ def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
 返回：
     评论列表
     """
-    url = 'http://api.bilibili.cn/feedback?aid='+GetString(aid);
+    url = 'http://api.bilibili.cn/feedback?aid='+GetString(aid)
     if page:
         url += '&page='+GetString(page)
     if pagesize:
@@ -152,27 +193,27 @@ def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
         url += '&ver='+GetString(ver)
     if order:
         url += '&order='+GetString(order)
-    jsoninfo = JsonInfo(url);
-    commentList = CommentList();
-    commentList.comments = [];
+    jsoninfo = JsonInfo(url)
+    commentList = CommentList()
+    commentList.comments = []
     commentList.commentLen = jsoninfo.Getvalue('totalResult')
-    commentList.page = jsoninfo.Getvalue('pages');
-    idx = 0;
+    commentList.page = jsoninfo.Getvalue('pages')
+    idx = 0
     while jsoninfo.Getvalue(str(idx)):
-        liuyan = Comment();
+        liuyan = Comment()
         liuyan.lv = jsoninfo.Getvalue(str(idx),'lv')
         liuyan.fbid = jsoninfo.Getvalue(str(idx),'fbid')
         liuyan.msg = jsoninfo.Getvalue(str(idx),'msg')
         liuyan.ad_check = jsoninfo.Getvalue(str(idx),'ad_check')
-        liuyan.post_user.mid = jsoninfo.Getvalue(str(idx),'mid');
-        liuyan.post_user.avatar = jsoninfo.Getvalue(str(idx),'face');
+        liuyan.post_user.mid = jsoninfo.Getvalue(str(idx),'mid')
+        liuyan.post_user.avatar = jsoninfo.Getvalue(str(idx),'face')
         liuyan.post_user.rank = jsoninfo.Getvalue(str(idx),'rank')
         liuyan.post_user.name = jsoninfo.Getvalue(str(idx),'nick')
-        commentList.comments.append(liuyan);
-        idx += 1;
+        commentList.comments.append(liuyan)
+        idx += 1
     return commentList
 
-def GetAllComment(aid,ver=None,order = None):
+def GetAllComment(aid, ver=None, order = None):
     """
 获取一个视频全部评论，有可能需要多次爬取，所以会有较大耗时
 输入：
@@ -182,88 +223,87 @@ def GetAllComment(aid,ver=None,order = None):
 返回：
     评论列表
     """
-    MaxPageSize = 300;
+    MaxPageSize = 300
     commentList = GetComment(aid=aid,pagesize=MaxPageSize,ver=ver,order=order)
     if commentList.page == 1:
-        return commentList;
+        return commentList
     for p in range(2,commentList.page+1):
-        #print '%d/%d'%(p*MaxPageSize,commentList.commentLen)
         t_commentlist = GetComment(aid=aid,pagesize=MaxPageSize,page=p,ver=ver,order=order)
         for liuyan in t_commentlist.comments:
             commentList.comments.append(liuyan)
         time.sleep(0.5)
     return commentList
 
-def GetVedioInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
-    paras = {'id': GetString(aid),'page': GetString(page)};
-    if fav != None:
-        paras['fav'] = fav;
-    url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret);
-    jsoninfo = JsonInfo(url);
-    vedio = Vedio(aid,jsoninfo.Getvalue('title'));
+def GetVedioInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
+    paras = {'id': GetString(aid),'page': GetString(page)}
+    if fav:
+        paras['fav'] = fav
+    url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret)
+    jsoninfo = JsonInfo(url)
+    vedio = Vedio(aid,jsoninfo.Getvalue('title'))
     vedio.guankan = jsoninfo.Getvalue('play')
     vedio.commentNumber = jsoninfo.Getvalue('review')
     vedio.danmu = jsoninfo.Getvalue('video_review')
-    vedio.shoucang = jsoninfo.Getvalue('favorites');
+    vedio.shoucang = jsoninfo.Getvalue('favorites')
     vedio.description = jsoninfo.Getvalue('description')
-    vedio.tag = [];
-    taglist = jsoninfo.Getvalue('tag');
-    if taglist != None:
+    vedio.tag = []
+    taglist = jsoninfo.Getvalue('tag')
+    if taglist:
         for tag in taglist.split(','):
-            vedio.tag.append(tag);
-    vedio.cover = jsoninfo.Getvalue('pic');
-    vedio.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
-    vedio.page = jsoninfo.Getvalue('pages');
-    vedio.date = jsoninfo.Getvalue('created_at');
-    vedio.credit = jsoninfo.Getvalue('credit');
-    vedio.coin = jsoninfo.Getvalue('coins');
-    vedio.spid = jsoninfo.Getvalue('spid');
-    vedio.cid = jsoninfo.Getvalue('cid');
-    vedio.offsite = jsoninfo.Getvalue('offsite');
-    vedio.partname = jsoninfo.Getvalue('partname');
-    vedio.src = jsoninfo.Getvalue('src');
+            vedio.tag.append(tag)
+    vedio.cover = jsoninfo.Getvalue('pic')
+    vedio.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'))
+    vedio.page = jsoninfo.Getvalue('pages')
+    vedio.date = jsoninfo.Getvalue('created_at')
+    vedio.credit = jsoninfo.Getvalue('credit')
+    vedio.coin = jsoninfo.Getvalue('coins')
+    vedio.spid = jsoninfo.Getvalue('spid')
+    vedio.cid = jsoninfo.Getvalue('cid')
+    vedio.offsite = jsoninfo.Getvalue('offsite')
+    vedio.partname = jsoninfo.Getvalue('partname')
+    vedio.src = jsoninfo.Getvalue('src')
     vedio.tid = jsoninfo.Getvalue('tid')
     vedio.typename = jsoninfo.Getvalue('typename')
-    vedio.instant_server = jsoninfo.Getvalue('instant_server');
+    vedio.instant_server = jsoninfo.Getvalue('instant_server')
     return vedio
 
-def GetSign(params,appkey,AppSecret=None):
+def GetSign(params, appkey, AppSecret=None):
     """
     获取新版API的签名，不然会返回-3错误
 待添加：【重要！】
     需要做URL编码并保证字母都是大写，如 %2F
     """
-    params['appkey']=appkey;
-    data = "";
-    paras = params.keys();
-    paras.sort();
+    params['appkey']=appkey
+    data = ""
+    paras = params.keys()
+    paras.sort()
     for para in paras:
         if data != "":
-            data += "&";
-        data += para + "=" + str(params[para]);
+            data += "&"
+        data += para + "=" + str(params[para])
     if AppSecret == None:
         return data
     m = hashlib.md5()
     m.update(data+AppSecret)
     return data+'&sign='+m.hexdigest()
 
-def GetGangumi(appkey,btype = None,weekday = None,AppSecret=None):
+def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
     """
 获取新番信息
 输入：
     btype：番剧类型 2: 二次元新番 3: 三次元新番 默认：所有
-    weekday:周一:1 周二:2 ...周六:6 
+    weekday:周一:1 周二:2 ...周六:6
     """
-    paras = {};
+    paras = {}
     if btype != None and btype in [2,3]:
         paras['btype'] = GetString(btype)
     if weekday != None:
         paras['weekday'] = GetString(weekday)
-    url =  'http://api.bilibili.cn/bangumi?' + GetSign(paras,appkey,AppSecret);
-    jsoninfo = JsonInfo(url);
-    bangumilist = [];
+    url =  'http://api.bilibili.cn/bangumi?' + GetSign(paras, appkey, AppSecret)
+    jsoninfo = JsonInfo(url)
+    bangumilist = []
     for bgm in jsoninfo.Getvalue('list'):
-        bangumi = Bangumi();
+        bangumi = Bangumi()
         bangumi.typeid = bgm['typeid']
         bangumi.lastupdate = bgm['lastupdate']
         bangumi.areaid = bgm['areaid']
@@ -293,15 +333,15 @@ def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
     pagesize:返回条目多少
     page：页码
     """
-    url = "http://api.bilibili.cn/search?keyword=%s&order=%s&pagesize=%d&page=%d"%(keyword,order,pagesize,page)
+    url = "http://api.bilibili.cn/search?keyword=%s&order=%s&pagesize=%d&page=%d"%(keyword, order, pagesize, page)
     jsoninfo = JsonInfo(url)
     vediolist = []
     for vedio_idx in jsoninfo.Getvalue('result'):
         if vedio_idx['type'] != 'video':
             continue
-        vedio = Vedio(vedio_idx['aid'],vedio_idx['title'].encode('utf8'))
+        vedio = Vedio(vedio_idx['aid'], vedio_idx['title'])
         vedio.typename = vedio_idx['typename']
-        vedio.author = User(vedio_idx['mid'],vedio_idx['author'])
+        vedio.author = User(vedio_idx['mid'], vedio_idx['author'])
         vedio.acurl = vedio_idx['arcurl']
         vedio.description = vedio_idx['description']
         vedio.arcrank = vedio_idx['arcrank']
@@ -327,8 +367,8 @@ def biliZhuantiSearch(keyword):
     for zhuanti_idx in jsoninfo.Getvalue('result'):
         if zhuanti_idx['type'] != 'special':
             continue
-        zhuanti = ZhuantiInfo(zhuanti_idx['spid'],zhuanti_idx['title'].encode('utf8'))
-        zhuanti.author = User(zhuanti_idx['mid'],zhuanti_idx['author'].encode('utf8'))
+        zhuanti = ZhuantiInfo(zhuanti_idx['spid'], zhuanti_idx['title'])
+        zhuanti.author = User(zhuanti_idx['mid'], zhuanti_idx['author'])
         zhuanti.cover = zhuanti_idx['pic']
         zhuanti.thumb = zhuanti_idx['thumb']
         zhuanti.ischeck = zhuanti_idx['ischeck']
@@ -349,69 +389,68 @@ def biliZhuantiSearch(keyword):
         zhuantiList.append(zhuanti)
     return zhuantiList
 
-
-#def GetBangumiByTime(year,month):
-#    url='http://www.bilibili.tv/index/bangumi/%s-%s.json'%(GetString(year),GetString(month));     
-#    print url    
-#    jsoninfo = getURLContent(url);
+#def GetBangumiByTime(year, month):
+#    url='http://www.bilibili.tv/index/bangumi/%s-%s.json'%(GetString(year),GetString(month))
+#    print url
+#    jsoninfo = getURLContent(url)
 #    print jsoninfo
 
-def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detail =None,order = None,AppSecret=None):
-    paras = {};
-    paras['appkey']=appkey;
-    paras['tid']=GetString(tid);
+def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None):
+    paras = {}
+    paras['appkey']=appkey
+    paras['tid']=GetString(tid)
     if order:
-        paras['order']=order;
+        paras['order']=order
     if click_detail:
-        paras['click_detail']=click_detail;
+        paras['click_detail']=click_detail
     if pagesize:
-        paras['pagesize']=GetString(pagesize);
+        paras['pagesize']=GetString(pagesize)
     if begin != None and len(begin)==3:
-        paras['begin']='%d-%d-%d'%(begin[0],begin[1],begin[2]);
+        paras['begin']='%d-%d-%d'%(begin[0],begin[1],begin[2])
     if end != None and len(end)==3:
-        paras['end']='%d-%d-%d'%(end[0],end[1],end[2]);
+        paras['end']='%d-%d-%d'%(end[0],end[1],end[2])
     if page:
-        paras['page']=GetString(page);
+        paras['page']=GetString(page)
     if click_detail:
-        paras['click_detail'] = click_detail;
-    url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret);    
-    jsoninfo = JsonInfo(url);
-    vediolist = [];
+        paras['click_detail'] = click_detail
+    url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret)
+    jsoninfo = JsonInfo(url)
+    vediolist = []
     page = jsoninfo.Getvalue('pages')
     name = jsoninfo.Getvalue('name')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
-        idx = str(i);
-        vedio = Vedio(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'));
+        idx = str(i)
+        vedio = Vedio(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'))
         vedio.Iscopy = jsoninfo.Getvalue('list',idx,'copyright')
         vedio.tid = jsoninfo.Getvalue('list',idx,'typeid')
         vedio.typename = jsoninfo.Getvalue('list',idx,'typename')
-        vedio.subtitle = jsoninfo.Getvalue('list',idx,'subtitle'); 
-        vedio.guankan = jsoninfo.Getvalue('list',idx,'play'); 
-        vedio.commentNumber = jsoninfo.Getvalue('list',idx,'review');
-        vedio.danmu = jsoninfo.Getvalue('list',idx,'video_review');
-        vedio.shoucang = jsoninfo.Getvalue('list',idx,'favorites');
+        vedio.subtitle = jsoninfo.Getvalue('list',idx,'subtitle')
+        vedio.guankan = jsoninfo.Getvalue('list',idx,'play')
+        vedio.commentNumber = jsoninfo.Getvalue('list',idx,'review')
+        vedio.danmu = jsoninfo.Getvalue('list',idx,'video_review')
+        vedio.shoucang = jsoninfo.Getvalue('list',idx,'favorites')
         vedio.author = User(jsoninfo.Getvalue('list',idx,'mid'),jsoninfo.Getvalue('list',idx,'author'))
-        vedio.description = jsoninfo.Getvalue('list',idx,'description');
-        vedio.date = jsoninfo.Getvalue('list',idx,'create');
-        vedio.cover = jsoninfo.Getvalue('list',idx,'pic');
-        vedio.credit = jsoninfo.Getvalue('list',idx,'credit');
-        vedio.coin = jsoninfo.Getvalue('list',idx,'coins');
-        vedio.duration = jsoninfo.Getvalue('list',idx,'duration');
+        vedio.description = jsoninfo.Getvalue('list',idx,'description')
+        vedio.date = jsoninfo.Getvalue('list',idx,'create')
+        vedio.cover = jsoninfo.Getvalue('list',idx,'pic')
+        vedio.credit = jsoninfo.Getvalue('list',idx,'credit')
+        vedio.coin = jsoninfo.Getvalue('list',idx,'coins')
+        vedio.duration = jsoninfo.Getvalue('list',idx,'duration')
         if click_detail != None:
-            vedio.play_site = jsoninfo.Getvalue('list',idx,'play_site');
-            vedio.play_forward = jsoninfo.Getvalue('list',idx,'play_forward');
-            vedio.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile');
+            vedio.play_site = jsoninfo.Getvalue('list',idx,'play_site')
+            vedio.play_forward = jsoninfo.Getvalue('list',idx,'play_forward')
+            vedio.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile')
         vediolist.append(vedio)
     return [page,name,vediolist]
-        
+
 def GetDanmuku(cid):
-    cid = getint(cid);
-    url = "http://comment.bilibili.cn/%d.xml"%(cid);
+    cid = getint(cid)
+    url = "http://comment.bilibili.cn/%d.xml"%(cid)
     content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
     content = GetRE(content,r'<d p=[^>]*>([^<]*)<')
-    return content;
+    return content
 
-def GetBilibiliUrl(url,appkey,AppSecret=None):
+def GetBilibiliUrl(url, appkey, AppSecret=None):
     overseas=False
     url_get_media = 'http://interface.bilibili.com/playurl?' if not overseas else 'http://interface.bilibili.com/v_cdn_play?'
     regex_match = re.findall('http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)',url)
@@ -425,37 +464,35 @@ def GetBilibiliUrl(url,appkey,AppSecret=None):
     resp_media = getURLContent(url_get_media+GetSign(media_args,appkey,AppSecret))
     media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
     return media_urls
-    
+
 if __name__ == "__main__":
-#    f = open('result.txt','w');
+#    f = open('result.txt','w')
      #获取最热视频
 #    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
 #    for vedio in vedioList:
 #        print vedio.title
-#        vedio.saveToFile(f);
      #获取用户信息
     # user = GetUserInfoBymid('72960')
     # print user.name, user.DisplayRank
     # user = GetUserInfoByName('vespa')
     # print user.friend
-#    user.saveToFile(f);   
     #获取专题视频信息
    # vediolist = GetVedioOfZhuanti('5691',bangumi=1)
    # for vedio in vediolist:
-   #     print vedio.title.encode('utf8')
+   #     print vedio.title
     #获取评论
-#    commentList = GetAllComment('1154794');
+#    commentList = GetAllComment('1154794')
 #    for liuyan in commentList.comments:
 #        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
-#    f.close();
+#    f.close()
     #获取视频信息
     # appkey = '************'
     # secretkey = None #选填
-#    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey);
+#    vedio = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey)
 #    for tag in vedio.tag:
 #        print tag
     #获取新番
-#    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey);
+#    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
 #    for bangumi in bangumilist:
 #        print bangumi.scover,bangumi.mcover,bangumi.cover
     #获取分类排行
@@ -473,4 +510,4 @@ if __name__ == "__main__":
     # for vedio in biliVedioSearch('rwby'):
     #     print vedio.title
     for zhuanti in biliZhuantiSearch('rwby'):
-        print zhuanti.title
+        print zhuanti.title.encode('utf8')
