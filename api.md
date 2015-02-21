@@ -293,9 +293,11 @@ json['list']['0']['title']
     * aid：视频AV号
     * page：页码【选填】
     * pagesize：单页返回的记录条数，最大不超过300，默认为10。【选填】
-    * ver：API版本,最新是3【选填】
+    * ~~ver：API版本,最新是3【选填】~~
     * order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序【选填】
 
+> 官方说明ver选3，但是测试表明拿不回数据，ver应该是1
+ 
 * 返回格式：
     *  第一层：
         *  totalResult：总评论数
@@ -310,18 +312,14 @@ json['list']['0']['title']
         *  face：发布人头像
         *  rank：发布人显示标识
         *  nick：发布人暱称
-* 示例
-```python
-for i in range(0,len(json)-2):
-    print JsonInfo[str(i)]['lv'],':',JsonInfo[str(i)]['msg'].encode('gbk','ignore')
-```
 
-> **python-api：**
+
+#### API实现：
 ```python
-#获取视频单页评论：
-GetComment(aid,page = None,pagesize = None,ver=None,order = None)
-#获取视频全部评论：
-GetAllComment(aid,ver=None,order = None)
+# 获取视频单页评论
+def GetComment(aid, page = None, pagesize = None, order = None)
+# 获取视频全部评论
+def GetAllComment(aid, order = None)
 ```
 
 **读取专题信息**
