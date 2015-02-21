@@ -55,9 +55,9 @@ def GetPopularVedio(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, or
     return GetVedioFromRate(content)
 
 def GetVedioFromRate(content):
-"""
+    """
 从视频搜索源码页面提取视频信息
-"""
+    """
     #av号和标题
     regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title">([^/]+)</a>'
     info1 = GetRE(content,regular1)
@@ -173,13 +173,12 @@ def GetVedioOfZhuanti(spid, season_id=None, bangumi=None):
         vediolist.append(vedio)
     return vediolist
 
-def GetComment(aid, page = None, pagesize = None, ver=None, order = None):
+def GetComment(aid, page = None, pagesize = None, order = None):
     """
 输入：
     aid：AV号
     page：页码
     pagesize：单页返回的记录条数，最大不超过300，默认为10。
-    ver：API版本,最新是3
     order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序
 返回：
     评论列表
@@ -189,8 +188,6 @@ def GetComment(aid, page = None, pagesize = None, ver=None, order = None):
         url += '&page='+GetString(page)
     if pagesize:
         url += '&pagesize='+GetString(pagesize)
-    if ver:
-        url += '&ver='+GetString(ver)
     if order:
         url += '&order='+GetString(order)
     jsoninfo = JsonInfo(url)
@@ -213,18 +210,17 @@ def GetComment(aid, page = None, pagesize = None, ver=None, order = None):
         idx += 1
     return commentList
 
-def GetAllComment(aid, ver=None, order = None):
+def GetAllComment(aid, order = None):
     """
 获取一个视频全部评论，有可能需要多次爬取，所以会有较大耗时
 输入：
     aid：AV号
-    ver：API版本,最新是3
     order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序
 返回：
     评论列表
     """
     MaxPageSize = 300
-    commentList = GetComment(aid=aid,pagesize=MaxPageSize,ver=ver,order=order)
+    commentList = GetComment(aid=aid, pagesize=MaxPageSize, order=order)
     if commentList.page == 1:
         return commentList
     for p in range(2,commentList.page+1):
@@ -481,9 +477,9 @@ if __name__ == "__main__":
    # for vedio in vediolist:
    #     print vedio.title
     #获取评论
-#    commentList = GetAllComment('1154794')
-#    for liuyan in commentList.comments:
-#        print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
+   commentList = GetAllComment('1154794')
+   for liuyan in commentList.comments:
+       print liuyan.lv,'-',liuyan.post_user.name.encode('utf8'),':',liuyan.msg.encode('utf8')
 #    f.close()
     #获取视频信息
     # appkey = '************'
@@ -509,5 +505,5 @@ if __name__ == "__main__":
     #     print(url)
     # for vedio in biliVedioSearch('rwby'):
     #     print vedio.title
-    for zhuanti in biliZhuantiSearch('rwby'):
-        print zhuanti.title.encode('utf8')
+    # for zhuanti in biliZhuantiSearch('rwby'):
+    #     print zhuanti.title.encode('utf8')
