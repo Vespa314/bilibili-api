@@ -31,7 +31,7 @@ class User():
     DisplayRank = None
 
 
-class Vedio():
+class Video():
     def __init__(self,m_aid=None,m_title=None):
         if m_aid:
             self.aid = m_aid

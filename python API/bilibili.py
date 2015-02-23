@@ -30,7 +30,7 @@ TYPE_PINYIN = 'pinyin'
 TYPE_TOUGAO = 'default'
 ############################常量定义结束
 
-def GetPopularVedio(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, original=0):
+def GetPopularVideo(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, original=0):
     """
 输入：
     begintime：起始时间，三元数组[year1,month1,day1]
@@ -52,7 +52,7 @@ def GetPopularVedio(begintime, endtime, sortType=TYPE_BOFANG, zone=0, page=1, or
         ori = ''
     url = 'http://www.bilibili.tv/list/%s-%d-%d-%d-%d-%d~%d-%d-%d%s.html'%(sortType,zone,page,begintime[0],begintime[1],begintime[2],endtime[0],endtime[1],endtime[2],ori)
     content = getURLContent(url)
-    return GetVedioFromRate(content)
+    return GetVideoFromRate(content)
 
 
 def GetUserInfo(url):
@@ -105,7 +105,7 @@ def GetUserInfoByName(name):
     url = 'http://api.bilibili.cn/userinfo'+"?user="+name
     return GetUserInfo(url)
 
-def GetVedioOfZhuanti(spid, season_id=None, bangumi=None):
+def GetVideoOfZhuanti(spid, season_id=None, bangumi=None):
     """
 输入：
     spid:专题id
@@ -122,7 +122,7 @@ def GetVedioOfZhuanti(spid, season_id=None, bangumi=None):
     jsoninfo = JsonInfo(url)
     videolist = []
     for video_idx in jsoninfo.Getvalue('list'):
-        video = Vedio(video_idx['aid'],video_idx['title'])
+        video = Video(video_idx['aid'],video_idx['title'])
         video.cover = video_idx['cover']
         video.guankan = video_idx['click']
         if video_idx.has_key('episode'):
@@ -190,13 +190,13 @@ def GetAllComment(aid, order = None):
         time.sleep(0.5)
     return commentList
 
-def GetVedioInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
+def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
     paras = {'id': GetString(aid),'page': GetString(page)}
     if fav:
         paras['fav'] = fav
     url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret)
     jsoninfo = JsonInfo(url)
-    video = Vedio(aid,jsoninfo.Getvalue('title'))
+    video = Video(aid,jsoninfo.Getvalue('title'))
     video.guankan = jsoninfo.Getvalue('play')
     video.commentNumber = jsoninfo.Getvalue('review')
     video.danmu = jsoninfo.Getvalue('video_review')
@@ -261,7 +261,7 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
         bangumilist.append(bangumi)
     return bangumilist
 
-def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
+def biliVideoSearch(keyword, order = 'default', pagesize = 20, page = 1):
     """
 根据关键词搜索视频
 输入：
@@ -276,7 +276,7 @@ def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1):
     for video_idx in jsoninfo.Getvalue('result'):
         if video_idx['type'] != 'video':
             continue
-        video = Vedio(video_idx['aid'], video_idx['title'])
+        video = Video(video_idx['aid'], video_idx['title'])
         video.typename = video_idx['typename']
         video.author = User(video_idx['mid'], video_idx['author'])
         video.acurl = video_idx['arcurl']
@@ -357,7 +357,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
     name = jsoninfo.Getvalue('name')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
         idx = str(i)
-        video = Vedio(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'))
+        video = Video(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'))
         video.Iscopy = jsoninfo.Getvalue('list',idx,'copyright')
         video.tid = jsoninfo.Getvalue('list',idx,'typeid')
         video.typename = jsoninfo.Getvalue('list',idx,'typename')
@@ -395,7 +395,7 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
         return []
     aid = regex_match[0][0]
     pid = regex_match[0][2] or '1'
-    video = GetVedioInfo(aid,appkey,pid,AppSecret)
+    video = GetVideoInfo(aid,appkey,pid,AppSecret)
     cid = video.cid
     media_args = {'cid': cid,'quality':4}
     resp_media = getURLContent(url_get_media+GetSign(media_args,appkey,AppSecret))
@@ -405,7 +405,7 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
 if __name__ == "__main__":
 #    f = open('result.txt','w')
      #获取最热视频
-#    videoList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+#    videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
 #    for video in videoList:
 #        print video.title
      #获取用户信息
@@ -414,7 +414,7 @@ if __name__ == "__main__":
     # user = GetUserInfoByName('vespa')
     # print user.friend
     #获取专题视频信息
-   # videolist = GetVedioOfZhuanti('5691',bangumi=1)
+   # videolist = GetVideoOfZhuanti('5691',bangumi=1)
    # for video in videolist:
    #     print video.title
     #获取评论
@@ -425,7 +425,7 @@ if __name__ == "__main__":
     #获取视频信息
     # appkey = '************'
     # secretkey = None #选填
-#    video = GetVedioInfo(1152959,appkey=appkey,AppSecret=secretkey)
+#    video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
 #    for tag in video.tag:
 #        print tag
     #获取新番
@@ -437,14 +437,14 @@ if __name__ == "__main__":
 #    for video in videolist:
 #        print video.title,video.play_site
 #获取弹幕
-#    video = GetVedioInfo(1677082,appkey,AppSecret=screatekey)
+#    video = GetVideoInfo(1677082,appkey,AppSecret=screatekey)
 #    for danmu in GetDanmuku(video.cid):
 #        print danmu
     #获取视频下载地址列表
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
     #     print(url)
-    # for video in biliVedioSearch('rwby'):
+    # for video in biliVideoSearch('rwby'):
     #     print video.title
     # for zhuanti in biliZhuantiSearch('rwby'):
     #     print zhuanti.title.encode('utf8')

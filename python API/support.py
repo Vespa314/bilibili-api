@@ -61,7 +61,7 @@ def getint(string):
         i = 0
     return i
 
-def GetVedioFromRate(content):
+def GetVideoFromRate(content):
     """
 从视频搜索源码页面提取视频信息
     """
