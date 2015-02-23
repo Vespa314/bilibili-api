@@ -403,25 +403,23 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
     return media_urls
 
 if __name__ == "__main__":
-#    f = open('result.txt','w')
      #获取最热视频
-#    videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-#    for video in videoList:
-#        print video.title
+   # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+   # for video in videoList:
+   #     print video.title
      #获取用户信息
     # user = GetUserInfoBymid('72960')
-    # print user.name, user.DisplayRank
+    # print user.name.encode('utf8'), user.DisplayRank
     # user = GetUserInfoByName('vespa')
     # print user.friend
     #获取专题视频信息
    # videolist = GetVideoOfZhuanti('5691',bangumi=1)
    # for video in videolist:
-   #     print video.title
+   #     print video.title.encode('utf8')
     #获取评论
-   commentList = GetAllComment('1154794')
-   for liuyan in commentList.comments:
-       print liuyan.lv,'-',liuyan.post_user.name.encode('utf8'),':',liuyan.msg.encode('utf8')
-#    f.close()
+   # commentList = GetAllComment('1154794')
+   # for liuyan in commentList.comments:
+   #     print liuyan.lv,'-',liuyan.post_user.name.encode('utf8'),':',liuyan.msg.encode('utf8')
     #获取视频信息
     # appkey = '************'
     # secretkey = None #选填
@@ -444,7 +442,9 @@ if __name__ == "__main__":
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
     #     print(url)
+    #视频搜索
     # for video in biliVideoSearch('rwby'):
-    #     print video.title
+    #     print video.title.encode('utf8')
+    #专题搜索
     # for zhuanti in biliZhuantiSearch('rwby'):
     #     print zhuanti.title.encode('utf8')
