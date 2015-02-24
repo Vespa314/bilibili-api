@@ -66,6 +66,9 @@ class Video():
     instant_server = None
     src = None
     partname = None
+    allow_bp = None
+    allow_feed = None
+    created = None
 #播放信息：
     play_site = None
     play_forward = None

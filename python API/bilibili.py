@@ -221,6 +221,10 @@ def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
     video.tid = jsoninfo.Getvalue('tid')
     video.typename = jsoninfo.Getvalue('typename')
     video.instant_server = jsoninfo.Getvalue('instant_server')
+    ## 以下三个意义不明。。
+    # video.allow_bp = jsoninfo.Getvalue('allow_bp')
+    # video.allow_feed = jsoninfo.Getvalue('allow_feed')
+    # video.created = jsoninfo.Getvalue('created')
     return video
 
 
@@ -423,9 +427,9 @@ if __name__ == "__main__":
     #获取视频信息
     # appkey = '************'
     # secretkey = None #选填
-#    video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
-#    for tag in video.tag:
-#        print tag
+    # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
+    # for tag in video.tag:
+    #     print tag.encode('utf8')
     #获取新番
 #    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
 #    for bangumi in bangumilist:
