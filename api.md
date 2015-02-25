@@ -430,7 +430,51 @@ GetUserInfoByName(name)
 
 ##B站API(需认证)：
 > 下方所有调用api方法均要加入`appkey=...`,如果是新注册的appkey的话还需要加入sign，具体算法是：
-【待补充】
+python：
+```python
+def GetSign(params, appkey, AppSecret=None):
+    """
+    获取新版API的签名，不然会返回-3错误
+待添加：【重要！】
+    需要做URL编码并保证字母都是大写，如 %2F
+    """
+    params['appkey']=appkey
+    data = ""
+    paras = params.keys()
+    paras.sort()
+    for para in paras:
+        if data != "":
+            data += "&"
+        data += para + "=" + str(params[para])
+    if AppSecret == None:
+        return data
+    m = hashlib.md5()
+    m.update(data+AppSecret)
+    return data+'&sign='+m.hexdigest()
+```
+js:
+```Javascript
+function get_sign(params, key)
+ {
+     var s_keys = [];
+     for (var i in params)
+     {
+         s_keys.push(i);
+     }
+      s_keys.sort();
+      var data = "";
+      for (var i = 0; i < s_keys.length; i++)
+     {
+          // encodeURIComponent 返回的转义数字必须为大写( 如 %2F )
+         data+=(data ? "&" : "")+s_keys[i]+"="+encodeURIComponent(params[s_keys[i]]);
+     }
+     return {
+         "sign":hex_md5(data+key),
+         "params":data
+     };
+ }
+ ```
+
 
 **读取视频信息**【已完成】
 * URL：【返回json】
@@ -470,6 +514,10 @@ GetUserInfoByName(name)
 
 > **注意：**发现有部分视频必须登陆后才可以获得视频信息，这部分待完善！！！！
 
+#### API实现：
+```python
+def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None)
+```
 
 
 **获取新番信息**【已完成】
