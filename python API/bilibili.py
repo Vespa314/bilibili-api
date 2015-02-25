@@ -191,6 +191,13 @@ def GetAllComment(aid, order = None):
     return commentList
 
 def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
+    """
+获取视频信息
+输入：
+    aid：AV号
+    page：页码
+    fav：是否读取会员收藏状态 (默认 0)
+    """
     paras = {'id': GetString(aid),'page': GetString(page)}
     if fav:
         paras['fav'] = fav
