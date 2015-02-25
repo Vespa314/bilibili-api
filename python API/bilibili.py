@@ -344,6 +344,13 @@ def biliZhuantiSearch(keyword):
 #    print jsoninfo
 
 def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None):
+    """
+获取排行信息
+输入：
+    详见https://github.com/Vespa314/bilibili-api/blob/master/api.md
+输出：
+    详见https://github.com/Vespa314/bilibili-api/blob/master/api.md
+    """
     paras = {}
     paras['appkey']=appkey
     paras['tid']=GetString(tid)
@@ -362,8 +369,12 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
     if click_detail:
         paras['click_detail'] = click_detail
     url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret)
+    print url
     jsoninfo = JsonInfo(url)
     videolist = []
+    if jsoninfo.Getvalue('code') != 0:
+        print jsoninfo.Getvalue('error')
+        return vediolist
     page = jsoninfo.Getvalue('pages')
     name = jsoninfo.Getvalue('name')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
@@ -374,7 +385,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
         video.typename = jsoninfo.Getvalue('list',idx,'typename')
         video.subtitle = jsoninfo.Getvalue('list',idx,'subtitle')
         video.guankan = jsoninfo.Getvalue('list',idx,'play')
-        video.commentNumber = jsoninfo.Getvalue('list',idx,'review')
+        # video.commentNumber = jsoninfo.Getvalue('list',idx,'review')
         video.danmu = jsoninfo.Getvalue('list',idx,'video_review')
         video.shoucang = jsoninfo.Getvalue('list',idx,'favorites')
         video.author = User(jsoninfo.Getvalue('list',idx,'mid'),jsoninfo.Getvalue('list',idx,'author'))
@@ -383,6 +394,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
         video.cover = jsoninfo.Getvalue('list',idx,'pic')
         video.credit = jsoninfo.Getvalue('list',idx,'credit')
         video.coin = jsoninfo.Getvalue('list',idx,'coins')
+        video.commentNumber = jsoninfo.Getvalue('list',idx,'comment')
         video.duration = jsoninfo.Getvalue('list',idx,'duration')
         if click_detail != None:
             video.play_site = jsoninfo.Getvalue('list',idx,'play_site')
@@ -442,9 +454,9 @@ if __name__ == "__main__":
 #    for bangumi in bangumilist:
 #        print bangumi.scover,bangumi.mcover,bangumi.cover
     #获取分类排行
-#    [page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=12,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
-#    for video in videolist:
-#        print video.title,video.play_site
+    # [page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=1,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
+    # for video in videolist:
+    #     print video.title.encode('utf8'),video.play_site
 #获取弹幕
 #    video = GetVideoInfo(1677082,appkey,AppSecret=screatekey)
 #    for danmu in GetDanmuku(video.cid):

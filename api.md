@@ -470,6 +470,8 @@ GetUserInfoByName(name)
 
 > **注意：**发现有部分视频必须登陆后才可以获得视频信息，这部分待完善！！！！
 
+
+
 **获取新番信息**【已完成】
 * URL：【返回json】
     * ` http://api.bilibili.cn/bangumi`
@@ -554,7 +556,7 @@ GetUserInfoByName(name)
         * typename:视频分类名称
         * subtitle:视频副标题
         * play:播放次数
-        * review:评论数
+        * review & comment:评论数【数值相同】
         * video_review:弹幕数
         * favorites:收藏数
         * author:视频作者
@@ -574,6 +576,11 @@ GetUserInfoByName(name)
 * -602:结束日期格式错误
 * -603:选择的时间跨度过大
 * -604:沒有输入拼音
+
+#### API实现：
+```python
+def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None)
+```
 
 
 **搜索视频**【已完成】
