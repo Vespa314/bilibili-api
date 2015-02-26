@@ -239,7 +239,7 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
     """
 获取新番信息
 输入：
-    btype：番剧类型 2: 二次元新番 3: 三次元新番 默认：所有
+    btype：番剧类型 2: 二次元新番 3: 三次元新番 默认(0)：所有
     weekday:周一:1 周二:2 ...周六:6
     """
     paras = {}
@@ -250,6 +250,9 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
     url =  'http://api.bilibili.cn/bangumi?' + GetSign(paras, appkey, AppSecret)
     jsoninfo = JsonInfo(url)
     bangumilist = []
+    if jsoninfo.Getvalue('code') != 0:
+        print jsoninfo.Getvalue('error')
+        return bangumilist
     for bgm in jsoninfo.Getvalue('list'):
         bangumi = Bangumi()
         bangumi.typeid = bgm['typeid']
@@ -269,6 +272,8 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
         bangumi.mcover = bgm['mcover']
         bangumi.click = bgm['click']
         bangumi.season_id = bgm['season_id']
+        bangumi.click = bgm['click']
+        bangumi.video_view = bgm['video_view']
         bangumilist.append(bangumi)
     return bangumilist
 
@@ -450,9 +455,9 @@ if __name__ == "__main__":
     # for tag in video.tag:
     #     print tag.encode('utf8')
     #获取新番
-#    bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
-#    for bangumi in bangumilist:
-#        print bangumi.scover,bangumi.mcover,bangumi.cover
+    # bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
+    # for bangumi in bangumilist:
+    #     print bangumi.title.encode('utf8')
     #获取分类排行
     # [page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=1,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
     # for video in videolist:

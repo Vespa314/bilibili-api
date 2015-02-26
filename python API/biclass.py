@@ -83,7 +83,7 @@ class Bangumi():
     bgmcount = None#番剧当前总集数
     title = None
     lastupdate_at = None
-    attention = None
+    attention = None #订阅数
     cover = None
     priority = None
     area = None
@@ -94,6 +94,8 @@ class Bangumi():
     mcover = None
     click = None
     season_id = None
+    click = None # 浏览数
+    video_view = None
 
 class Comment():
     def __init__(self):
