@@ -9,10 +9,7 @@ import os
 
 def vediowrite(f,vedio):
     
-    if vedio.title:
-        f.write('Aid:%s\nTitle:%s\n'%(vedio.aid.encode('utf8'),vedio.title.encode('utf8')))
-    else:
-        f.write('Aid:%s\nTitle:NULL\n'%(vedio.aid.encode('utf8')))
+    f.write('Aid:%s\nTitle:%s\n'%(vedio.aid.encode('utf8'),vedio.title.encode('utf8')))
     f.write('copyright:%s\n'%(vedio.Iscopy.encode('utf8')))
     f.write('Typeid:%s\nTypename:%s\n'%(vedio.tid,vedio.typename.encode('utf8')))
     f.write('Click:%s\nDanmu:%s\n'%(vedio.guankan,vedio.danmu))
@@ -59,32 +56,33 @@ def Check(appkey,tid,begin,end,path):
         print 'match:',begin[0:2],tid,number,linenum
 
 def GetAllVedio(appkey,tid,begin,end,path):
-    if os.path.exists('./%s/%d.txt'%(path,tid)):
-        print './%s/%d.txt'%(path,tid),' Already exist'
-        return
-    f = open('./%s/%d.txt'%(path,tid),'w');
-    [pages,number,vediolist] = GetRank(appkey,tid,order='hot',pagesize = 100,begin=begin,end=end,click_detail='true')
-    for vedio in vediolist:
-        vediowrite(f,vedio);
-    if pages == 1 or len(vediolist) == 0:
-        print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,1,1
-        f.close()
-        return
-    for page in range(2,pages+1):
-        print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,page,'/',pages
+  #  if os.path.exists('./%s/%d.txt'%(path,tid)):
+   #     print './%s/%d.txt'%(path,tid),' Already exist'
+    #    return
+  #  f = open('./%s/%d.txt'%(path,tid),'w');
+   # [pages,number,vediolist] = GetRank(appkey,tid,order='hot',pagesize = 100,begin=begin,end=end,click_detail='true')
+  #  for vedio in vediolist:
+  #      vediowrite(f,vedio);
+  #  if pages == 1 or len(vediolist) == 0:
+  #      print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,1,1
+  #      f.close()
+  #      return
+  #  for page in range(2,pages+1):
+   #     print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,page,'/',pages
     #    time.sleep(3)
-        [page2,number2,vediolist2] = GetRank(appkey,tid,order='hot',page=page,pagesize = 100,begin=begin,end=end,click_detail='true')
-        for vedio in vediolist2:
-            vediowrite(f,vedio);
-    f.close()
+    [page2,number2,vediolist2] = GetRank(appkey,tid,order='hot',page=43,pagesize = 100,begin=begin,end=end,click_detail='true')
+    for vedio in vediolist2:
+        print vedio.title,vedio.aid
+ #           vediowrite(f,vedio);
+ #   f.close()
     return
 
 def main():
     appkey = '03fc8eb101b091fb';
-    for year in range(2015,2008,-1):
-        for month in range(1,13):
+    for year in range(2013,2014):
+        for month in range(11,12):
             begin = [year,month,2];
-            if year == 2015 and month >= 3:
+            if year == 2015 and month >= 1:
                 continue;
             if year == 2009 and month < 6:
                 continue
@@ -95,7 +93,7 @@ def main():
             path = '%d-%d'%(year,month);
             if not os.path.exists(path):
                 os.mkdir(path)
-            for tid in range(1,151):
+            for tid in range(4,5):
                 GetAllVedio(appkey,tid,begin,end,path)
 #                 Check(appkey,tid,begin,end,path)
 

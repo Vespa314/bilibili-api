@@ -24,6 +24,7 @@ def getURLContent(url):
             time.sleep(20)
         if flag == 1:
         	break;
+    time.sleep(3)
     return content;
     
 #def FromJson(url):

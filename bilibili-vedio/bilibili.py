@@ -305,7 +305,7 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
     jsoninfo = JsonInfo(url);
     while jsoninfo.Getvalue('code') != 0:
         print jsoninfo.Getvalue('error'),'re-connecting...'
-        time.sleep(3);
+        time.sleep(300);
     vediolist = [];
     page = jsoninfo.Getvalue('pages')
     number = jsoninfo.Getvalue('results')
