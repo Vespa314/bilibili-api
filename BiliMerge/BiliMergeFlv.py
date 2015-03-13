@@ -1,19 +1,18 @@
 #!/usr/bin/env python
 
 import subprocess
-import os 
+import os
 import sys
+import glob
 
-def merge(dir):
-    fid = open('%s/filelist.txt'%(dir),'w')
-    for idx in xrange(0,10000):
-        if os.path.isfile('%s/%d.flv'%(dir,idx)):
-            fid.write("file '%s/%d.flv'\n"%(dir,idx))
-        else:
-            break;
+def merge(folder):
+    flv_list = sorted(glob.glob('{folder}/*.flv'.format(folder = folder)))
+    fid = open('%s/filelist.txt' % (folder), 'w')
+    for idx in flv_list:
+        fid.write("file '%s/%d.flv'\n" % (folder, idx))
     fid.close()
     
-    cmd = ['ffmpeg', '-f', 'concat', '-i', dir+'/'+'filelist.txt','-codec', 'copy', dir+'/'+'output.mp4']
+    cmd = ['ffmpeg', '-f', 'concat', '-i', folder+'/'+'filelist.txt','-codec', 'copy', folder+'/'+'output.mp4']
     subprocess.Popen(cmd).wait()
 
 if __name__ == "__main__":
