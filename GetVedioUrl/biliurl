@@ -1,0 +1,7 @@
+#!/bin/bash
+# copy this script to /usr/bin/
+# usage:
+#         biliurl http://www.bilibili.com/video/avxxxx/
+# the download url will be automatically copied to clipboard
+
+~/danmaku2ass/biliDownLoad.py $@ | pbcopy
