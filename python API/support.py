@@ -74,25 +74,25 @@ def GetVideoFromRate(content):
 从视频搜索源码页面提取视频信息
     """
     #av号和标题
-    regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title">([^/]+)</a>'
+    regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title" [^>]*>([^/]+)</a>'
     info1 = GetRE(content,regular1)
     #观看数
-    regular2 = r'<i class="gk" title=".*">(.+)</i>'
+    regular2 = r'<i class="gk" title=".*" [^>]*>(.+)</i>'
     info2 = GetRE(content,regular2)
     #收藏
-    regular3 = r'<i class="sc" title=".*">(.+)</i>'
+    regular3 = r'<i class="sc" title=".*" [^>]*>(.+)</i>'
     info3 = GetRE(content,regular3)
     #弹幕
-    regular4 = r'<i class="dm" title=".*">(.+)</i>'
+    regular4 = r'<i class="dm" title=".*" [^>]*>(.+)</i>'
     info4 = GetRE(content,regular4)
     #日期
     regular5 = r'<i class="date" title=".*">(\d+-\d+-\d+ \d+:\d+)</i>'
     info5 = GetRE(content,regular5)
     #封面
-    regular6 = r'<img src="(.+)">'
+    regular6 = r'<img src="(.+)" [^>]*>'
     info6 = GetRE(content,regular6)
     #Up的id和名字
-    regular7 = r'<a class="up r10000" href="http://space\.bilibili\.com/(\d+)" target="_blank">(.+)</a>'
+    regular7 = r'<i class="up r10000">(.*)</i>'
     info7 = GetRE(content,regular7)
     #!!!!!!!!这里可以断言所有信息长度相等
     videoNum = len(info1)#视频长度

@@ -234,7 +234,7 @@ def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
     return video
 
 
-def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
+def GetBangumi(appkey, btype = None, weekday = None, AppSecret=None):
     """
 获取新番信息
 输入：
@@ -384,7 +384,6 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
     if click_detail:
         paras['click_detail'] = click_detail
     url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret)
-    print url
     jsoninfo = JsonInfo(url)
     videolist = []
     if jsoninfo.Getvalue('code') != 0:
@@ -465,7 +464,7 @@ if __name__ == "__main__":
     # for tag in video.tag:
     #     print tag
     #获取新番
-    # bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
+    # bangumilist = GetBangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
     # for bangumi in bangumilist:
     #     print bangumi.title
     #获取分类排行
