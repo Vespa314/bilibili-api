@@ -10,6 +10,8 @@ class User():
         if m_mid:
             self.mid = m_mid
         if m_name:
+            if isinstance(m_name,unicode):
+                m_name = m_name.encode('utf8')
             self.name = m_name
 #   获取空间地址
     def GetSpace(self):
@@ -36,6 +38,8 @@ class Video():
         if m_aid:
             self.aid = m_aid
         if m_title:
+            if isinstance(m_title,unicode):
+                m_title = m_title.encode('utf8')
             self.title = m_title
     aid = None
     title = None
@@ -116,6 +120,8 @@ class CommentList():
 class ZhuantiInfo():
     def __init__(self, m_spid,m_title):
         self.spid = m_spid
+        if isinstance(m_title,unicode):
+            m_title = m_title.encode('utf8')
         self.title = m_title
     spid = None
     title = None

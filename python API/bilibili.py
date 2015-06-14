@@ -255,6 +255,7 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
         return bangumilist
     for bgm in jsoninfo.Getvalue('list'):
         bangumi = Bangumi()
+        bgm = DictDecode2UTF8(bgm)
         bangumi.typeid = bgm['typeid']
         bangumi.lastupdate = bgm['lastupdate']
         bangumi.areaid = bgm['areaid']
@@ -431,48 +432,48 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
     return media_urls
 
 if __name__ == "__main__":
-     #获取最热视频
-   # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-   # for video in videoList:
-   #     print video.title
+    #获取最热视频
+    # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+    # for video in videoList:
+    #     print video.title
      #获取用户信息
     # user = GetUserInfoBymid('72960')
-    # print user.name.encode('utf8'), user.DisplayRank
+    # print user.name,user.DisplayRank
     # user = GetUserInfoByName('vespa')
     # print user.friend
     #获取专题视频信息
-   # videolist = GetVideoOfZhuanti('5691',bangumi=1)
-   # for video in videolist:
-   #     print video.title.encode('utf8')
+    # videolist = GetVideoOfZhuanti('46465',bangumi=1)
+    # for video in videolist:
+    #     print video.title
     #获取评论
-   # commentList = GetAllComment('1154794')
-   # for liuyan in commentList.comments:
-   #     print liuyan.lv,'-',liuyan.post_user.name.encode('utf8'),':',liuyan.msg.encode('utf8')
+    # commentList = GetAllComment('1154794')
+    # for liuyan in commentList.comments:
+    #     print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
     #获取视频信息
     # appkey = '************'
     # secretkey = None #选填
     # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
     # for tag in video.tag:
-    #     print tag.encode('utf8')
+    #     print tag
     #获取新番
     # bangumilist = GetGangumi(appkey,btype = 2,weekday=1,AppSecret=secretkey)
     # for bangumi in bangumilist:
-    #     print bangumi.title.encode('utf8')
+    #     print bangumi.title
     #获取分类排行
     # [page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=1,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
     # for video in videolist:
-    #     print video.title.encode('utf8'),video.play_site
-#获取弹幕
-#    video = GetVideoInfo(1677082,appkey,AppSecret=screatekey)
-#    for danmu in GetDanmuku(video.cid):
-#        print danmu
+    #     print video.title,video.play_site
+    #获取弹幕
+    # video = GetVideoInfo(1677082,appkey,AppSecret=secretkey)
+    # for danmu in GetDanmuku(video.cid):
+    #     print danmu
     #获取视频下载地址列表
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
     #     print(url)
     #视频搜索
     # for video in biliVideoSearch('rwby'):
-    #     print video.title.encode('utf8')
+    #     print video.title
     #专题搜索
     # for zhuanti in biliZhuantiSearch('rwby'):
-    #     print zhuanti.title.encode('utf8')
+    #     print zhuanti.title

@@ -46,6 +46,8 @@ class JsonInfo():
                     temp = temp[key]
                 else:
                     return None
+        if isinstance(temp,unicode):
+            temp = temp.encode('utf8')
         return temp
     info = None
 
@@ -60,6 +62,12 @@ def getint(string):
     except:
         i = 0
     return i
+
+def DictDecode2UTF8(dict):
+    for keys in dict:
+        if isinstance(dict[keys],unicode):
+            dict[keys] = dict[keys].encode('utf8')
+    return dict
 
 def GetVideoFromRate(content):
     """
