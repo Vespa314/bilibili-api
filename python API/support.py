@@ -33,6 +33,12 @@ def getURLContent(url):
 class JsonInfo():
     def __init__(self,url):
         self.info = json.loads(getURLContent(url))
+        if self.info.has_key('code') and self.info['code'] != 0:
+            if self.info.has_key('message'):
+                print "【Error】code=%d, msg=%s, url=%s"%(self.info['code'],self.Getvalue('message'),url)
+            elif self.info.has_key('error'):
+                print "【Error】code=%d, msg=%s, url=%s"%(self.info['code'],self.Getvalue('error'),url)
+            error = True
     def Getvalue(self,*keys):
         if len(keys) == 0:
             return None
@@ -50,6 +56,7 @@ class JsonInfo():
             temp = temp.encode('utf8')
         return temp
     info = None
+    error = False
 
 def GetString(t):
     if type(t) == int:
