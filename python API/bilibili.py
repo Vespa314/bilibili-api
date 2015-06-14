@@ -121,6 +121,7 @@ def GetVideoOfZhuanti(spid, season_id=None, bangumi=None):
     jsoninfo = JsonInfo(url)
     videolist = []
     for video_idx in jsoninfo.Getvalue('list'):
+        video_idx = DictDecode2UTF8(video_idx)
         video = Video(video_idx['aid'],video_idx['title'])
         video.cover = video_idx['cover']
         video.guankan = video_idx['click']
@@ -300,6 +301,7 @@ def biliVideoSearch(appkey, AppSecret, keyword, order = 'default', pagesize = 20
     for video_idx in jsoninfo.Getvalue('result'):
         if video_idx['type'] != 'video':
             continue
+        video_idx = DictDecode2UTF8(video_idx)
         video = Video(video_idx['aid'], video_idx['title'])
         video.typename = video_idx['typename']
         video.author = User(video_idx['mid'], video_idx['author'])
@@ -330,6 +332,7 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
     for zhuanti_idx in jsoninfo.Getvalue('result'):
         if zhuanti_idx['type'] != 'special':
             continue
+        video_idx = DictDecode2UTF8(video_idx)
         zhuanti = ZhuantiInfo(zhuanti_idx['spid'], zhuanti_idx['title'])
         zhuanti.author = User(zhuanti_idx['mid'], zhuanti_idx['author'])
         zhuanti.cover = zhuanti_idx['pic']
