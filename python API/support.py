@@ -10,7 +10,7 @@ import json
 import zlib
 import gzip
 import xml.dom.minidom
-
+import hashlib
 from biclass import *
 import time
 def GetRE(content,regexp):

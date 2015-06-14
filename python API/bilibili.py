@@ -7,7 +7,6 @@ Created on Mon May 26 23:42:03 2014
 
 
 from support import *
-import hashlib
 
 ############################常量定义
 
@@ -278,8 +277,11 @@ def GetGangumi(appkey, btype = None, weekday = None, AppSecret=None):
         bangumilist.append(bangumi)
     return bangumilist
 
-def biliVideoSearch(keyword, order = 'default', pagesize = 20, page = 1):
+def biliVideoSearch(appkey, AppSecret, keyword, order = 'default', pagesize = 20, page = 1):
     """
+【注】：
+    旧版Appkey不可用，必须配合AppSecret使用！！
+
 根据关键词搜索视频
 输入：
     order：排序方式  默认default，其余待测试
@@ -287,7 +289,12 @@ def biliVideoSearch(keyword, order = 'default', pagesize = 20, page = 1):
     pagesize:返回条目多少
     page：页码
     """
-    url = "http://api.bilibili.cn/search?keyword=%s&order=%s&pagesize=%d&page=%d"%(keyword, order, pagesize, page)
+    paras = {}
+    paras['keyword'] = GetString(keyword)
+    paras['order'] = GetString(order)
+    paras['pagesize'] = GetString(pagesize)
+    paras['page'] = GetString(page)
+    url =  'http://api.bilibili.cn/search?' + GetSign(paras, appkey, AppSecret)
     jsoninfo = JsonInfo(url)
     videolist = []
     for video_idx in jsoninfo.Getvalue('result'):
@@ -309,13 +316,15 @@ def biliVideoSearch(keyword, order = 'default', pagesize = 20, page = 1):
         videolist.append(video)
     return videolist
 
-def biliZhuantiSearch(keyword):
+def biliZhuantiSearch(appkey, AppSecret, keyword):
     """
 根据关键词搜索专题
 输入：
     keyword：关键词
     """
-    url = "http://api.bilibili.cn/search?keyword=%s"%(keyword)
+    paras = {}
+    paras['keyword'] = GetString(keyword)
+    url = 'http://api.bilibili.cn/search?' + GetSign(paras, appkey, AppSecret)
     jsoninfo = JsonInfo(url)
     zhuantiList = []
     for zhuanti_idx in jsoninfo.Getvalue('result'):
@@ -472,8 +481,8 @@ if __name__ == "__main__":
     # for url in media_urls:
     #     print(url)
     #视频搜索
-    # for video in biliVideoSearch('rwby'):
+    # for video in biliVideoSearch(appkey,secretkey,'rwby'):
     #     print video.title
     #专题搜索
-    # for zhuanti in biliZhuantiSearch('rwby'):
+    # for zhuanti in biliZhuantiSearch(appkey,secretkey,'rwby'):
     #     print zhuanti.title

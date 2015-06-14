@@ -630,7 +630,6 @@ def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None)
 def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None)
 ```
 
-
 **搜索视频**【已完成】
 * URL：【返回json】
     * `http://api.bilibili.cn/search`
@@ -656,9 +655,11 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
 	* pubdate：上传时间
 	* tag：标签
   
+> 【**注意：**】经测试，此api的appkey必须使用新版的，即必须配合AppSecret使用，否则会返回{“code”:-3,”message”:”API sign invalid”}
+
 #### API实现：
 ```python
-def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1)
+def biliVideoSearch(appkey, AppSecret, keyword, order = ‘default’, pagesize = 20, page = 1)
 ```
 
 **搜索专题**【已完成】
@@ -689,11 +690,12 @@ def biliVedioSearch(keyword, order = 'default', pagesize = 20, page = 1)
 	* is_bangumi：是否番剧
 	* arcurl：专题页面URL
   
+> 【**注意：**】经测试，此api的appkey必须使用新版的，即必须配合AppSecret使用，否则会返回{“code”:-3,”message”:”API sign invalid”}
+
 #### API实现：
 ```python
-def biliZhuantiSearch(keyword)
+biliZhuantiSearch(appkey, AppSecret, keyword)
 ```
-
 
 ---
 ## 辅助API
