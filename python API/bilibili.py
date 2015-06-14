@@ -379,7 +379,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
     videolist = []
     if jsoninfo.Getvalue('code') != 0:
         print jsoninfo.Getvalue('error')
-        return vediolist
+        return videolist
     page = jsoninfo.Getvalue('pages')
     name = jsoninfo.Getvalue('name')
     for i in range(len(jsoninfo.Getvalue('list'))-1):

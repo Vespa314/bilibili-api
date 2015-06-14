@@ -16,14 +16,14 @@ class User():
         return 'http://space.bilibili.tv/'+str(self.mid)
     mid = None
     name = None
-    isApprove = False#是否是认证账号
-    spaceName = ""
-    sex = ""
+    isApprove = None#是否是认证账号
+    spaceName = None
+    sex = None
     rank = None
     avatar = None
-    follow = 0#关注好友数目
-    fans = 0#粉丝数目
-    article = 0#投稿数
+    follow = None#关注好友数目
+    fans = None#粉丝数目
+    article = None#投稿数
     place = None#所在地
     description = None#认证用户为认证信息 普通用户为交友宣言
     followlist = None#关注的好友列表
