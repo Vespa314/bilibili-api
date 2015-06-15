@@ -59,8 +59,6 @@ def GetUserInfo(url):
 由GetUserInfoBymid(mid)或者GetUserInfoByName(name)调用
 返回：
     用户信息
-待添加：
-    如果用户不存在返回的是：{"code":-626,"message":"User is not exists."}
     """
     jsoninfo = JsonInfo(url)
     user = User(jsoninfo.Getvalue('mid'), jsoninfo.Getvalue('name'))
