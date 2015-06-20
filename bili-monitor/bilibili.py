@@ -202,7 +202,6 @@ def GetVideoInfo(aid, appkey,page = 1, AppSecret=None, fav = None):
     if fav:
         paras['fav'] = fav
     url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret)
-    print url
     jsoninfo = JsonInfo(url)
     video = Video(aid,jsoninfo.Getvalue('title'))
     video.guankan = jsoninfo.Getvalue('play')

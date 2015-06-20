@@ -35,8 +35,6 @@ if __name__ == "__main__":
     bangumilist = GetBangumi(appkey,btype = 2,weekday=0,AppSecret=secretkey);
     for bangumi in bangumilist:
         bangumi.title = fileRename(bangumi.title)
-        if not bangumi.title.find('Jo')>=0:
-            continue
         print "updating bangumi info of:",bangumi.title
         path = "./%s"%(bangumi.title)
         mMkdir(path)
