@@ -106,18 +106,18 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
         paras['click_detail'] = click_detail;
     url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret);   
     jsoninfo = JsonInfo(url);
-    vediolist = [];
+    videolist = [];
     for i in range(len(jsoninfo.Getvalue('list'))-1):
         idx = str(i);
         item = jsoninfo.Getvalue('list',idx);
-        vedio = Vedio(item['aid'],item['title']);
-        vedio.guankan = item['play']; 
-        vedio.tid = item['typeid']; 
-        vedio.author = User(item['mid'],item['author'])
-        vedio.description = item['description'];
-        vedio.duration = item['duration'];
-        vediolist.append(vedio)
-    return vediolist
+        video = Video(item['aid'],item['title']);
+        video.guankan = item['play']; 
+        video.tid = item['typeid']; 
+        video.author = User(item['mid'],item['author'])
+        video.description = item['description'];
+        video.duration = item['duration'];
+        videolist.append(video)
+    return videolist
         
 query = '{query}'
 fb = Feedback()
@@ -154,10 +154,10 @@ if opt != []:
 endday = datetime.datetime.now()
 beginday = endday - datetime.timedelta(days =dayspan)
             
-vediolist = GetRank(appkey,zone,begin=[beginday.year,beginday.month,beginday.day],end=[endday.year,endday.month,endday.day],page = None,pagesize=30,click_detail =None,order = mode,AppSecret=None)
+videolist = GetRank(appkey,zone,begin=[beginday.year,beginday.month,beginday.day],end=[endday.year,endday.month,endday.day],page = None,pagesize=30,click_detail =None,order = mode,AppSecret=None)
 
 try:
-    for bgm in vediolist:
+    for bgm in videolist:
         if bgm.tid not in [33,32,94]:
             fb.add_item("%s(%s)"%(bgm.title,str(bgm.guankan)),subtitle="【%s】%s"%(bgm.author.name,bgm.description),arg=bgm.aid)
     

@@ -11,7 +11,7 @@
 代码暂时只在MAC系统下测试通过，对于其他系统可以自行研究，至少。。。。。下面这句代码的目标路径你要改一下吧。。。
 
 ```
-Danmaku2ASS(GetDanmuku(vedio.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),vedio.title), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
+Danmaku2ASS(GetDanmuku(video.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),video.title), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
 ```
 如果有疑问想交流，可以电邮:`kylensherlock艾特gmail.com`
 

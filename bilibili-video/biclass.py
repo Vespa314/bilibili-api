@@ -46,7 +46,7 @@ class User():
     followlist = None;#关注的好友列表
     
 
-class Vedio():
+class Video():
     def __init__(self,m_aid=None,m_title=None):
         if m_aid:
             self.aid = m_aid;

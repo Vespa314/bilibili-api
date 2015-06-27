@@ -9,7 +9,7 @@ from support import *
 import hashlib
 import datetime
 
-def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
+def GetVideoOfZhuanti(spid,season_id=None,bangumi=None):
     """
 输入：
     spid:专题id
@@ -36,4 +36,4 @@ query = '{query}'
 # 3：三次元
 # wn:查询星期n
 
-GetVedioOfZhuanti(query,bangumi = 1)
+GetVideoOfZhuanti(query,bangumi = 1)

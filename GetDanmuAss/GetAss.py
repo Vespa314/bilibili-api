@@ -313,38 +313,38 @@ def WriteComment(f, c, row, width, height, bottomReserved, fontsize, lifetime, s
 def CalculateLength(s):
     return max(map(len, s.split('\n')))  # May not be accurate
 
-def GetVedioInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
+def GetVideoInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
     paras = {'id': GetString(aid),'page': GetString(page)};
     if fav != None:
         paras['fav'] = fav;
     url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret);
     jsoninfo = JsonInfo(url);
-    vedio = Vedio(aid,jsoninfo.Getvalue('title'));
-    vedio.guankan = jsoninfo.Getvalue('play')
-    vedio.commentNumber = jsoninfo.Getvalue('review')
-    vedio.danmu = jsoninfo.Getvalue('video_review')
-    vedio.shoucang = jsoninfo.Getvalue('favorites');
-    vedio.description = jsoninfo.Getvalue('description')
-    vedio.tag = [];
+    video = Video(aid,jsoninfo.Getvalue('title'));
+    video.guankan = jsoninfo.Getvalue('play')
+    video.commentNumber = jsoninfo.Getvalue('review')
+    video.danmu = jsoninfo.Getvalue('video_review')
+    video.shoucang = jsoninfo.Getvalue('favorites');
+    video.description = jsoninfo.Getvalue('description')
+    video.tag = [];
     taglist = jsoninfo.Getvalue('tag');
     if taglist != None:
         for tag in taglist.split(','):
-            vedio.tag.append(tag);
-    vedio.cover = jsoninfo.Getvalue('pic');
-    vedio.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
-    vedio.page = jsoninfo.Getvalue('pages');
-    vedio.date = jsoninfo.Getvalue('created_at');
-    vedio.credit = jsoninfo.Getvalue('credit');
-    vedio.coin = jsoninfo.Getvalue('coins');
-    vedio.spid = jsoninfo.Getvalue('spid');
-    vedio.cid = jsoninfo.Getvalue('cid');
-    vedio.offsite = jsoninfo.Getvalue('offsite');
-    vedio.partname = jsoninfo.Getvalue('partname');
-    vedio.src = jsoninfo.Getvalue('src');
-    vedio.tid = jsoninfo.Getvalue('tid')
-    vedio.typename = jsoninfo.Getvalue('typename')
-    vedio.instant_server = jsoninfo.Getvalue('instant_server');
-    return vedio
+            video.tag.append(tag);
+    video.cover = jsoninfo.Getvalue('pic');
+    video.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
+    video.page = jsoninfo.Getvalue('pages');
+    video.date = jsoninfo.Getvalue('created_at');
+    video.credit = jsoninfo.Getvalue('credit');
+    video.coin = jsoninfo.Getvalue('coins');
+    video.spid = jsoninfo.Getvalue('spid');
+    video.cid = jsoninfo.Getvalue('cid');
+    video.offsite = jsoninfo.Getvalue('offsite');
+    video.partname = jsoninfo.Getvalue('partname');
+    video.src = jsoninfo.Getvalue('src');
+    video.tid = jsoninfo.Getvalue('tid')
+    video.typename = jsoninfo.Getvalue('typename')
+    video.instant_server = jsoninfo.Getvalue('instant_server');
+    return video
     
 def GetSign(params,appkey,AppSecret=None):
     """
@@ -465,5 +465,5 @@ if __name__ == '__main__':
             raise ValueError('Invalid URL: %s' % url)
         aid = regex_match.group(1)
         pid = regex_match.group(3) or '1'
-        vedio = GetVedioInfo(aid,appkey,AppSecret=None,page = pid)
-        Danmaku2ASS(GetDanmuku(vedio.cid),r'%s/Desktop/%s-%s.ass'%(os.path.expanduser('~'),vedio.title,pid), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
+        video = GetVideoInfo(aid,appkey,AppSecret=None,page = pid)
+        Danmaku2ASS(GetDanmuku(video.cid),r'%s/Desktop/%s-%s.ass'%(os.path.expanduser('~'),video.title,pid), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)

@@ -29,7 +29,7 @@ TYPE_PINYIN = 'pinyin'
 TYPE_TOUGAO = 'default'
 ############################常量定义结束
 
-def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0):
+def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0):
     """
 输入：    
     begintime：起始时间，三元数组[year1,month1,day1]
@@ -52,7 +52,7 @@ def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,origina
         ori = ''
     url = 'http://www.bilibili.tv/list/%s-%d-%d-%d-%d-%d~%d-%d-%d%s.html'%(sortType,zone,page,begintime[0],begintime[1],begintime[2],endtime[0],endtime[1],endtime[2],ori);    
     content = getURLContent(url);
-    return GetVedioFromRate(content);
+    return GetVideoFromRate(content);
 
 def GetUserInfo(url):
     """
@@ -105,7 +105,7 @@ def GetUserInfoByName(name):
     print url
     return GetUserInfo(url)
 
-def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
+def GetVideoOfZhuanti(spid,season_id=None,bangumi=None):
     """
 输入：
     spid:专题id
@@ -120,13 +120,13 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
     if bangumi != None:
         url += '&bangumi='+GetString(bangumi);
     jsoninfo = FromJson(url);
-    vediolist = [];
-    for vedio_idx in jsoninfo['list']:
-        vedio = Vedio(jsoninfo['list'][vedio_idx]['aid'],jsoninfo['list'][vedio_idx]['title']);
-        vedio.cover = jsoninfo['list'][vedio_idx]['cover'];
-        vedio.guankan = jsoninfo['list'][vedio_idx]['click'];
-        vediolist.append(vedio);
-    return vediolist
+    videolist = [];
+    for video_idx in jsoninfo['list']:
+        video = Video(jsoninfo['list'][video_idx]['aid'],jsoninfo['list'][video_idx]['title']);
+        video.cover = jsoninfo['list'][video_idx]['cover'];
+        video.guankan = jsoninfo['list'][video_idx]['click'];
+        videolist.append(video);
+    return videolist
 
 def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
     """
@@ -195,9 +195,9 @@ def GetAllComment(aid,ver=None,order = None):
 if __name__ == "__main__":
 #     f = open('result.txt','w');
      
-#    vedioList = GetPopularVedio([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
-#    for vedio in vedioList:
-#        vedio.saveToFile(f);
+#    videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
+#    for video in videoList:
+#        video.saveToFile(f);
      
 #     user = GetUserInfoBymid('72960');
 #     print user.name.decode('utf8','ignore').encode('gbk','ignore')
@@ -205,9 +205,9 @@ if __name__ == "__main__":
 #     print user.spaceName.decode('utf8','ignore').encode('gbk','ignore')
 ##    user.saveToFile(f);    
     
-#    vediolist = GetVedioOfZhuanti('6492',bangumi=0);
-#    for vedio in vediolist:
-#        print vedio.title
+#    videolist = GetVideoOfZhuanti('6492',bangumi=0);
+#    for video in videolist:
+#        print video.title
     
     commentList = GetAllComment('55300');
     for liuyan in commentList.comments:

@@ -35,7 +35,7 @@ def GetString(t):
     return t
 
 #从视频源码获取视频信息
-def GetVedioFromRate(content):
+def GetVideoFromRate(content):
     #av号和标题
     regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title">([^/]+)</a>';
     info1 = GetRE(content,regular1)
@@ -58,17 +58,17 @@ def GetVedioFromRate(content):
     regular7 = r'<a class="up r10000" href="http://space.bilibili.tv/(\d+)" target="_blank">(.+)</a>'
     info7 = GetRE(content,regular7)
     #!!!!!!!!这里可以断言所有信息长度相等
-    vedioNum = len(info1);#视频长度
-    vedioList = [];
-    for i in range(vedioNum):
-        vedio_t = Vedio();
-        vedio_t.aid = int(info1[i][0]);
-        vedio_t.title = info1[i][1];
-        vedio_t.guankan = int(info2[i]);
-        vedio_t.shoucang = int(info3[i]);
-        vedio_t.danmu = int(info4[i]);
-        vedio_t.date = info5[i];
-        vedio_t.cover = info6[i];
-        vedio_t.po = User(info7[i][0],info7[i][1])
-        vedioList.append(vedio_t);
-    return vedioList
+    videoNum = len(info1);#视频长度
+    videoList = [];
+    for i in range(videoNum):
+        video_t = Video();
+        video_t.aid = int(info1[i][0]);
+        video_t.title = info1[i][1];
+        video_t.guankan = int(info2[i]);
+        video_t.shoucang = int(info3[i]);
+        video_t.danmu = int(info4[i]);
+        video_t.date = info5[i];
+        video_t.cover = info6[i];
+        video_t.po = User(info7[i][0],info7[i][1])
+        videoList.append(video_t);
+    return videoList

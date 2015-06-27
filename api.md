@@ -115,7 +115,7 @@
 
 #### API实现：
 ```python
-def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0)
+def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0)
 ```
 
 * 输入:
@@ -382,7 +382,7 @@ http://www.bilibili.tv/sppage/ad-recommend-[spid]-[page].html也可以获得相�
 
 #### API实现：
 ```python
-def GetVedioOfZhuanti(spid,season_id=None,bangumi=None)
+def GetVideoOfZhuanti(spid,season_id=None,bangumi=None)
 ```
 
 * 输入:

@@ -30,7 +30,7 @@ TYPE_PINYIN = 'pinyin'
 TYPE_TOUGAO = 'default'
 ############################常量定义结束
 
-def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0):
+def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,original=0):
     """
 输入：    
     begintime：起始时间，三元数组[year1,month1,day1]
@@ -53,7 +53,7 @@ def GetPopularVedio(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,origina
         ori = ''
     url = 'http://www.bilibili.tv/list/%s-%d-%d-%d-%d-%d~%d-%d-%d%s.html'%(sortType,zone,page,begintime[0],begintime[1],begintime[2],endtime[0],endtime[1],endtime[2],ori);    
     content = getURLContent(url);
-    return GetVedioFromRate(content);
+    return GetVideoFromRate(content);
 
 def GetUserInfo(url):
     """
@@ -103,7 +103,7 @@ def GetUserInfoByName(name):
     url = 'http://api.bilibili.cn/userinfo'+"?user="+name;
     return GetUserInfo(url)
 
-def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
+def GetVideoOfZhuanti(spid,season_id=None,bangumi=None):
     """
 输入：
     spid:专题id
@@ -118,13 +118,13 @@ def GetVedioOfZhuanti(spid,season_id=None,bangumi=None):
     if bangumi != None:
         url += '&bangumi='+GetString(bangumi);
     jsoninfo = JsonInfo(url);
-    vediolist = [];
-    for vedio_idx in jsoninfo.Getvalue('list'):
-        vedio = Vedio(jsoninfo.Getvalue('list',vedio_idx,'aid'),jsoninfo.Getvalue('list',vedio_idx,'title'));
-        vedio.cover = jsoninfo.Getvalue('list',vedio_idx,'cover');
-        vedio.guankan = jsoninfo.Getvalue('list',vedio_idx,'click');
-        vediolist.append(vedio);
-    return vediolist
+    videolist = [];
+    for video_idx in jsoninfo.Getvalue('list'):
+        video = Video(jsoninfo.Getvalue('list',video_idx,'aid'),jsoninfo.Getvalue('list',video_idx,'title'));
+        video.cover = jsoninfo.Getvalue('list',video_idx,'cover');
+        video.guankan = jsoninfo.Getvalue('list',video_idx,'click');
+        videolist.append(video);
+    return videolist
 
 def GetComment(aid,page = None,pagesize = None,ver=None,order = None):
     """
@@ -188,38 +188,38 @@ def GetAllComment(aid,ver=None,order = None):
         time.sleep(0.5)
     return commentList
 
-def GetVedioInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
+def GetVideoInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
     paras = {'id': GetString(aid),'page': GetString(page)};
     if fav != None:
         paras['fav'] = fav;
     url =  'http://api.bilibili.cn/view?'+GetSign(paras,appkey,AppSecret);
     jsoninfo = JsonInfo(url);
-    vedio = Vedio(aid,jsoninfo.Getvalue('title'));
-    vedio.guankan = jsoninfo.Getvalue('play')
-    vedio.commentNumber = jsoninfo.Getvalue('review')
-    vedio.danmu = jsoninfo.Getvalue('video_review')
-    vedio.shoucang = jsoninfo.Getvalue('favorites');
-    vedio.description = jsoninfo.Getvalue('description')
-    vedio.tag = [];
+    video = Video(aid,jsoninfo.Getvalue('title'));
+    video.guankan = jsoninfo.Getvalue('play')
+    video.commentNumber = jsoninfo.Getvalue('review')
+    video.danmu = jsoninfo.Getvalue('video_review')
+    video.shoucang = jsoninfo.Getvalue('favorites');
+    video.description = jsoninfo.Getvalue('description')
+    video.tag = [];
     taglist = jsoninfo.Getvalue('tag');
     if taglist != None:
         for tag in taglist.split(','):
-            vedio.tag.append(tag);
-    vedio.cover = jsoninfo.Getvalue('pic');
-    vedio.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
-    vedio.page = jsoninfo.Getvalue('pages');
-    vedio.date = jsoninfo.Getvalue('created_at');
-    vedio.credit = jsoninfo.Getvalue('credit');
-    vedio.coin = jsoninfo.Getvalue('coins');
-    vedio.spid = jsoninfo.Getvalue('spid');
-    vedio.cid = jsoninfo.Getvalue('cid');
-    vedio.offsite = jsoninfo.Getvalue('offsite');
-    vedio.partname = jsoninfo.Getvalue('partname');
-    vedio.src = jsoninfo.Getvalue('src');
-    vedio.tid = jsoninfo.Getvalue('tid')
-    vedio.typename = jsoninfo.Getvalue('typename')
-    vedio.instant_server = jsoninfo.Getvalue('instant_server');
-    return vedio
+            video.tag.append(tag);
+    video.cover = jsoninfo.Getvalue('pic');
+    video.author = User(jsoninfo.Getvalue('mid'),jsoninfo.Getvalue('author'));
+    video.page = jsoninfo.Getvalue('pages');
+    video.date = jsoninfo.Getvalue('created_at');
+    video.credit = jsoninfo.Getvalue('credit');
+    video.coin = jsoninfo.Getvalue('coins');
+    video.spid = jsoninfo.Getvalue('spid');
+    video.cid = jsoninfo.Getvalue('cid');
+    video.offsite = jsoninfo.Getvalue('offsite');
+    video.partname = jsoninfo.Getvalue('partname');
+    video.src = jsoninfo.Getvalue('src');
+    video.tid = jsoninfo.Getvalue('tid')
+    video.typename = jsoninfo.Getvalue('typename')
+    video.instant_server = jsoninfo.Getvalue('instant_server');
+    return video
     
 def GetSign(params,appkey,AppSecret=None):
     """
@@ -306,31 +306,31 @@ def GetRank(appkey,tid,begin=None,end=None,page = None,pagesize=None,click_detai
     while jsoninfo.Getvalue('code') != 0:
         print jsoninfo.Getvalue('error'),'re-connecting...'
         time.sleep(300);
-    vediolist = [];
+    videolist = [];
     page = jsoninfo.Getvalue('pages')
     number = jsoninfo.Getvalue('results')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
         idx = str(i);
-        vedio = Vedio(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'));
-        vedio.Iscopy = jsoninfo.Getvalue('list',idx,'copyright')
-        vedio.tid = jsoninfo.Getvalue('list',idx,'typeid')
-        vedio.typename = jsoninfo.Getvalue('list',idx,'typename')
-        vedio.subtitle = jsoninfo.Getvalue('list',idx,'subtitle'); 
-        vedio.guankan = jsoninfo.Getvalue('list',idx,'play'); 
-        vedio.commentNumber = jsoninfo.Getvalue('list',idx,'review');
-        vedio.danmu = jsoninfo.Getvalue('list',idx,'video_review');
-        vedio.shoucang = jsoninfo.Getvalue('list',idx,'favorites');
-        vedio.author = User(jsoninfo.Getvalue('list',idx,'mid'),jsoninfo.Getvalue('list',idx,'author'))
-        vedio.description = jsoninfo.Getvalue('list',idx,'description');
-        vedio.date = jsoninfo.Getvalue('list',idx,'create');
-        vedio.cover = jsoninfo.Getvalue('list',idx,'pic');
-        vedio.credit = jsoninfo.Getvalue('list',idx,'credit');
-        vedio.coin = jsoninfo.Getvalue('list',idx,'coins');
-        vedio.duration = jsoninfo.Getvalue('list',idx,'duration');
+        video = Video(jsoninfo.Getvalue('list',idx,'aid'),jsoninfo.Getvalue('list',idx,'title'));
+        video.Iscopy = jsoninfo.Getvalue('list',idx,'copyright')
+        video.tid = jsoninfo.Getvalue('list',idx,'typeid')
+        video.typename = jsoninfo.Getvalue('list',idx,'typename')
+        video.subtitle = jsoninfo.Getvalue('list',idx,'subtitle'); 
+        video.guankan = jsoninfo.Getvalue('list',idx,'play'); 
+        video.commentNumber = jsoninfo.Getvalue('list',idx,'review');
+        video.danmu = jsoninfo.Getvalue('list',idx,'video_review');
+        video.shoucang = jsoninfo.Getvalue('list',idx,'favorites');
+        video.author = User(jsoninfo.Getvalue('list',idx,'mid'),jsoninfo.Getvalue('list',idx,'author'))
+        video.description = jsoninfo.Getvalue('list',idx,'description');
+        video.date = jsoninfo.Getvalue('list',idx,'create');
+        video.cover = jsoninfo.Getvalue('list',idx,'pic');
+        video.credit = jsoninfo.Getvalue('list',idx,'credit');
+        video.coin = jsoninfo.Getvalue('list',idx,'coins');
+        video.duration = jsoninfo.Getvalue('list',idx,'duration');
         if click_detail != None:
-            vedio.play_site = jsoninfo.Getvalue('list',idx,'play_site');
-            vedio.play_forward = jsoninfo.Getvalue('list',idx,'play_forward');
-            vedio.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile');
-        vediolist.append(vedio)
-    return [page,number,vediolist]
+            video.play_site = jsoninfo.Getvalue('list',idx,'play_site');
+            video.play_forward = jsoninfo.Getvalue('list',idx,'play_forward');
+            video.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile');
+        videolist.append(video)
+    return [page,number,videolist]
         
