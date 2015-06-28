@@ -5,6 +5,7 @@ Created on Mon May 26 23:59:09 2014
 @author: Vespa
 """
 import urllib2
+import urllib
 import re
 import json
 import zlib
@@ -120,17 +121,12 @@ def GetVideoFromRate(content):
 def GetSign(params, appkey, AppSecret=None):
     """
     获取新版API的签名，不然会返回-3错误
-待添加：【重要！】
-    需要做URL编码并保证字母都是大写，如 %2F
     """
     params['appkey']=appkey
     data = ""
     paras = params.keys()
     paras.sort()
-    for para in paras:
-        if data != "":
-            data += "&"
-        data += para + "=" + str(params[para])
+    data = urllib.urlencode(params)
     if AppSecret == None:
         return data
     m = hashlib.md5()

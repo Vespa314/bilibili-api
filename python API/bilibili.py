@@ -318,6 +318,8 @@ def biliVideoSearch(appkey, AppSecret, keyword, order = 'default', pagesize = 20
 
 def biliZhuantiSearch(appkey, AppSecret, keyword):
     """
+【注】：
+    旧版Appkey不可用，必须配合AppSecret使用！！
 根据关键词搜索专题
 输入：
     keyword：关键词
@@ -330,7 +332,7 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
     for zhuanti_idx in jsoninfo.Getvalue('result'):
         if zhuanti_idx['type'] != 'special':
             continue
-        video_idx = DictDecode2UTF8(video_idx)
+        zhuanti_idx = DictDecode2UTF8(zhuanti_idx)
         zhuanti = ZhuantiInfo(zhuanti_idx['spid'], zhuanti_idx['title'])
         zhuanti.author = User(zhuanti_idx['mid'], zhuanti_idx['author'])
         zhuanti.cover = zhuanti_idx['pic']
@@ -484,5 +486,5 @@ if __name__ == "__main__":
     # for video in biliVideoSearch(appkey,secretkey,'rwby'):
     #     print video.title
     #专题搜索
-    # for zhuanti in biliZhuantiSearch(appkey,secretkey,'rwby'):
+    # for zhuanti in biliZhuantiSearch(appkey,secretkey,'果然'):
     #     print zhuanti.title
