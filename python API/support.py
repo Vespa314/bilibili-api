@@ -14,6 +14,9 @@ import xml.dom.minidom
 import hashlib
 from biclass import *
 import time
+import sys
+import os
+
 def GetRE(content,regexp):
     return re.findall(regexp, content)
 

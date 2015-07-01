@@ -510,7 +510,7 @@ function get_sign(params, key)
     * create_at：视频发布日期
     * ~~favorited：当前帐号收藏状态~~
 
-> 下载弹幕API：GetDanmuku(cid)，无需API验证
+> 下载弹幕API：GetDanmukuContent(cid)，无需API验证
 
 > **注意：**发现有部分视频必须登陆后才可以获得视频信息，这部分待完善！！！！
 

@@ -7,7 +7,6 @@ Created on Mon May 26 23:42:03 2014
 
 
 from support import *
-
 ############################常量定义
 
 #####排序方式
@@ -420,12 +419,38 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
         videolist.append(video)
     return [page,name,videolist]
 
+def GetDanmukuContent(cid):
+    """
+    获取弹幕内容
+    """
+    content = GetRE(GetDanmuku(cid),r'<d p=[^>]*>([^<]*)<')
+    return content
+
 def GetDanmuku(cid):
+    """
+    获取弹幕xml内容
+    """
     cid = getint(cid)
     url = "http://comment.bilibili.cn/%d.xml"%(cid)
     content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
-    content = GetRE(content,r'<d p=[^>]*>([^<]*)<')
     return content
+
+
+def Danmaku2ASS(input_files, output_file, stage_width, stage_height, reserve_blank=0, font_face='sans-serif', font_size=25.0, text_opacity=1.0, comment_duration=5.0, is_reduce_comments=False, progress_callback=None):
+    """
+获取弹幕转化成ass文件
+input_files：弹幕文件，可由GetDanmuku(cid)获得
+output_file：输出ASS文件路径
+    """
+    fo = None
+    comments = ReadComments(input_files, font_size)
+    try:
+        fo = ConvertToFile(output_file, 'w')
+        ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, comment_duration, is_reduce_comments, progress_callback)
+    finally:
+        if output_file and fo != output_file:
+            fo.close()
+
 
 def GetBilibiliUrl(url, appkey, AppSecret=None):
     overseas=False
@@ -461,8 +486,8 @@ if __name__ == "__main__":
     # for liuyan in commentList.comments:
     #     print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
     #获取视频信息
-    # appkey = '************'
-    # secretkey = None #选填
+    appkey = '***'
+    secretkey = '***'
     # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
     # for tag in video.tag:
     #     print tag
@@ -476,8 +501,11 @@ if __name__ == "__main__":
     #     print video.title,video.play_site
     #获取弹幕
     # video = GetVideoInfo(1677082,appkey,AppSecret=secretkey)
-    # for danmu in GetDanmuku(video.cid):
+    # for danmu in GetDanmukuContent(video.cid):
     #     print danmu
+    #获取弹幕ASS文件
+    # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
+    # Danmaku2ASS(GetDanmuku(video.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),video.title.replace(r'/','')), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
     #获取视频下载地址列表
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:
