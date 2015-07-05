@@ -435,6 +435,14 @@ def GetDanmuku(cid):
     content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
     return content
 
+def ParseDanmuku(cid):
+    """
+    按时间顺序返回每一条弹幕的时间和内容
+    """
+    comments = []
+    comments.extend(ParseComment(GetDanmuku(cid)))
+    comments.sort()
+    return comments
 
 def Danmaku2ASS(input_files, output_file, stage_width, stage_height, reserve_blank=0, font_face='sans-serif', font_size=25.0, text_opacity=1.0, comment_duration=5.0, is_reduce_comments=False, progress_callback=None):
     """
@@ -506,6 +514,10 @@ if __name__ == "__main__":
     #获取弹幕ASS文件
     # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
     # Danmaku2ASS(GetDanmuku(video.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),video.title.replace(r'/','')), 640, 360, 0, 'sans-serif', 15, 0.5, 10, False)
+    # 分解弹幕
+    # video = GetVideoInfo(1152959,appkey=appkey,AppSecret=secretkey)
+    # for t,danmu in ParseDanmuku(video.cid):
+    #     print t,danmu
     #获取视频下载地址列表
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
     # for url in media_urls:

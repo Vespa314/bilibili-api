@@ -16,7 +16,7 @@ from biclass import *
 import time
 import sys
 import os
-
+from GetAssDanmaku import *
 def GetRE(content,regexp):
     return re.findall(regexp, content)
 
@@ -135,3 +135,11 @@ def GetSign(params, appkey, AppSecret=None):
     m = hashlib.md5()
     m.update(data+AppSecret)
     return data+'&sign='+m.hexdigest()
+
+def ParseComment(danmu):
+    dom = xml.dom.minidom.parseString(danmu)
+    comment_element = dom.getElementsByTagName('d')
+    for i, comment in enumerate(comment_element):
+        p = str(comment.getAttribute('p')).split(',')
+        c = str(comment.childNodes[0].wholeText).replace('/n', '\n')
+        yield (float(p[0]),c)
