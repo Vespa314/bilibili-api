@@ -141,5 +141,8 @@ def ParseComment(danmu):
     comment_element = dom.getElementsByTagName('d')
     for i, comment in enumerate(comment_element):
         p = str(comment.getAttribute('p')).split(',')
-        c = str(comment.childNodes[0].wholeText).replace('/n', '\n')
+        if len(comment.childNodes) != 0:
+            c = str(comment.childNodes[0].wholeText).replace('/n', '\n')
+        else:
+            c = ""
         yield (float(p[0]),c)
