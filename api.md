@@ -715,3 +715,21 @@ GetBilibiliUrl(url,appkey,AppSecret=None)
 	* url列表
 
 > 返回URL地址经常变化，而且有时返回的是若干个6分钟短视频的url，需要通过ffmpeg等工具连接起来，但是偶尔再等一下返回的又变成一个URL了。。。
+
+**获取弹幕信息**【已完成】
+
+code：
+ParseDanmuku(cid)
+
+* 输入：
+	* cid：视频cid
+* 返回
+	* 弹幕信息：
+		* danmu.t_video:弹幕时间（基于视频）
+		* danmu.t_stamp:弹幕发表时间
+		* danmu.mid_crc:用户mid经过crc32计算后的16进制结果值为:hex(binascii.crc32(mid))
+		* danmu.danmu_type:弹幕类型
+			* 1：滚动弹幕
+			* 4：底部弹幕
+			* 5：顶部弹幕
+		* danmu.content：弹幕内容

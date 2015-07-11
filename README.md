@@ -2,7 +2,7 @@
 ============
 
 ### 目录：
-* python API/：python版本API【变坑中。。】
+* python API/：python版本API
 * bilibili-po/：测试爬取B站up的关注关系网，以便后期分析【已完成】
   * bilibili-po/爬取结果:爬取的原始数据，包括每一个up的id，昵称，投稿数，粉丝数以及关注列表
   * bilibili-po/分析：分析爬取的数据的python代码和Mathematica代码
@@ -176,4 +176,16 @@ class ZhuantiInfo():
     season_id = None
     is_bangumi = None
     arcurl = None
+```
+
+弹幕类:
+```
+class Danmu():
+    def __init__(self):
+        pass
+    t_video = None
+    t_stamp = None
+    mid_crc = None  # 值为:hex(binascii.crc32(mid))
+    danmu_type = None # 1:滚动弹幕 5：顶端弹幕  4：底部弹幕
+    content = None
 ```
