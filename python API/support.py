@@ -141,8 +141,13 @@ def ParseComment(danmu):
     comment_element = dom.getElementsByTagName('d')
     for i, comment in enumerate(comment_element):
         p = str(comment.getAttribute('p')).split(',')
+        danmu = Danmu()
+        danmu.t_video = float(p[0])
+        danmu.danmu_type = int(p[1])
+        danmu.t_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(p[4])))
+        danmu.mid_crc = p[6]
         if len(comment.childNodes) != 0:
-            c = str(comment.childNodes[0].wholeText).replace('/n', '\n')
+            danmu.content = str(comment.childNodes[0].wholeText).replace('/n', '\n')
         else:
-            c = ""
-        yield (float(p[0]),c)
+            danmu.content = ""
+        yield danmu
