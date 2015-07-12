@@ -733,3 +733,4 @@ ParseDanmuku(cid)
 			* 4：底部弹幕
 			* 5：顶部弹幕
 		* danmu.content：弹幕内容
+		* danmu.danmu_color：弹幕颜色
