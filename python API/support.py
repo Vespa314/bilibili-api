@@ -129,7 +129,10 @@ def GetSign(params, appkey, AppSecret=None):
     data = ""
     paras = params.keys()
     paras.sort()
-    data = urllib.urlencode(params)
+    for para in paras:
+        if data != "":
+            data += "&"
+        data += para + "=" + str(urllib.quote(params[para]))
     if AppSecret == None:
         return data
     m = hashlib.md5()
