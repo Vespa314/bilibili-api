@@ -424,7 +424,38 @@ GetUserInfoBymid(mid)
 GetUserInfoByName(name)
 ```
 
-**说明：**返回数据编码紊乱，有些utf8有些是gbk。。如果现实有问题，请自行调整
+**读取Up视频列表【已完成】**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/member/getSubmitVideos`
+* 输入：
+    * mid：用户id
+    * pagesize：单词拉去数目
+    * page：页数
+* 返回格式：
+    * aid：av号
+    * title：视频名
+    * copyright：是否原创
+    * typeid：tid
+    * typename：类别
+    * subtitle：子标题
+    * play：播放数
+    * review：评论数
+    * favorites：收藏数
+    * mid：Up主id
+    * author：Up主
+    * description：视频描述
+    * create：上传日期
+    * pic：封面URL
+    * credit：
+    * coins：硬币数
+    * duration：视频时长
+    * comment：弹幕数
+
+#### API实现
+```python
+GetVideoOfUploader(mid,pagesize=20,page=1)
+```
 
 ---
 

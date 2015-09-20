@@ -64,9 +64,9 @@ class Video():
     episode = None
     arcurl = None#网页地址
     arcrank = None#不明
-#不明：
     tid = None
     typename = None
+#不明：
     instant_server = None
     src = None
     partname = None

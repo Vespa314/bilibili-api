@@ -475,6 +475,31 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
     media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
     return media_urls
 
+def GetVideoOfUploader(mid,pagesize=20,page=1):
+    url = 'http://space.bilibili.com/ajax/member/getSubmitVideos?mid=%d&pagesize=%d&page=%d'%(getint(mid),getint(pagesize),getint(page))
+    jsoninfo = JsonInfo(url)
+    videolist = []
+    for video_t in jsoninfo.Getvalue('data','list'):
+        video = Video(video_t['aid'],video_t['title'])
+        video.Iscopy = video_t['copyright']
+        video.tid = video_t['typeid']
+        video.typename = video_t['typename']
+        video.subtitle = video_t['subtitle']
+        video.guankan = video_t['play']
+        video.commentNumber = video_t['review']
+        video.shoucang = video_t['favorites']
+        video.author = User(video_t['mid'],video_t['author'])
+        video.description = video_t['description']
+        video.date = video_t['create']
+        video.cover = video_t['pic']
+        video.credit = video_t['credit']
+        video.coin = video_t['coins']
+        video.duration = video_t['duration']
+        video.danmu = video_t['comment']
+        videolist.append(video)
+    return videolist
+
+
 if __name__ == "__main__":
     #获取最热视频
     # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
@@ -528,3 +553,5 @@ if __name__ == "__main__":
     #专题搜索
     # for zhuanti in biliZhuantiSearch(appkey,secretkey,'果然'):
     #     print zhuanti.title
+    # for video in GetVideoOfUploader(72960,300):
+    #     print video.title
