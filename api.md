@@ -430,7 +430,7 @@ GetUserInfoByName(name)
     * `http://space.bilibili.com/ajax/member/getSubmitVideos`
 * 输入：
     * mid：用户id
-    * pagesize：单词拉去数目
+    * pagesize：单次拉去数目
     * page：页数
 * 返回格式：
 	* 第一层data
@@ -459,6 +459,167 @@ GetUserInfoByName(name)
 ```python
 GetVideoOfUploader(mid,pagesize=20,page=1)
 ```
+
+**读取Mylist列表信息**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/fav/getboxlist`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层list
+	    * fav_box：列表号码
+	    * name：列表名
+	    * max_count：容量
+	    * count：数目
+	    * atten_count：收藏人数
+	    * state：【不明】
+	    * ctime：【创建时间？！】
+		* count：总数目
+
+**读取订阅剧集信息**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/bangumi/getlist`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层result
+	    * season_id：【不知道什么鬼】
+	    * share_url：专题所在页面
+	    * title：标题
+	    * is_finish：是否完结
+	    * favorites：收藏人数
+	    * newest_ep_index：最新剧集
+	    * last_ep_index：【不知道什么鬼】
+	    * total_count：总视频数目
+	    * cover：封面
+		* count：总数目
+		* pages：页数
+
+
+**读取投过硬币视频**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/member/getcoinvideos`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层list
+	    * aid：av号
+	    * title：视频名
+	    * copyright：是否原创
+	    * typeid：tid
+	    * typename：类别
+	    * subtitle：子标题
+	    * play：播放数
+	    * review：评论数
+	    * favorites：收藏数
+	    * mid：Up主id
+	    * author：Up主
+	    * description：视频描述
+	    * create：上传日期
+	    * pic：封面URL
+	    * credit：
+	    * coins：硬币数
+	    * duration：视频时长
+	    * video_review：弹幕数
+	    * comment：弹幕数
+		* count：总数目
+		* pages：页数
+
+**读取订阅标签**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/tags/getsublist`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层tags
+	    * updated_ts：更新日期
+	    * name：名称
+	    * tag_id：标签编号
+	    * tynotify：是否开启实时推送
+		* count：总数目
+
+
+**读取玩过的游戏**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/game/getlastplay`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 【找不到有数据的mid，没试出来】
+
+**读取正在看的视频**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/member/getViewing`
+* 输入：
+    * mid：用户id
+* 返回格式：
+	* aid:av号
+	* title:视频名称
+
+> 如果没在观看，返回『无数据』
+
+
+**读取关注用户列表**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/friend/GetAttentionList`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层list
+	    * record_id：【不知道什么鬼】
+	    * fid：被关注者mid
+	    * addtime：关注事件
+	    * uname：被关注者昵称
+	    * face：头像
+	    * attentioned：【不知道什么鬼，感觉不是全是1就是全是0】
+		* pages：(当前pagesize下)总页数
+		* results：总数目
+
+
+**读取粉丝列表**
+
+* URL：【返回json】
+    * `http://space.bilibili.com/ajax/friend/GetFansList`
+* 输入：
+    * mid：用户id
+    * pagesize：单次拉去数目
+    * page：页数
+* 返回格式：
+	* 第一层data
+		* 第二层list
+	    * record_id：【不知道什么鬼】
+	    * fid：粉丝mid
+	    * addtime：关注事件
+	    * uname：粉丝昵称
+	    * face：头像
+	    * attentioned：【不知道什么鬼，感觉不是全是1就是全是0】
+		* pages：(当前pagesize下)总页数
+		* results：总数目
+
 
 ---
 
