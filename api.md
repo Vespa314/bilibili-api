@@ -433,24 +433,27 @@ GetUserInfoByName(name)
     * pagesize：单词拉去数目
     * page：页数
 * 返回格式：
-    * aid：av号
-    * title：视频名
-    * copyright：是否原创
-    * typeid：tid
-    * typename：类别
-    * subtitle：子标题
-    * play：播放数
-    * review：评论数
-    * favorites：收藏数
-    * mid：Up主id
-    * author：Up主
-    * description：视频描述
-    * create：上传日期
-    * pic：封面URL
-    * credit：
-    * coins：硬币数
-    * duration：视频时长
-    * comment：弹幕数
+	* 第一层data
+		* 第二层list
+	    * aid：av号
+	    * title：视频名
+	    * copyright：是否原创
+	    * typeid：tid
+	    * typename：类别
+	    * subtitle：子标题
+	    * play：播放数
+	    * review：评论数
+	    * favorites：收藏数
+	    * mid：Up主id
+	    * author：Up主
+	    * description：视频描述
+	    * create：上传日期
+	    * pic：封面URL
+	    * credit：
+	    * coins：硬币数
+	    * duration：视频时长
+	    * comment：弹幕数
+		* count：视频总数目
 
 #### API实现
 ```python
