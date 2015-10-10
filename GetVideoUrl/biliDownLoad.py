@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#Modified by SuperFashi
 
 import sys
 import gzip
@@ -10,7 +11,7 @@ import urllib.request
 import xml.dom.minidom
 import zlib
 
-USER_AGENT = 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'
+USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/45.0.2454.99 Safari/537.36'
 APPKEY = '85eb6835b0a1034e'
 APPSEC = '2ad42749773c441109bdc0191257a664'
 
@@ -22,22 +23,20 @@ def GetBilibiliUrl(url):
         raise ValueError('Invalid URL: %s' % url)
     aid = regex_match[0][0]
     pid = regex_match[0][2] or '1'
-    cid_args = {'type': 'json',  'id': aid, 'page': pid}
+    cid_args = {'type': 'json', 'id': aid, 'page': pid}
 
     resp_cid = urlfetch('http://api.bilibili.com/view?'+GetSign(cid_args,APPKEY,APPSEC))
     resp_cid = dict(json.loads(resp_cid.decode('utf-8', 'replace')))
     cid = resp_cid.get('cid')
-    media_args = {'cid': cid,'quality':4}
-    resp_media = urlfetch(url_get_media+GetSign(media_args,APPKEY,APPSEC))
-    media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
+    media_args = {'otype': 'json', 'cid': cid, 'type': 'mp4', 'quality': 4, 'appkey': APPKEY}
+    resp_media = urlfetch(url_get_media+ChangeFuck(media_args))
+    resp_media = dict(json.loads(resp_media.decode('utf-8', 'replace')))
+    media_urls = resp_media.get('durl')
+    media_urls = media_urls[0]
+    media_urls = media_urls.get('url')
     return media_urls
     
 def GetSign(params,appkey,AppSecret=None):
-    """
-    获取新版API的签名，不然会返回-3错误
-待添加：【重要！】
-    需要做URL编码并保证字母都是大写，如 %2F
-    """
     params['appkey']=appkey;
     data = "";
     paras = sorted(params)
@@ -51,9 +50,18 @@ def GetSign(params,appkey,AppSecret=None):
     m = hashlib.md5()
     m.update((data+AppSecret).encode('utf-8'))
     return data+'&sign='+m.hexdigest()
+
+def ChangeFuck(params):
+    data = "";
+    paras = params;
+    for para in paras:
+        if data != "":
+            data += "&";
+        data += para + "=" + str(params[para]);
+    return data
     
 def urlfetch(url):
-    req_headers = {'Accept-Encoding': 'gzip, deflate'}
+    req_headers = {'Accept-Encoding': 'gzip, deflate', 'User-Agent': USER_AGENT}
     req = urllib.request.Request(url=url, headers=req_headers)
     response = urllib.request.urlopen(req, timeout=120)
     content_encoding = response.info().get('Content-Encoding')
@@ -71,5 +79,4 @@ if __name__ == '__main__':
         print('输入视频播放地址')
     else:
         media_urls = GetBilibiliUrl(sys.argv[1])
-        for i in media_urls:
-            print(i)
+        print(media_urls)
