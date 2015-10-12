@@ -459,21 +459,20 @@ output_file：输出ASS文件路径
         if output_file and fo != output_file:
             fo.close()
 
-
 def GetBilibiliUrl(url, appkey, AppSecret=None):
     overseas=False
     url_get_media = 'http://interface.bilibili.com/playurl?' if not overseas else 'http://interface.bilibili.com/v_cdn_play?'
     regex_match = re.findall('http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)',url)
     if not regex_match:
-        return []
+        raise ValueError('Invalid URL: %s' % url)
     aid = regex_match[0][0]
     pid = regex_match[0][2] or '1'
     video = GetVideoInfo(aid,appkey,pid,AppSecret)
     cid = video.cid
-    media_args = {'cid': cid,'quality':4}
+    media_args = {'otype': 'json', 'cid': cid, 'type': 'mp4', 'quality': 4}
     resp_media = getURLContent(url_get_media+GetSign(media_args,appkey,AppSecret))
-    media_urls = [str(k.wholeText).strip() for i in xml.dom.minidom.parseString(resp_media.decode('utf-8', 'replace')).getElementsByTagName('durl') for j in i.getElementsByTagName('url')[:1] for k in j.childNodes if k.nodeType == 4]
-    return media_urls
+    resp_media = dict(json.loads(resp_media.decode('utf-8', 'replace')))
+    return resp_media.get('durl')[0].get('url')
 
 def GetVideoOfUploader(mid,pagesize=20,page=1):
     url = 'http://space.bilibili.com/ajax/member/getSubmitVideos?mid=%d&pagesize=%d&page=%d'%(getint(mid),getint(pagesize),getint(page))
@@ -544,9 +543,8 @@ if __name__ == "__main__":
     # for danmu in ParseDanmuku(video.cid):
         # print danmu.t_video,danmu.t_stamp,danmu.content
     #获取视频下载地址列表
-    # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey)
-    # for url in media_urls:
-    #     print(url)
+    # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey,AppSecret=secretkey)
+    # print(media_urls)
     #视频搜索
     # for video in biliVideoSearch(appkey,secretkey,'rwby'):
     #     print video.title
