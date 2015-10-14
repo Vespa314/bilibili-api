@@ -407,8 +407,14 @@ def GetVideoOfZhuanti(spid,season_id=None,bangumi=None)
     * approve：是否为认证帐号
     * spacename：空间名【注意：2015-01-29测试该项不返回】
     * sex：性别 (男/女/不明)
-    * rank：帐号显示标识【不明白是什么。。】
-    * DisplayRank：【好像是rank的字符串形式】
+    * rank：帐号显示标识【实为用户等级, 和获取视频以及功能权限有关】
+	    * Rank 说明
+				* 32000: 站长 – 有权限获取所有视频信息 (包括未通过审核和审核中的视频)
+				* 31000: 职人
+				* 20000: 字幕君 – 有权限发送逆向弹幕
+				* 10000: 普通用户
+				* 参见 B 站 2012 年时因服务器配置错误泄露的部分 PHP 源码可更多了解权限机制: https://gist.github.com/zacyu/8ed569008acff5ed05b5 
+    * DisplayRank：【用户标识, 从 rank 衍生出, 影响实际显示的头像边框等】
     * face：小头像
     * attention：关注的好友人数
     * friend：好友数【不明白，反正比attention多1】
@@ -841,7 +847,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
 	* author：Up主姓名
 	* arcurl：视频页面地址
 	* description：视频简介
-	* arcrank：【不明】
+	* arcrank：视频状态与所需权限 (-6: 修复待审, -4: 撞车跳转, >0: 视频所需用户 rank)
 	* pic：封面图片URL
 	* play：播放数
 	* video_review：弹幕数
