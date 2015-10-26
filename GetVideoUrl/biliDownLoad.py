@@ -24,42 +24,32 @@ def GetBilibiliUrl(url):
     aid = regex_match[0][0]
     pid = regex_match[0][2] or '1'
     cid_args = {'type': 'json', 'id': aid, 'page': pid}
-
     resp_cid = urlfetch('http://api.bilibili.com/view?'+GetSign(cid_args,APPKEY,APPSEC))
     resp_cid = dict(json.loads(resp_cid.decode('utf-8', 'replace')))
     cid = resp_cid.get('cid')
     media_args = {'otype': 'json', 'cid': cid, 'type': 'mp4', 'quality': 4, 'appkey': APPKEY}
-    resp_media = urlfetch(url_get_media+ChangeFuck(media_args))
+    resp_media = urlfetch(url_get_media+GetSign(media_args,APPKEY,APPSEC))
     resp_media = dict(json.loads(resp_media.decode('utf-8', 'replace')))
     media_urls = resp_media.get('durl')
     media_urls = media_urls[0]
     media_urls = media_urls.get('url')
     return media_urls
-    
+
 def GetSign(params,appkey,AppSecret=None):
-    params['appkey']=appkey;
-    data = "";
+    params['appkey']=appkey
+    data = ""
     paras = sorted(params)
-    paras.sort();
+    paras.sort()
     for para in paras:
         if data != "":
-            data += "&";
-        data += para + "=" + str(params[para]);
+            data += "&"
+        data += para + "=" + str(params[para])
     if AppSecret == None:
         return data
     m = hashlib.md5()
     m.update((data+AppSecret).encode('utf-8'))
     return data+'&sign='+m.hexdigest()
 
-def ChangeFuck(params):
-    data = "";
-    paras = params;
-    for para in paras:
-        if data != "":
-            data += "&";
-        data += para + "=" + str(params[para]);
-    return data
-    
 def urlfetch(url):
     req_headers = {'Accept-Encoding': 'gzip, deflate', 'User-Agent': USER_AGENT}
     req = urllib.request.Request(url=url, headers=req_headers)
