@@ -1,13 +1,11 @@
-#!/usr/bin/env python3
-#Modified by SuperFashi
+#coding=utf-8
 
 import sys
 import gzip
 import json
 import hashlib
 import re
-import urllib.parse
-import urllib.request
+import urllib2
 import xml.dom.minidom
 import zlib
 
@@ -30,10 +28,10 @@ def GetBilibiliUrl(url):
     media_args = {'otype': 'json', 'cid': cid, 'type': 'mp4', 'quality': 4, 'appkey': APPKEY}
     resp_media = urlfetch(url_get_media+GetSign(media_args,APPKEY,APPSEC))
     resp_media = dict(json.loads(resp_media.decode('utf-8', 'replace')))
-    media_urls = resp_media.get('durl')
-    media_urls = media_urls[0]
-    media_urls = media_urls.get('url')
-    return media_urls
+    res = []
+    for media_url in resp_media.get('durl'):
+        res.append(media_url.get('url'))
+    return res
 
 def GetSign(params,appkey,AppSecret=None):
     params['appkey']=appkey
@@ -51,22 +49,14 @@ def GetSign(params,appkey,AppSecret=None):
     return data+'&sign='+m.hexdigest()
 
 def urlfetch(url):
-    req_headers = {'Accept-Encoding': 'gzip, deflate', 'User-Agent': USER_AGENT}
-    req = urllib.request.Request(url=url, headers=req_headers)
-    response = urllib.request.urlopen(req, timeout=120)
-    content_encoding = response.info().get('Content-Encoding')
-    if content_encoding == 'gzip':
-        data = gzip.GzipFile(fileobj=response).read()
-    elif content_encoding == 'deflate':
-        decompressobj = zlib.decompressobj(-zlib.MAX_WBITS)
-        data = decompressobj.decompress(response.read())+decompressobj.flush()
-    else:
-        data = response.read()
-    return data
+    req_headers = {'User-Agent': USER_AGENT}
+    req = urllib2.Request(url=url, headers=req_headers)
+    return urllib2.urlopen(req).read()
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         print('输入视频播放地址')
     else:
         media_urls = GetBilibiliUrl(sys.argv[1])
-        print(media_urls)
+        for media_url in media_urls:
+            print media_url

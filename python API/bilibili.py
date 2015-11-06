@@ -472,7 +472,10 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
     media_args = {'otype': 'json', 'cid': cid, 'type': 'mp4', 'quality': 4}
     resp_media = getURLContent(url_get_media+GetSign(media_args,appkey,AppSecret))
     resp_media = dict(json.loads(resp_media.decode('utf-8', 'replace')))
-    return resp_media.get('durl')[0].get('url')
+    res = []
+    for media_url in resp_media.get('durl'):
+        res.append(media_url.get('url'))
+    return res
 
 def GetVideoOfUploader(mid,pagesize=20,page=1):
     url = 'http://space.bilibili.com/ajax/member/getSubmitVideos?mid=%d&pagesize=%d&page=%d'%(getint(mid),getint(pagesize),getint(page))
@@ -544,7 +547,8 @@ if __name__ == "__main__":
         # print danmu.t_video,danmu.t_stamp,danmu.content
     #获取视频下载地址列表
     # media_urls = GetBilibiliUrl('http://www.bilibili.com/video/av1691618/',appkey = appkey,AppSecret=secretkey)
-    # print(media_urls)
+    # for media_url in media_urls:
+    #     print(media_url)
     #视频搜索
     # for video in biliVideoSearch(appkey,secretkey,'rwby'):
     #     print video.title
