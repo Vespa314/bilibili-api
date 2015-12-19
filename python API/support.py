@@ -85,16 +85,16 @@ def GetVideoFromRate(content):
 从视频搜索源码页面提取视频信息
     """
     #av号和标题
-    regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title" [^>]*>([^/]+)</a>'
+    regular1 = r'<a href="/video/av(\d+)/" target="_blank" class="title" [^>]*>(.*)</a>'
     info1 = GetRE(content,regular1)
     #观看数
-    regular2 = r'<i class="b-icon b-icon-v-play" title=".+">.+number="(\d+)".+</span>'
+    regular2 = r'<i class="b-icon b-icon-v-play" title=".+"></i><span number="([^"]+)">\1</span>'
     info2 = GetRE(content,regular2)
     #收藏
-    regular3 = r'<i class="b-icon b-icon-v-fav" title=".+">.+number="(\d+)".+</span>'
+    regular3 = r'<i class="b-icon b-icon-v-fav" title=".+"></i><span number="([^"]+)">\1</span></span>'
     info3 = GetRE(content,regular3)
     #弹幕
-    regular4 = r'<i class="b-icon b-icon-v-dm" title=".+">.+number="(\d+)".+</span>'
+    regular4 = r'<i class="b-icon b-icon-v-dm" title=".+"></i><span number="([^"]+)">\1</span>'
     info4 = GetRE(content,regular4)
     #日期
     regular5 = r'<span class="v-date" title=".+">(.+)</span>'
@@ -108,6 +108,7 @@ def GetVideoFromRate(content):
     #!!!!!!!!这里可以断言所有信息长度相等
     videoNum = len(info1)#视频长度
     videoList = []
+
     for i in range(videoNum):
         video_t = Video()
         video_t.aid = getint(info1[i][0])
