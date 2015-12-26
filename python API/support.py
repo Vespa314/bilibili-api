@@ -151,6 +151,7 @@ def ParseComment(danmu):
         danmu.t_stamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(float(p[4])))
         danmu.mid_crc = p[6]
         danmu.danmu_color = ConvertColor(int(p[3]))
+        danmu_fontsize = int(p[2])
         if len(comment.childNodes) != 0:
             danmu.content = str(comment.childNodes[0].wholeText).replace('/n', '\n')
         else:

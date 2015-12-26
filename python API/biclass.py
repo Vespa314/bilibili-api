@@ -154,3 +154,4 @@ class Danmu():
     danmu_type = None # 1:滚动弹幕 5：顶端弹幕  4：底部弹幕
     content = None
     danmu_color = None
+    danmu_fontsize = None
