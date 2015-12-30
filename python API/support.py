@@ -40,9 +40,11 @@ class JsonInfo():
         if self.info.has_key('code') and self.info['code'] != 0:
             if self.info.has_key('message'):
                 print "【Error】code=%d, msg=%s, url=%s"%(self.info['code'],self.Getvalue('message'),url)
+                self.ERROR_MSG = self.Getvalue('message')
             elif self.info.has_key('error'):
                 print "【Error】code=%d, msg=%s, url=%s"%(self.info['code'],self.Getvalue('error'),url)
-            error = True
+                self.ERROR_MSG = self.Getvalue('error')
+            self.error = True
     def Getvalue(self,*keys):
         if len(keys) == 0:
             return None
@@ -61,6 +63,7 @@ class JsonInfo():
         return temp
     info = None
     error = False
+    ERROR_MSG = ""
 
 def GetString(t):
     if type(t) == int:

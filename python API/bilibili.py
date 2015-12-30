@@ -110,7 +110,7 @@ def GetVideoOfZhuanti(spid, season_id=None, bangumi=None):
 返回：
     视频列表，包含av号，标题，封面和观看数
     """
-    url = ' http://api.bilibili.cn/spview?spid='+GetString(spid)
+    url = 'http://api.bilibili.cn/spview?spid='+GetString(spid)
     if season_id:
         url += '&season_id='+GetString(season_id)
     if bangumi:
@@ -247,8 +247,8 @@ def GetBangumi(appkey, btype = None, weekday = None, AppSecret=None):
     url =  'http://api.bilibili.cn/bangumi?' + GetSign(paras, appkey, AppSecret)
     jsoninfo = JsonInfo(url)
     bangumilist = []
-    if jsoninfo.Getvalue('code') != 0:
-        print jsoninfo.Getvalue('error')
+    if jsoninfo.error:
+        print jsoninfo.ERROR_MSG
         return bangumilist
     for bgm in jsoninfo.Getvalue('list'):
         bangumi = Bangumi()
@@ -360,17 +360,20 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
 #    jsoninfo = getURLContent(url)
 #    print jsoninfo
 
-def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None):
+def GetRank(appkey, tid=None, begin=None, end=None, page = None, pagesize=None, click_detail =None, order = None, AppSecret=None):
     """
 获取排行信息
 输入：
     详见https://github.com/Vespa314/bilibili-api/blob/master/api.md
 输出：
     详见https://github.com/Vespa314/bilibili-api/blob/master/api.md
+备注：
+    pagesize ≤ 100
     """
     paras = {}
     paras['appkey']=appkey
-    paras['tid']=GetString(tid)
+    if tid:
+        paras['tid']=GetString(tid)
     if order:
         paras['order']=order
     if click_detail:
@@ -388,10 +391,10 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
     url = 'http://api.bilibili.cn/list?' + GetSign(paras,appkey,AppSecret)
     jsoninfo = JsonInfo(url)
     videolist = []
-    if jsoninfo.Getvalue('code') != 0:
-        print jsoninfo.Getvalue('error')
-        return videolist
-    page = jsoninfo.Getvalue('pages')
+    if jsoninfo.error:
+        print jsoninfo.ERROR_MSG
+        return [-1,"None",videolist]
+    total_page = jsoninfo.Getvalue('pages')
     name = jsoninfo.Getvalue('name')
     for i in range(len(jsoninfo.Getvalue('list'))-1):
         idx = str(i)
@@ -417,7 +420,7 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
             video.play_forward = jsoninfo.Getvalue('list',idx,'play_forward')
             video.play_mobile = jsoninfo.Getvalue('list',idx,'play_mobile')
         videolist.append(video)
-    return [page,name,videolist]
+    return [total_page,name,videolist]
 
 def GetDanmukuContent(cid):
     """
@@ -531,9 +534,10 @@ if __name__ == "__main__":
     # for bangumi in bangumilist:
     #     print bangumi.title
     #获取分类排行
-    # [page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=1,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
+    # [total_page,name,videolist] = GetRank(appkey,tid='0',order='hot',page=1,pagesize = 100,begin=[2014,1,1],end=[2014,2,1],click_detail='true')
+    # print total_page,name,len(videolist)
     # for video in videolist:
-    #     print video.title,video.play_site
+    #     print video.title,video.date[:10]
     #获取弹幕
     # video = GetVideoInfo(1677082,appkey,AppSecret=secretkey)
     # for danmu in GetDanmukuContent(video.cid):
