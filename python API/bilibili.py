@@ -351,6 +351,7 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
         zhuanti.season_id = zhuanti_idx['season_id']
         zhuanti.is_bangumi = zhuanti_idx['is_bangumi']
         zhuanti.arcurl = zhuanti_idx['arcurl']
+        zhuanti.is_bangumi_end = zhuanti_idx['is_bangumi_end']
         zhuantiList.append(zhuanti)
     return zhuantiList
 
@@ -482,7 +483,6 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
 
 def GetVideoOfUploader(mid,pagesize=20,page=1):
     url = 'http://space.bilibili.com/ajax/member/getSubmitVideos?mid=%d&pagesize=%d&page=%d'%(getint(mid),getint(pagesize),getint(page))
-    print url
     jsoninfo = JsonInfo(url)
     videolist = []
     for video_t in jsoninfo.Getvalue('data','vlist'):
@@ -557,5 +557,6 @@ if __name__ == "__main__":
     #专题搜索
     # for zhuanti in biliZhuantiSearch(appkey,secretkey,'果然'):
     #     print zhuanti.title
+    #查看Up更新视频
     # for video in GetVideoOfUploader(72960,300):
     #     print video.title

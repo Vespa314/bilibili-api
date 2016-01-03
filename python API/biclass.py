@@ -144,6 +144,7 @@ class ZhuantiInfo():
     season_id = None
     is_bangumi = None
     arcurl = None
+    is_bangumi_end = None
 
 class Danmu():
     def __init__(self):
