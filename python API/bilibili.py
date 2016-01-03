@@ -482,24 +482,22 @@ def GetBilibiliUrl(url, appkey, AppSecret=None):
 
 def GetVideoOfUploader(mid,pagesize=20,page=1):
     url = 'http://space.bilibili.com/ajax/member/getSubmitVideos?mid=%d&pagesize=%d&page=%d'%(getint(mid),getint(pagesize),getint(page))
+    print url
     jsoninfo = JsonInfo(url)
     videolist = []
-    for video_t in jsoninfo.Getvalue('data','list'):
+    for video_t in jsoninfo.Getvalue('data','vlist'):
         video = Video(video_t['aid'],video_t['title'])
         video.Iscopy = video_t['copyright']
         video.tid = video_t['typeid']
-        video.typename = video_t['typename']
         video.subtitle = video_t['subtitle']
         video.guankan = video_t['play']
         video.commentNumber = video_t['review']
         video.shoucang = video_t['favorites']
         video.author = User(video_t['mid'],video_t['author'])
         video.description = video_t['description']
-        video.date = video_t['create']
+        video.date = video_t['created']
         video.cover = video_t['pic']
-        video.credit = video_t['credit']
-        video.coin = video_t['coins']
-        video.duration = video_t['duration']
+        video.duration = video_t['length']
         video.danmu = video_t['comment']
         videolist.append(video)
     return videolist
