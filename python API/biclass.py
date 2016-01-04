@@ -31,6 +31,7 @@ class User():
     followlist = None#关注的好友列表
     friend = None
     DisplayRank = None
+    message = None # 承包时会返回的承保信息
 
 
 class Video():
@@ -156,3 +157,14 @@ class Danmu():
     content = None
     danmu_color = None
     danmu_fontsize = None
+
+class SponsorInfo():
+    def __init__(self):
+        pass
+    bp = None  ## 剧番总B币
+    percent = None  #承包总比例，不知道什么鬼
+    ep_bp = None  ## 该话的B币
+    ep_percent = None  ## 不明
+    sponsor_num = None   ## 承包人数
+    sponsor_user = None  ## 承包人列表
+

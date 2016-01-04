@@ -502,6 +502,28 @@ def GetVideoOfUploader(mid,pagesize=20,page=1):
         videolist.append(video)
     return videolist
 
+def GetSponsorInfo(aid,page=None):
+    """
+获取剧番承包信息，每页返回25个承保用户，总页数自己算
+    """
+    url = 'http://www.bilibili.com/widget/ajaxGetBP?aid=%s'%(GetString(aid))
+    if page:
+        url += '&page='+GetString(page)
+    jsoninfo = JsonInfo(url)
+    sponsorinfo = SponsorInfo()
+    sponsorinfo.bp = jsoninfo.Getvalue('bp')
+    sponsorinfo.percent = jsoninfo.Getvalue('percent')
+    sponsorinfo.ep_bp = jsoninfo.Getvalue('ep_bp')
+    sponsorinfo.ep_percent = jsoninfo.Getvalue('ep_percent')
+    sponsorinfo.sponsor_num = jsoninfo.Getvalue('users')
+    sponsorinfo.sponsor_user = []
+    for tuhao_user in jsoninfo.Getvalue('list','list'):
+        user =  User(tuhao_user['uid'],tuhao_user['uname'])
+        user.rank = tuhao_user['rank']
+        user.avatar = tuhao_user['face']
+        user.message = tuhao_user['message']
+        sponsorinfo.sponsor_user.append(user)
+    return sponsorinfo
 
 if __name__ == "__main__":
     #获取最热视频
@@ -560,3 +582,8 @@ if __name__ == "__main__":
     #查看Up更新视频
     # for video in GetVideoOfUploader(72960,300):
     #     print video.title
+    #查看承包信息
+    # sponsorinfo = GetSponsorInfo(1577393,page = 1)
+    # print sponsorinfo.ep_bp
+    # for tuhao in sponsorinfo.sponsor_user:
+    #     print tuhao.name

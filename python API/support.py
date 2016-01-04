@@ -26,12 +26,15 @@ def getURLContent(url):
         try:
             headers = {'User-Agent':'Mozilla/5.0 (Windows U Windows NT 6.1 en-US rv:1.9.1.6) Gecko/20091201 Firefox/3.5.6'}
             req = urllib2.Request(url = url,headers = headers)
-            content = urllib2.urlopen(req).read()
+            page = urllib2.urlopen(req)
+            content = page.read()
         except:
         	flag = 0
         	time.sleep(5)
         if flag == 1:
         	break
+    if page.info().get('Content-Encoding') == 'gzip':
+        content = zlib.decompress(content, 16+zlib.MAX_WBITS)
     return content
 
 class JsonInfo():
