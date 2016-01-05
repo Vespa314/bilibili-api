@@ -38,8 +38,8 @@ def getURLContent(url):
     return content
 
 class JsonInfo():
-    def __init__(self,url):
-        self.info = json.loads(getURLContent(url))
+    def __init__(self,url,pre_deal=lambda x:x):
+        self.info = json.loads(pre_deal(getURLContent(url)))
         if self.info.has_key('code') and self.info['code'] != 0:
             if self.info.has_key('message'):
                 print "【Error】code=%d, msg=%s, url=%s"%(self.info['code'],self.Getvalue('message'),url)
@@ -57,7 +57,7 @@ class JsonInfo():
             return None
         if len(keys) > 1:
             for key in keys[1:]:
-                if temp.has_key(key):
+                if type(temp) == dict and temp.has_key(key):
                     temp = temp[key]
                 else:
                     return None

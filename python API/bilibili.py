@@ -525,6 +525,33 @@ def GetSponsorInfo(aid,page=None):
         sponsorinfo.sponsor_user.append(user)
     return sponsorinfo
 
+def HasLiving(mid):
+    """
+    用户是否开通直播，如果有，返回房间号
+    """
+    url = "http://space.bilibili.com/ajax/live/getLive?mid=%s"%(GetString(mid))
+    jsoninfo = JsonInfo(url)
+    if jsoninfo.Getvalue('status') == True:
+        return jsoninfo.Getvalue('data')
+    else:
+        return None
+
+def IsLiving(mid):
+    """
+    是否在直播
+    """
+    url = "http://live.bilibili.com/bili/isliving/%s"%(GetString(mid))
+    jsoninfo = JsonInfo(url,pre_deal=lambda x:x[1:-2])
+    info = LivingInfo()
+    if jsoninfo.Getvalue('data'):
+        info.url = jsoninfo.Getvalue('data','url')
+        info.title = jsoninfo.Getvalue('data','title')
+        info.cover = jsoninfo.Getvalue('data','cover')
+        info.mid = mid
+        return info
+    else:
+        return None
+
 if __name__ == "__main__":
     #获取最热视频
     # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
@@ -587,3 +614,10 @@ if __name__ == "__main__":
     # print sponsorinfo.ep_bp
     # for tuhao in sponsorinfo.sponsor_user:
     #     print tuhao.name
+    # 检查是否开通直播:
+    # print HasLiving(4440520)
+    # print HasLiving(79)
+    # 获取直播状态
+    # stat = IsLiving(597396)
+    # if stat:
+    #     print stat.title

@@ -168,3 +168,10 @@ class SponsorInfo():
     sponsor_num = None   ## 承包人数
     sponsor_user = None  ## 承包人列表
 
+class LivingInfo():
+    def __init__(self):
+        pass
+    url = None
+    title = None
+    cover = None
+    mid = None  
