@@ -520,7 +520,8 @@ def GetSponsorInfo(aid,page=None):
     for tuhao_user in jsoninfo.Getvalue('list','list'):
         user =  User(tuhao_user['uid'],tuhao_user['uname'])
         user.rank = tuhao_user['rank']
-        user.avatar = tuhao_user['face']
+        if tuhao_user.has_key('face'):
+            user.avatar = tuhao_user['face']
         user.message = tuhao_user['message']
         sponsorinfo.sponsor_user.append(user)
     return sponsorinfo
