@@ -326,6 +326,7 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
     paras = {}
     paras['keyword'] = GetString(keyword)
     url = 'http://api.bilibili.cn/search?' + GetSign(paras, appkey, AppSecret)
+    print url
     jsoninfo = JsonInfo(url)
     zhuantiList = []
     for zhuanti_idx in jsoninfo.Getvalue('result'):
