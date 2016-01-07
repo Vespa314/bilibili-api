@@ -774,6 +774,64 @@ GetVideoOfUploader(mid,pagesize=20,page=1)
 		* pages：(当前pagesize下)总页数
 		* results：总数目
 
+**获取承包数据**
+
+* URL：【返回json】
+	* `http://www.bilibili.com/widget/ajaxGetBP`
+* 输入：
+	* aid：av号【必填】
+	* page：页数【选填】
+* 返回格式：
+	* bp：这部番全部B币
+	* percent：承包总比例
+	* ep_bp：这一话B币
+	* ep_percent：不懂
+	* users：这一话承包人数
+	* 第二层list
+		* uid：用户id
+		* hidden：是否隐藏？？
+		* rank：？？？
+		* message：承包留言
+		* uname：用户名
+		* face：头像
+> 每页25个承包土壕，貌似无法修改pagesize
+
+#### API实现：
+```python
+GetSponsorInfo(aid,page=None)
+```
+
+**获取开通直播状态**
+* URL：【返回json】
+	* `http://space.bilibili.com/ajax/live/getLive?`
+* 输入：
+	* mid：用户id
+* 返回格式：
+	* status：true or false，是否开通直播
+	* data：如果开通，为直播房间号
+#### API实现：
+```python
+HasLiving(mid)
+```
+
+**当前是否在直播**
+* URL：【返回json】
+	* `http://space.bilibili.com/ajax/live/getLive?`
+* 输入：
+	* mid：用户id
+* 返回格式：
+	* 第一层：data
+		* 第二层：
+			* url：地址
+			* title：房间名
+			* cover：封面
+
+#### API实现：
+```python
+IsLiving(mid)
+```
+
+	
 
 ---
 
