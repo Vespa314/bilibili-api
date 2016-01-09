@@ -6,29 +6,30 @@ Created on Thu Jun 05 00:00:22 2014
 """
 from bilibili import *
 import os
+import zipfile
 
 def videowrite(f,video):
-    
     if video.title:
-        f.write('Aid:%s\nTitle:%s\n'%(video.aid.encode('utf8'),video.title.encode('utf8')))
+        f.write('Aid:%s\nTitle:%s\n'%(video.aid,video.title))
     else:
-        f.write('Aid:%s\nTitle:NULL\n'%(video.aid.encode('utf8')))
-    f.write('copyright:%s\n'%(video.Iscopy.encode('utf8')))
-    f.write('Typeid:%s\nTypename:%s\n'%(video.tid,video.typename.encode('utf8')))
+        f.write('Aid:%s\nTitle:NULL\n'%(video.aid))
+    f.write('copyright:%s\n'%(video.Iscopy))
     f.write('Click:%s\nDanmu:%s\n'%(video.guankan,video.danmu))
     f.write('comment:%s\n'%(video.commentNumber))
+    f.write('credit:%s\n'%(video.credit))
+    f.write('coin:%s\n'%(video.coin))
     f.write('favorite:%s\n'%(video.shoucang))
     if video.author.name:
-        f.write('author:%s %s\n'%(video.author.name.encode('utf8'),video.author.mid))
+        f.write('author:%s %s\n'%(video.author.name,video.author.mid))
     else:
         f.write('author:%s %s\n'%('NULL',video.author.mid))
     f.write('date:%s\n'%(video.date))
-    f.write('credit:%s\n'%(video.credit))
-    f.write('coin:%s\n'%(video.coin))
     f.write('duration:%s\n'%(video.duration))
     f.write('play_site:%s\n'%(video.play_site))
     f.write('play_forward:%s\n'%(video.play_forward))
     f.write('play_mobile:%s\n'%(video.play_mobile))
+    f.write('description:%s\n'%(video.description))
+    f.write('pic:%s\n'%(video.cover))
     f.write('\n')
 
 def linecount_2(filename):
@@ -37,68 +38,58 @@ def linecount_2(filename):
         pass
     return count+1
 
-def Check(appkey,tid,begin,end,path):
-    filepath = './%s/%d.txt'%(path,tid)
-    [pages,number,videolist] = GetRank(appkey,tid,order='hot',pagesize = 100,begin=begin,end=end,click_detail='true')
-    time.sleep(3)
-    linenum = int(linecount_2(filepath)/17);
-    print time.strftime('%H:%M:%S',time.localtime(time.time())),
-    if number > linenum:
-        if abs(number-linenum-len(videolist)) < 5:
-            print 'All 100:',begin[0:2],tid,number,linenum,len(videolist)
-            f = open('./%s/%d.txt'%(path,tid),'a+');
-            for video in videolist:
-                videowrite(f,video);
-            f.close()
-        else:
-            print 'lose:',begin[0:2],tid,number,linenum
-            GetAllVideo(appkey,tid,begin,end,path)
-    elif number < linenum:
-        print 'now lost:',begin[0:2],tid,number,linenum
-    elif number == linenum:
-        print 'match:',begin[0:2],tid,number,linenum
+def GetAllVideo(year,month):
+    appkey = '*******'
+    begin = [year,month,1]
+    end = [year,month,31]
 
-def GetAllVideo(appkey,tid,begin,end,path):
-    if os.path.exists('./%s/%d.txt'%(path,tid)):
-        print './%s/%d.txt'%(path,tid),' Already exist'
-        return
-    f = open('./%s/%d.txt'%(path,tid),'w');
-    [pages,number,videolist] = GetRank(appkey,tid,order='hot',pagesize = 100,begin=begin,end=end,click_detail='true')
-    for video in videolist:
-        videowrite(f,video);
-    if pages == 1 or len(videolist) == 0:
-        print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,1,1
-        f.close()
-        return
-    for page in range(2,pages+1):
-        print '    ',time.strftime('%H:%M:%S',time.localtime(time.time())),begin[0:2],tid,page,'/',pages
-    #    time.sleep(3)
-        [page2,number2,videolist2] = GetRank(appkey,tid,order='hot',page=page,pagesize = 100,begin=begin,end=end,click_detail='true')
-        for video in videolist2:
-            videowrite(f,video);
-    f.close()
-    return
+    path = '/root/tmp/bilibili/%d-%d/'%(year,month)
+    print '%d-%d'%(year,month)
+    if not os.path.exists(path):
+        os.mkdir(path)
 
-def main():
-    appkey = '03fc8eb101b091fb';
-    for year in range(2015,2008,-1):
+    fid_dict = {}
+    tid_set = set([])
+
+    illegalSymble = list('/:?|<>*')
+
+    for page in xrange(1,9999999):
+        total_page = -1
+        stay_time = 5
+        while total_page == -1:
+            [total_page,_name,videolist] = GetRank(appkey,tid=0,order='hot',pagesize = 100,page=page,begin=begin,end=end,click_detail='true')
+            if total_page == -1:
+                time.sleep(stay_time)
+                stay_time += 5
+        print '\t%s:page %d/%d'%(time.strftime('%H:%M:%S',time.localtime(time.time())),page,total_page)
+        for video in videolist:
+            if not video.tid in tid_set:
+                for sym in illegalSymble:
+                    video.typename = video.typename.replace(sym,'')
+                fid_dict[video.tid] = open('%s%d-%s.txt'%(path,video.tid,video.typename),'w')
+                tid_set.add(video.tid)
+            videowrite(fid_dict[video.tid],video)
+
+        if page == total_page:
+            break
+        time.sleep(3)
+    for fid in fid_dict:
+        fid_dict[fid].close()
+    z = zipfile.ZipFile('/root/Dropbox/bili_video/video/%s.zip'%('%d-%d'%(year,month)), 'w')
+    for d in os.listdir(path):
+        z.write(path+os.sep+d)
+    z.close()
+    __import__('shutil').rmtree(path)
+
+if __name__ == "__main__":
+    for year in range(2009,2017):
         for month in range(1,13):
-            begin = [year,month,2];
-            if year == 2015 and month >= 3:
+            if year == 2016 and month >= 1:
                 continue;
             if year == 2009 and month < 6:
                 continue
-            if month == 12:
-                end = [year+1,1,1]
-            else:
-                end = [year,month+1,1];
-            path = '%d-%d'%(year,month);
-            if not os.path.exists(path):
-                os.mkdir(path)
-            for tid in range(1,151):
-                GetAllVideo(appkey,tid,begin,end,path)
-#                 Check(appkey,tid,begin,end,path)
-
-if __name__ == "__main__":
-    main()
+            if os.path.isfile('/root/Dropbox/bili_video/video/%s.zip'%('%d-%d'%(year,month))):
+                print year,'/',month," existed"
+                continue
+            GetAllVideo(year,month)
     print 'finished'
