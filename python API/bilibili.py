@@ -326,7 +326,6 @@ def biliZhuantiSearch(appkey, AppSecret, keyword):
     paras = {}
     paras['keyword'] = GetString(keyword)
     url = 'http://api.bilibili.cn/search?' + GetSign(paras, appkey, AppSecret)
-    print url
     jsoninfo = JsonInfo(url)
     zhuantiList = []
     for zhuanti_idx in jsoninfo.Getvalue('result'):
@@ -554,6 +553,33 @@ def IsLiving(mid):
     else:
         return None
 
+def GetOnlineUser():
+    url = "http://www.bilibili.com/online.js"
+    content = getURLContent(url)
+    web_online = GetRE(content,r'web_online = (\d+)')
+    play_online = GetRE(content,r'play_online = (\d+)')
+    return int(web_online[0]),int(play_online[0])
+
+def GetOnloneTopVideo():
+    """
+    获取在线人数最多的视频，随时失效。。
+    """
+    url = "http://www.bilibili.com/video/online.html"
+    content = getURLContent(url)
+    regexp = r'<div class="ebox" typeid="(\d+)"><a href="/video/av(\d+)/" title="([^"]+)" target="_blank"><img src="([^"]+)"/><p class="etitle">\3</p></a><div class="dlo"><span class="play"><i class="b-icon b-icon-v-play"></i>(\d+)</span><span class="dm"><i class="b-icon b-icon-v-dm"></i>(\d+)</span><span class="author">(((?!class).)*)</span></div><p class="ol"><b>(\d+)</b>在线</p></div>'
+    result = GetRE(content,regexp)
+    videolist = []
+    for res in result:
+        video = Video(res[1],res[2])
+        video.tid = int(res[0])
+        video.cover = res[3]
+        video.guankan = int(res[4])
+        video.danmu = int(res[5])
+        video.author = User(None,res[6])
+        video.online_user = int(res[8])
+        videolist.append(video)
+    return videolist
+
 if __name__ == "__main__":
     #获取最热视频
     # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
@@ -623,3 +649,9 @@ if __name__ == "__main__":
     # stat = IsLiving(597396)
     # if stat:
     #     print stat.title
+    # 获取在线人数
+    # web_online,play_online = GetOnlineUser()
+    # print web_online,play_online
+    # 获取在线人数最多的视频
+    # for video in GetOnloneTopVideo():
+    #     print video.title,video.online_user

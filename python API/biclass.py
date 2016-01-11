@@ -67,6 +67,7 @@ class Video():
     arcrank = None#不明
     tid = None
     typename = None
+    online_user = None # 当前在线观看人数
 #不明：
     instant_server = None
     src = None
