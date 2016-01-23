@@ -28,7 +28,9 @@ def getURLContent(url):
             req = urllib2.Request(url = url,headers = headers)
             page = urllib2.urlopen(req)
             content = page.read()
-        except:
+        except urllib2.HTTPError,e:
+            if e.code == 404:
+                return ""
         	flag = 0
         	time.sleep(5)
         if flag == 1:

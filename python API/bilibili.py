@@ -444,7 +444,10 @@ def ParseDanmuku(cid):
     按时间顺序返回每一条弹幕
     """
     Danmuku = []
-    Danmuku.extend(ParseComment(GetDanmuku(cid)))
+    DanmukuContent = GetDanmuku(cid)
+    if DanmukuContent == "":
+        return None
+    Danmuku.extend(ParseComment(DanmukuContent))
     Danmuku.sort(key=lambda x:x.t_video)
     return Danmuku
 
