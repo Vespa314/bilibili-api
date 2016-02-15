@@ -844,7 +844,7 @@ IsLiving(mid)
 	* 第一层：data
 		* 第二层：
 			* roomid：
-			* short_id：【不明】
+			* short_id：短号
 			* uname：播主
 			* uid：
 			* area：类型分区
@@ -857,11 +857,11 @@ IsLiving(mid)
 				* 7 放映间
 				* 。。。。也许以后B站会继续补充。。
 			* title：房间标题
-			* cover：
+			* cover：封面
 			* live_time：开播时间
 			* online：在线看的人数
-			* face：
-			* master_level：
+			* face：头像
+			* master_level：主播等级
 			* link：房间链接（只有一个roomid。。。）
 
 **剧番索引**
