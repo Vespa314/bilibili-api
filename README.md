@@ -14,6 +14,7 @@
 * GetVideoUrl/：输入视频URL地址获得下载URL（改造自[biligrab](https://github.com/m13253/biligrab-danmaku2ass)】）【已完成】
 * BiliMerge/：随手写的合并来自B站手机客户端离线下载的视频【已完成】
 * danmu-Delay/：随手写的弹幕字幕文件延时。。【已完成】
+* bili_live_guaji/:直播经验挂机脚本【已完成】
 
 ### 文件：
 * api.md   ：API的详细说明
