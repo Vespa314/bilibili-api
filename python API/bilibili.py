@@ -139,6 +139,7 @@ def GetComment(aid, page = None, pagesize = None, order = None):
     order：排序方式 默认按发布时间倒序 可选：good 按点赞人数排序 hot 按热门回复排序
 返回：
     评论列表
+【注意】：此接口目前只能查询av号小于3280075的视频，url后面增加ver=2或ver=3可以获取到后面视频的『热门评论』，非全部评论，如果需要，请使用GetComment_v2新API
     """
     url = 'http://api.bilibili.cn/feedback?aid='+GetString(aid)
     if page:
@@ -147,6 +148,7 @@ def GetComment(aid, page = None, pagesize = None, order = None):
         url += '&pagesize='+GetString(pagesize)
     if order:
         url += '&order='+GetString(order)
+    print url
     jsoninfo = JsonInfo(url)
     commentList = CommentList()
     commentList.comments = []
@@ -167,6 +169,33 @@ def GetComment(aid, page = None, pagesize = None, order = None):
         idx += 1
     return commentList
 
+def GetComment_v2(aid, page = 1, order = 0):
+    """
+输入：
+    aid：AV号
+    page：页码
+    order：排序方式 默认按发布时间倒序 可选：1 按热门排序 2 按点赞数排序
+返回：
+    评论列表"""
+    url = "http://api.bilibili.com/x/reply?type=1&oid=%s&pn=%s&nohot=1&sort=%s"%(GetString(aid),GetString(page),GetString(order))
+    jsoninfo = JsonInfo(url)
+    commentList = CommentList()
+    commentList.comments = []
+    commentList.commentLen = jsoninfo.Getvalue('data','page','count')
+    for comment in jsoninfo.Getvalue('data','replies'):
+        liuyan = Comment()
+        liuyan.lv = comment['floor']
+        liuyan.fbid = comment['rpid']
+        liuyan.parent_id = comment['parent']
+        liuyan.like = comment['like']
+        liuyan.msg = comment['content']['message']
+        liuyan.post_user = User(comment['member']['mid'],comment['member']['uname'])
+        liuyan.post_user.avatar = comment['member']['avatar']
+        liuyan.post_user.rank = comment['member']['rank']
+        commentList.comments.append(liuyan)
+    return commentList
+
+
 def GetAllComment(aid, order = None):
     """
 获取一个视频全部评论，有可能需要多次爬取，所以会有较大耗时
@@ -181,7 +210,7 @@ def GetAllComment(aid, order = None):
     if commentList.page == 1:
         return commentList
     for p in range(2,commentList.page+1):
-        t_commentlist = GetComment(aid=aid,pagesize=MaxPageSize,page=p,ver=ver,order=order)
+        t_commentlist = GetComment(aid=aid,pagesize=MaxPageSize,page=p,order=order)
         for liuyan in t_commentlist.comments:
             commentList.comments.append(liuyan)
         time.sleep(0.5)
@@ -586,6 +615,23 @@ def GetOnloneTopVideo():
         videolist.append(video)
     return videolist
 
+def GetVideoOfBangumi_V2(id):
+    """
+    非API版本获取剧番aid和视频名，解决GetVideoOfZhuanti API一些SPID找不到视频的问题。
+    传入id为剧番URL中的id：如http://www.bilibili.com/bangumi/i/2894/中的2894
+    由于是解析html，所以只获取aid和title
+    只适用于新番，不适合其他专题
+    """
+    url = "http://www.bilibili.com/bangumi/i/%d"%(getint(id))
+    content = getURLContent(url)
+    regexp = r'<div class="e-item[^"]*">[^<]+<a href="/video/av(\d+)[^"]*" target="_blank" title="(.*)">'
+    result = GetRE(content,regexp)
+    videolist = []
+    for aid,title in result:
+        videolist.append(Video(aid,title))
+    return videolist
+
+
 if __name__ == "__main__":
     #获取最热视频
     # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
@@ -601,9 +647,14 @@ if __name__ == "__main__":
     # for video in videolist:
     #     print video.title
     #获取评论
-    # commentList = GetAllComment('1154794')
+    # commentList = GetAllComment('1154794')## 此接口废弃中，请尽量不要使用
     # for liuyan in commentList.comments:
     #     print liuyan.lv,'-',liuyan.post_user.name,':',liuyan.msg
+    # comments = GetComment('3280082')## 此接口废弃中，请尽量不要使用
+    # for comment in comments.comments:
+    #     print comment.msg
+    # for comment in GetComment_v2(4251267).comments:## 新接口
+    #     print comment.post_user.name,':',comment.msg
     #获取视频信息
     appkey = '***'
     secretkey = '***'
@@ -661,3 +712,6 @@ if __name__ == "__main__":
     # 获取在线人数最多的视频
     # for video in GetOnloneTopVideo():
     #     print video.title,video.online_user
+    # videolist = GetVideoOfBangumi_V2(2894)
+    # for video in videolist:
+    #     print video.title

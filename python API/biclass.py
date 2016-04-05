@@ -108,9 +108,11 @@ class Comment():
         self.post_user = User()
     lv = None#楼层
     fbid = None#评论id
+    parent_id = None #被回复留言ID
     msg = None
     ad_check = None#状态 (0: 正常 1: UP主隐藏 2: 管理员删除 3: 因举报删除)
     post_user = None
+    like = None
 
 class CommentList():
     def __init__(self):
