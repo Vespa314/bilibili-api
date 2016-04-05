@@ -470,6 +470,27 @@ def GetComment(aid, page = None, pagesize = None, order = None)
 def GetAllComment(aid, order = None)
 ```
 
+> 注意：此接口目前只能查询av号小于3280075的视频，url后面增加ver=2或ver=3可以获取到后面视频的『热门评论』，非全部评论，如果需要，请使用GetComment_v2新API
+
+**读取评论V2【已完成】**
+* URL：【返回json】
+    * `http://api.bilibili.com/x/reply`
+* 输入：
+    * aid：视频AV号
+    * page：页码【选填】
+    * 排序方式 默认按发布时间倒序 可选：1 按热门排序 2 按点赞数排序
+ 
+* 返回格式：
+    额。。返回信息太多。。自己随便找一个url：http://api.bilibili.com/x/reply?type=1&oid=4251267&pn=1&nohot=1&sort=0 参考一下即可。。
+    API中只拉取了一部分信息，其余信息根据个人需要自行添加。。
+
+
+#### API实现：
+```python
+# 获取视频单页评论
+GetComment_v2(aid, page = 1, order = 0)
+```
+
 **读取专题信息**
 * URL：【返回json】
     * `http://api.bilibili.tv/sp`
