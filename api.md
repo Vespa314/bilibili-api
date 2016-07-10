@@ -911,6 +911,81 @@ IsLiving(mid)
 				* week：
 
 
+**获取剧番详细信息**
+* URL：【返回json】
+	* `http://bangumi.bilibili.com/jsonp/seasoninfo/${bgmid}.ver?callback=seasonListCallback&jsonp=jsonp`
+* 输入：
+	* bgmid：新番id
+* 返回格式：
+	* 第一层：result
+		* 第二层：
+			* actor：
+				* actor：演员/声优
+				* actor_id：演员id
+				* role：角色
+			* allow_bp：
+			* allow_download：
+			* area：制作国家
+			* arealimit：
+			* bangumi_id：
+			* bangumi_title：番剧名
+			* brief：简介
+			* coins
+			* copyright
+			* cover
+			* danmaku_count
+			* episodes：分集信息
+				* av_id
+				* coins
+				* cover
+				* episode_id
+				* index：集数
+				* index_title：单集名称
+				* is_new
+				* is_webplay
+				* mid
+				* page
+				* up
+				* update_time
+				* webplay_url
+			* evaluate：番的简介
+			* favorites：
+			* is_finish：
+			* newest_ep_id：最新一集id
+			* newest_ep_index：最后集数
+			* play_count
+			* pub_time
+			* related_seasons
+			* season_id
+			* season_title：比如『第二季』
+			* seasons：其他季信息
+				* bangumi_id
+				* cover
+				* is_finish
+				* newest_ep_id
+				* newest_ep_index
+				* season_id
+				* title：比如『第一季』
+				* total_count：集数
+			* share_url
+			* squareCover
+			* staff
+			* tag2s
+			* tags
+				* cover
+				* tag_id
+				* tag_name
+			* title
+			* total_count
+			* user_season
+				* attention
+				* last_ep_index
+				* last_time
+			* version
+			* viewRank
+			* watchingCount
+			* weekday
+
 ---
 
 ##B站API(需认证)：
