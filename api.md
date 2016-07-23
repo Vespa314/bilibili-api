@@ -911,9 +911,9 @@ IsLiving(mid)
 				* week：
 
 
-**获取剧番详细信息**
+**获取剧番详细信息(POST)**
 * URL：【返回json】
-	* `http://bangumi.bilibili.com/jsonp/seasoninfo/${bgmid}.ver?callback=seasonListCallback&jsonp=jsonp`
+	* `http://bangumi.bilibili.com/jsonp/seasoninfo/${bgmid}.ver`
 * 输入：
 	* bgmid：新番id
 * 返回格式：
@@ -985,6 +985,13 @@ IsLiving(mid)
 			* viewRank
 			* watchingCount
 			* weekday
+
+> POST请求和Get请求结果略有不同，Get返回来的json会被包围在seasonListCallback(${JSON_RESULT})中，而POST会直接返回可以解析的json字符串
+
+#### API实现（POST版本，因为参数太多，只添加了常用了，如有需要，自行添加）：
+```python
+GetBangumiInfo(bgm_id)
+```
 
 ---
 
