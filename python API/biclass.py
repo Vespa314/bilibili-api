@@ -66,6 +66,8 @@ class Video():
     arcurl = None#网页地址
     arcrank = None#不明
     tid = None
+    index = None#剧番中的集数
+    episode_id = None
     typename = None
     online_user = None # 当前在线观看人数
 #不明：
@@ -85,7 +87,7 @@ class Bangumi():
         pass
     typeid = None
     lastupdate = None
-    areaid = None
+    area = None
     bgmcount = None#番剧当前总集数
     title = None
     lastupdate_at = None
@@ -99,9 +101,16 @@ class Bangumi():
     scover = None
     mcover = None
     click = None
+    coin = None
     season_id = None
+    season_title = None
     click = None # 浏览数
     video_view = None
+    episode_list = []
+    tags = []
+    isFinished = None
+    newest_ep_id = None
+    newest_ep_index = None
 
 class Comment():
     def __init__(self):

@@ -287,7 +287,7 @@ def GetBangumi(appkey, btype = None, weekday = None, AppSecret=None):
         bgm = DictDecode2UTF8(bgm)
         bangumi.typeid = bgm['typeid']
         bangumi.lastupdate = bgm['lastupdate']
-        bangumi.areaid = bgm['areaid']
+        bangumi.area = bgm['areaid']
         bangumi.bgmcount = getint(bgm['bgmcount'])
         bangumi.title = bgm['title']
         bangumi.lastupdate_at = bgm['lastupdate_at']
@@ -631,6 +631,33 @@ def GetVideoOfBangumi_V2(id):
         videolist.append(Video(aid,title))
     return videolist
 
+def GetBangumiInfo(bgm_id):
+    url = "http://bangumi.bilibili.com/jsonp/seasoninfo/%s.ver"%(GetString(bgm_id))
+    jsoninfo = JsonInfo(url,pre_deal=lambda x:x[19:-2])#seasonListCallback(xxxxx)
+    bangumi = Bangumi()
+    bangumi.title = jsoninfo.Getvalue('result','title')
+    bangumi.area = jsoninfo.Getvalue('result','area')
+    bangumi.cover = jsoninfo.Getvalue('result','cover')
+    for episode in jsoninfo.Getvalue('result','episodes'):
+        m_video = Video(episode['av_id'],episode['index_title'])
+        m_video.coin = episode['coins']
+        m_video.cover = episode['cover']
+        m_video.date = episode['update_time']
+        m_video.index = episode['index']
+        m_video.episode_id = episode['episode_id']## 视频地址http://bangumi.bilibili.com/anime/v/episode_id
+        bangumi.episode_list.append(m_video)
+    bangumi.bgmcount = jsoninfo.Getvalue('result','total_count')
+    bangumi.season_id = jsoninfo.Getvalue('result','season_id')
+    bangumi.season_title = jsoninfo.Getvalue('result','season_title')
+    for tag in jsoninfo.Getvalue('result','tags'):
+        bangumi.tags.append(tag['tag_name'])
+    bangumi.attention = jsoninfo.Getvalue('result','favorites')
+    bangumi.isFinished = jsoninfo.Getvalue('result','is_finish')
+    bangumi.newest_ep_id = jsoninfo.Getvalue('result','newest_ep_id')
+    bangumi.newest_ep_index = jsoninfo.Getvalue('result','newest_ep_index')
+    bangumi.click = jsoninfo.Getvalue('result','play_count')
+    bangumi.weekday = jsoninfo.Getvalue('result','weekday')
+    return bangumi
 
 if __name__ == "__main__":
     #获取最热视频
@@ -715,3 +742,7 @@ if __name__ == "__main__":
     # videolist = GetVideoOfBangumi_V2(2894)
     # for video in videolist:
     #     print video.title
+    bangumi = GetBangumiInfo(1551)
+    print bangumi.title
+    for eps in bangumi.episode_list:
+        print eps.index,eps.title
