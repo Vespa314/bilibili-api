@@ -70,6 +70,7 @@ class Video():
     episode_id = None
     typename = None
     online_user = None # 当前在线观看人数
+    partition_index = None # 属于分P视频的索引
 #不明：
     instant_server = None
     src = None

@@ -75,8 +75,9 @@ def GetUserInfo(url):
     user.friend = jsoninfo.Getvalue('friend')
     user.DisplayRank = jsoninfo.Getvalue('DisplayRank')
     user.followlist = []
-    for fo in jsoninfo.Getvalue('attentions'):
-        user.followlist.append(fo)
+    if jsoninfo.Getvalue('attentions') is not None:
+        for fo in jsoninfo.Getvalue('attentions'):
+            user.followlist.append(fo)
     return user
 
 def GetUserInfoBymid(mid):
@@ -615,42 +616,32 @@ def GetOnloneTopVideo():
         videolist.append(video)
     return videolist
 
-def GetVideoOfBangumi_V2(id):
-    """
-    非API版本获取剧番aid和视频名，解决GetVideoOfZhuanti API一些SPID找不到视频的问题。
-    传入id为剧番URL中的id：如http://www.bilibili.com/bangumi/i/2894/中的2894
-    由于是解析html，所以只获取aid和title
-    只适用于新番，不适合其他专题
-    """
-    url = "http://www.bilibili.com/bangumi/i/%d"%(getint(id))
-    content = getURLContent(url)
-    regexp = r'<div class="e-item[^"]*">[^<]+<a href="/video/av(\d+)[^"]*" target="_blank" title="(.*)">'
-    result = GetRE(content,regexp)
-    videolist = []
-    for aid,title in result:
-        videolist.append(Video(aid,title))
-    return videolist
-
 def GetBangumiInfo(bgm_id):
     url = "http://bangumi.bilibili.com/jsonp/seasoninfo/%s.ver"%(GetString(bgm_id))
-    jsoninfo = JsonInfo(url,pre_deal=lambda x:x[19:-2])#seasonListCallback(xxxxx)
+    jsoninfo = JsonInfo(url,pre_deal=lambda x:[x[19:-2] if x.find('seasonListCallback')>=0 else x][0])#seasonListCallback(xxxxx)
     bangumi = Bangumi()
+    if jsoninfo.error:
+        return None
     bangumi.title = jsoninfo.Getvalue('result','title')
     bangumi.area = jsoninfo.Getvalue('result','area')
     bangumi.cover = jsoninfo.Getvalue('result','cover')
-    for episode in jsoninfo.Getvalue('result','episodes'):
-        m_video = Video(episode['av_id'],episode['index_title'])
-        m_video.coin = episode['coins']
-        m_video.cover = episode['cover']
-        m_video.date = episode['update_time']
-        m_video.index = episode['index']
-        m_video.episode_id = episode['episode_id']## 视频地址http://bangumi.bilibili.com/anime/v/episode_id
-        bangumi.episode_list.append(m_video)
+    episodes_list = jsoninfo.Getvalue('result','episodes')
+    if episodes_list is not None:
+        for episode in episodes_list:
+            m_video = Video(episode['av_id'],episode['index_title'])
+            m_video.coin = episode['coins']
+            m_video.cover = episode['cover']
+            m_video.date = episode['update_time']
+            m_video.index = episode['index']
+            m_video.episode_id = episode['episode_id']## 视频地址http://bangumi.bilibili.com/anime/v/episode_id
+            bangumi.episode_list.append(m_video)
     bangumi.bgmcount = jsoninfo.Getvalue('result','total_count')
     bangumi.season_id = jsoninfo.Getvalue('result','season_id')
     bangumi.season_title = jsoninfo.Getvalue('result','season_title')
-    for tag in jsoninfo.Getvalue('result','tags'):
-        bangumi.tags.append(tag['tag_name'])
+    tags = jsoninfo.Getvalue('result','tags')
+    if tags is not None:
+        for tag in jsoninfo.Getvalue('result','tags'):
+            bangumi.tags.append(tag['tag_name'])
     bangumi.attention = jsoninfo.Getvalue('result','favorites')
     bangumi.isFinished = jsoninfo.Getvalue('result','is_finish')
     bangumi.newest_ep_id = jsoninfo.Getvalue('result','newest_ep_id')
@@ -658,6 +649,27 @@ def GetBangumiInfo(bgm_id):
     bangumi.click = jsoninfo.Getvalue('result','play_count')
     bangumi.weekday = jsoninfo.Getvalue('result','weekday')
     return bangumi
+
+def GetVideoPartitionInfo(aid):
+    """
+    在没有appkey情况下获取分P简要信息可以直接解析网页，不保证长期有效
+    """
+    url = "http://www.bilibili.com/video/av%s/"%(GetString(aid))
+    content = getURLContent(url)
+    regexp = r'<h1 title="(.*)">\1</h1>'
+    result = GetRE(content,regexp)
+    if len(result) == 0:
+        return None
+    title = result[0]
+    regexp = r"<option value='/video/av3388284/index_(\d).html'>(.*)</option>"
+    result = GetRE(content,regexp)
+    video_list = []
+    for index,name in result:
+        m_video = Video(aid,title)
+        m_video.subtitle = name
+        m_video.partition_index = index
+        video_list.append(m_video)
+    return video_list
 
 if __name__ == "__main__":
     #获取最热视频
@@ -739,10 +751,14 @@ if __name__ == "__main__":
     # 获取在线人数最多的视频
     # for video in GetOnloneTopVideo():
     #     print video.title,video.online_user
-    # videolist = GetVideoOfBangumi_V2(2894)
-    # for video in videolist:
-    #     print video.title
-    bangumi = GetBangumiInfo(1551)
-    print bangumi.title
-    for eps in bangumi.episode_list:
-        print eps.index,eps.title
+    # 获取番剧一季的详细信息
+    # bangumi = GetBangumiInfo(1551)
+    # if bangumi is not None:
+    #     print bangumi.title
+    #     for eps in bangumi.episode_list:
+    #         print eps.index,eps.title
+    # else:
+    #     print "地球上找不到这个内容"
+    # 获取分P信息
+    #for video in GetVideoPartitionInfo(3388284):
+    #    print "%s的%sP:『%s』"%(video.title,video.partition_index,video.subtitle)
