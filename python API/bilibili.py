@@ -659,9 +659,9 @@ def GetVideoPartitionInfo(aid):
     regexp = r'<h1 title="(.*)">\1</h1>'
     result = GetRE(content,regexp)
     if len(result) == 0:
-        return None
+        return []
     title = result[0]
-    regexp = r"<option value='/video/av3388284/index_(\d).html'>(.*)</option>"
+    regexp = r"<option value='/video/av\d+/index_(\d).html'>(.*)</option>"
     result = GetRE(content,regexp)
     video_list = []
     for index,name in result:
@@ -760,5 +760,5 @@ if __name__ == "__main__":
     # else:
     #     print "地球上找不到这个内容"
     # 获取分P信息
-    #for video in GetVideoPartitionInfo(3388284):
+    #for video in GetVideoPartitionInfo(5297317):
     #    print "%s的%sP:『%s』"%(video.title,video.partition_index,video.subtitle)
