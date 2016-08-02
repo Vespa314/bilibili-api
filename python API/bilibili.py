@@ -469,7 +469,9 @@ def GetDanmuku(cid):
     """
     cid = getint(cid)
     url = "http://comment.bilibili.cn/%d.xml"%(cid)
-    content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
+    content = getURLContent(url)
+    if len(content) > 0:
+        content = zlib.decompressobj(-zlib.MAX_WBITS).decompress(getURLContent(url))
     return content
 
 def ParseDanmuku(cid):
@@ -671,6 +673,16 @@ def GetVideoPartitionInfo(aid):
         video_list.append(m_video)
     return video_list
 
+def GetCidOfVideo(aid):
+    url = 'http://www.bilibili.com/video/av%s/'%(GetString(aid))
+    content = getURLContent(url)
+    regexp = r'cid=(\d+)'
+    result = GetRE(content,regexp)
+    if len(result) > 0:
+        return result[0]
+    else:
+        return -1
+
 if __name__ == "__main__":
     #获取最热视频
     # videoList = GetPopularVideo([2014,05,20],[2014,05,27],TYPE_BOFANG,0,1)
@@ -762,3 +774,5 @@ if __name__ == "__main__":
     # 获取分P信息
     #for video in GetVideoPartitionInfo(5297317):
     #    print "%s的%sP:『%s』"%(video.title,video.partition_index,video.subtitle)
+    # 无Key获取cid
+    # print GetCidOfVideo(5492071)
