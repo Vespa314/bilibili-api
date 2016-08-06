@@ -837,7 +837,7 @@ HasLiving(mid)
 
 **当前是否在直播**
 * URL：【返回json】
-	* `http://space.bilibili.com/ajax/live/getLive?`
+	* `http://live.bilibili.com/bili/isliving/${mid}`
 * 输入：
 	* mid：用户id
 * 返回格式：
