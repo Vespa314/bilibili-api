@@ -2,9 +2,17 @@
 
 import requests
 import time
+import re
+
+def GetOneRoomId():
+    r = requests.get('http://live.bilibili.com/').text
+    res = re.search(r'data-room-id="(\d+)"', r)
+    if res:
+        return res.group(1)
 
 def post_heartbeat(headers):
     url = 'http://live.bilibili.com/User/userOnlineHeart'
+    headers['Referer'] = "http://live.bilibili.com/%s"%(GetOneRoomId())
     response = requests.post(url, headers=headers)
     print response.content
 
