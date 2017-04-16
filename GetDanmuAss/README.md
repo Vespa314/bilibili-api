@@ -21,7 +21,7 @@ Danmaku2ASS(GetDanmuku(video.cid),r'%s/Desktop/%s.ass'%(os.path.expanduser('~'),
 
 ~~暂时不支持下载P2弹幕。。。后期会加上。。。~~ 【已支持】
 
-##鸣谢
+## 鸣谢
 
 我只是写了一下B站api获得弹幕，而转换模块基本参考[m13253](https://github.com/m13253)所写的[danmaku2ass](https://github.com/m13253/danmaku2ass)项目！！！
 

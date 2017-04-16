@@ -1,4 +1,4 @@
-##B站API收集整理及开发，测试【开发中】
+## B站API收集整理及开发，测试【开发中】
 ============
 
 ### 目录：
@@ -20,7 +20,7 @@
 * api.md   ：API的详细说明
 * README.md：return this
 
-###主要三部分API组成：
+### 主要三部分API组成：
 * 根据爬取页面获取到的信息：
   * 视频排行【已完成】
   * 根据条件筛选视频
@@ -37,9 +37,9 @@
   * 获取排行视频信息【已完成】
   * ...
 
-###类接口：
+### 类接口：
 
-####用户类：
+#### 用户类：
 ```python
 class User():
     def __init__(self,m_mid=None,m_name=None):
@@ -62,7 +62,7 @@ class User():
     followlist = None;#关注的好友列表
 ```
 
-####视频类：
+#### 视频类：
 ```python
 class Video():
     def __init__(self,m_aid=None,m_title=None):
@@ -93,19 +93,19 @@ class Video():
     episode = None;
     arcurl = None;#网页地址
     arcrank = None;#不明
-#不明：    
+# 不明：    
     tid = None;
     typename = None;
     instant_server = None;
     src = None;
     partname = None;
-#播放信息：
+# 播放信息：
     play_site = None;
     play_forward = None;
     play_mobile = None;
 ```
 
-####评论类：
+#### 评论类：
 ```
 class Comment():
     def __init__(self):
@@ -117,7 +117,7 @@ class Comment():
     post_user = None;
 ```
 
-####评论组(一组评论):
+#### 评论组(一组评论):
 ```
 class CommentList():
     def __init__(self):
@@ -127,7 +127,7 @@ class CommentList():
     page = None;
 ```
 
-####新番类：
+#### 新番类：
 ```
 class Bangumi():
     def __init__(self):
