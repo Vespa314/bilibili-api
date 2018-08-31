@@ -1265,6 +1265,7 @@ def biliVideoSearch(appkey, AppSecret, keyword, order = ‘default’, pagesize 
 	* 3:30-60分钟
 	* 4:60分钟以上
    * tid的参数请参考分区标号进行操作，这里解释一个，0表示对所有B站分区进行搜索
+*** 注意：本方法搜索的数据最多只有1000条，也就是50页，如果需要更多的数据，建议在后面加上pagesize
 
 **搜索专题**【已完成】
 * URL：【返回json】
