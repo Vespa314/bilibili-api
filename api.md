@@ -1,11 +1,11 @@
-##直接爬取视频排行【已完成】:
+## 直接爬取视频排行【已完成】:
 * 获取URL: `http://www.bilibili.tv/list/[stow]-[zone]-[page]-[year1]-[month1]-[day1]~[year2]-[month2]-[day2].html`
 
 * 返回：只关于视频部分的源码
 
-###参数说明：
+### 参数说明：
 
-####Type:排序方式
+#### Type:排序方式
 * **收藏**：stow
 * **评论数**：review
 * **播放数**：hot
@@ -17,7 +17,7 @@
 
 >**注意：**上面排序方式中，**粗体字(前六个)**部分可以获取下文描述一切分区，但是*斜体(后两个)*只能获取二级以后的分区，也就是说**不可以**通过`拼音`和`投稿时间`来获取`综合排名`,`动画`,`音乐/舞蹈`,`游戏`,`科学技术`,`娱乐`,`影视`,`动画剧番`等分区。【可能是可以的，但是我没找到方法:-D】
 
-####zone：分区
+#### zone：分区
 * **综合排名**：0
 * **动画**：1
     * AMD·AMV：24
@@ -280,13 +280,13 @@ def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,origina
     
 ---
 
-##视频Index
+## 视频Index
 * 获取URL: `http://www.bilibili.tv/list/b-[firstlatter]-[zone]-[time]-[catalog]-[state]-[style]-[updatetime]-[sorttype]-[weekday]--[page].html`
 
 * 返回：整个网页源代码
 
 
-###参数说明：
+### 参数说明：
 #### zone:地区
 * 不限：a
 * 中国大陆：a1
@@ -361,13 +361,13 @@ def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,origina
 #### page：页数
 必填，1~n
 
-##按月份获取`动画`新番
+## 按月份获取`动画`新番
 * 获取URL: `http://www.bilibili.tv/index/bangumi/[year]-[month].json`
 
 * 返回：json信息
 
-###参数说明：
-####输入：
+### 参数说明：
+#### 输入：
 * year:年份  四位数
 * month:月份
 
@@ -382,7 +382,7 @@ def GetPopularVideo(begintime,endtime,sortType=TYPE_BOFANG,zone=0,page=1,origina
 
 ---
 
-##B站API(无需认证或登录即可爬取的部分)：
+## B站API(无需认证或登录即可爬取的部分)：
 **获取本周排行**
 * URL：【返回json】
     * `http://api.bilibili.cn/index`
@@ -995,7 +995,7 @@ GetBangumiInfo(bgm_id)
 
 ---
 
-##B站API(需认证)：
+## B站API(需认证)：
 > 下方所有调用api方法均要加入`appkey=...`,如果是新注册的appkey的话还需要加入sign，具体算法是：
 python：
 ```python
