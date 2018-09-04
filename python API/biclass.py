@@ -168,7 +168,7 @@ class SponsorInfo():
         self.bp = None  ## 剧番总B币
         self.percent = None  #承包总比例，不知道什么鬼
         self.ep_bp = None  ## 该话的B币
-        self.ep_percent = None  ## 不明
+        self.ep_percent = None  ## 该话的承包占比（估计指单话与整体的占比）
         self.sponsor_num = None   ## 承包人数
         self.sponsor_user = None  ## 承包人列表
 
