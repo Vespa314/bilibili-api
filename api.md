@@ -1229,6 +1229,44 @@ def GetRank(appkey, tid, begin=None, end=None, page = None, pagesize=None, click
 def biliVideoSearch(appkey, AppSecret, keyword, order = ‘default’, pagesize = 20, page = 1)
 ```
 
+**搜索视频V2**【不使用APPKEY的】【GET】【返回结果未完成解释，API网址已经写出，参数返回过于复杂，需要分析】
+* URL：【返回JSON】
+   * 'http://api.bilibili.com/x/web-interface/search/type' #最近抓出来的一个搜索API网址，可在不使用APPKEY的情况下使用，实测有效（测试表示，不可以通过USERID也就是API里面的MID和UID来进行搜索，与B站网页版搜索原理一致）
+   * 'http://api.bilibili.com/x/web-interface/search/all' # 根据关键词综合搜索
+* 输入：
+   * search_type:搜索类型【如果是综合搜索则不用】
+   * kerword：关键词（提示：需要对关键词进行URLENCODING操作，建议使用request.get，不建议使用url.format之后再get，可能会导致中文不识别问题）
+   * highlight:是否高亮关键词【选填】
+   * order：排序依据【选填，且不是所有类型都需要】
+   * duration：持续时间范围【选填，且不是所有的搜索类型需要】
+   * tid：分区编号【选填，也不是所有的都需要】
+* 关于search_type的系数参考：
+   * video:视频
+   * media_bangumi：番剧
+   * media_ft:影视
+   * live：直播
+   * article：专栏文章
+   * topic：话题
+   * bili_user:用户（LV2以上）
+   * photo:相册
+* 对于order/duration/tid参数的解释：
+   * 在综合搜索中，也就是使用第二个地址进行操作的时候，默认情况下，order=totalrank，duration=0，tid=0（也就是三个参数缺省的时候）
+   * 注意，使用order参数后，默认情况下，除totalrank，剩下所有参数都不针对番剧搜索，请注意，如果需要番剧数据，请使用totalrank进行搜索
+   * order参数解释：
+   	* totalrank：综合排序（默认值）
+	* click：点击率（从多到少）
+	* pubdate：发布时间（从新到老）
+	* dm：弹幕数排序（从名字就很好解释，dm就是弹幕的拼音开头简写，这个也是从多到少）
+	* stow：根据收藏数排序（从多到少）
+   * duration参数解释：
+   	* 0：全部（默认）
+	* 1:10分钟以下
+	* 2:10-30分钟
+	* 3:30-60分钟
+	* 4:60分钟以上
+   * tid的参数请参考分区标号进行操作，这里解释一个，0表示对所有B站分区进行搜索
+*** 注意：本方法搜索的数据最多只有1000条，也就是50页，如果需要更多的数据，建议在后面加上pagesize
+
 **搜索专题**【已完成】
 * URL：【返回json】
     * `http://api.bilibili.cn/search`
