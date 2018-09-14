@@ -6,7 +6,7 @@ Created on Mon May 26 23:42:03 2014
 """
 
 
-from support import * 
+from support import *
 import hashlib
 import io
 import xml.dom.minidom
@@ -19,7 +19,7 @@ default_encoding = 'utf-8'
 if sys.getdefaultencoding() != default_encoding:
     reload(sys)
     sys.setdefaultencoding(default_encoding)
-    
+
 class safe_list(list):
     def get(self, index, default=None):
         try:
@@ -269,7 +269,7 @@ def FindAlternativeRow(rows, c, height, bottomReserved):
         elif rows[c[4]][row][0] < rows[c[4]][res][0]:
             res = row
     return res
-    
+
 def ConvertColor(RGB, width=1280, height=576):
     if RGB == 0x000000:
         return '000000'
@@ -287,7 +287,7 @@ def ConvertColor(RGB, width=1280, height=576):
             ClipByte(R*-0.10493933142075390+G*1.17231478191855154+B*-0.06737545049779757),
             ClipByte(R*0.91348912373987645+G*0.07858536372532510+B*0.00792551253479842)
         )
-        
+
 def WriteComment(f, c, row, width, height, bottomReserved, fontsize, lifetime, styleid):
     text = ASSEscape(c[3])
     styles = []
@@ -345,7 +345,7 @@ def GetVideoInfo(aid,appkey,page = 1,AppSecret=None,fav = None):
     video.typename = jsoninfo.Getvalue('typename')
     video.instant_server = jsoninfo.Getvalue('instant_server');
     return video
-    
+
 def GetSign(params,appkey,AppSecret=None):
     """
     获取新版API的签名，不然会返回-3错误
@@ -368,7 +368,7 @@ def GetSign(params,appkey,AppSecret=None):
 
 
 
-        
+
 def GetDanmuku(cid):
     cid = getint(cid);
     url = "http://comment.bilibili.cn/%d.xml"%(cid);
@@ -381,7 +381,7 @@ def GetDanmuku(cid):
 #    s = f.read()
 #    s = re.sub('[\\x00-\\x08\\x0b\\x0c\\x0e-\\x1f]', '\ufffd', s)
 #    return io.StringIO(s)
-    
+
 def ReadCommentsBilibili(f, fontsize):
     dom = xml.dom.minidom.parseString(f)
     comment_element = dom.getElementsByTagName('d')
@@ -437,18 +437,18 @@ def ProcessComments(comments, f, width, height, bottomReserved, fontface, fontsi
             logging.warning(_('Invalid comment: %r') % i[3])
     if progress_callback:
         progress_callback(len(comments), len(comments))
-        
+
 def Danmaku2ASS(input_files, output_file, stage_width, stage_height, reserve_blank=0, font_face='sans-serif', font_size=25.0, text_opacity=1.0, comment_duration=5.0, is_reduce_comments=False, progress_callback=None):
     fo = None
     comments = ReadComments(input_files, font_size)
-    try:        
+    try:
         fo = ConvertToFile(output_file, 'w')
         ProcessComments(comments, fo, stage_width, stage_height, reserve_blank, font_face, font_size, text_opacity, comment_duration, is_reduce_comments, progress_callback)
     finally:
         if output_file and fo != output_file:
             fo.close()
 
-def ReadComments(input_files, font_size=25.0):    
+def ReadComments(input_files, font_size=25.0):
     comments = []
     comments.extend(ReadCommentsBilibili(input_files, font_size))
     comments.sort()
@@ -459,8 +459,9 @@ if __name__ == '__main__':
         print "输入av号"
     else:
         appkey = "03fc8eb101b091fb"
-        regex = re.compile('http:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)')
-        regex_match = regex.match(sys.argv[1])
+        url = sys.argv[1]
+        regex = re.compile('https:/*[^/]+/video/av(\\d+)(/|/index.html|/index_(\\d+).html)?(\\?|#|$)')
+        regex_match = regex.match(url)
         if not regex_match:
             raise ValueError('Invalid URL: %s' % url)
         aid = regex_match.group(1)
